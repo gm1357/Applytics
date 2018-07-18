@@ -12,6 +12,14 @@
     "url": "git+https://github.com/gm1357/Applytics.git"
   },
   "author": "Gabriel Machado",
+  "keywords": [
+    "analytics",
+    "mobile",
+    "app",
+    "data",
+    "analysis",
+    "applytics"
+  ],
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/gm1357/Applytics/issues"
