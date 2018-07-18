@@ -1,12 +1,12 @@
 # Applytics
 Ferramenta analytics para apps desenvolvida para conclusão de curso de bcc.
 
-##Construido com:
+## Construido com:
 - Node.js
 - Express
 - MySQL
 
-##Bibliotecas utilizadas:
+## Bibliotecas utilizadas:
 - express-load
 - express-validator
 - body-parser
