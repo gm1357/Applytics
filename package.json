@@ -17,6 +17,15 @@
   },
   "homepage": "https://github.com/gm1357/Applytics#readme",
   "dependencies": {
-    "express": "^4.16.3"
+    "body-parser": "^1.18.3",
+    "ejs": "^2.6.1",
+    "express": "^4.16.3",
+    "express-load": "^1.1.16",
+    "express-validator": "^5.2.0",
+    "method-override": "^3.0.0"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0",
+    "supertest": "^3.1.0"
   }
 }
