@@ -15,6 +15,7 @@ Ferramenta analytics para apps desenvolvida para conclusão de curso de bcc.
 - Bootstrap
 - jQuery
 - Popper.js
+- Serve-favicon
 - Dev:
     - Mocha
     - Supertest

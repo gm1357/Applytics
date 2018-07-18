@@ -26,7 +26,8 @@
     "express-validator": "^5.2.0",
     "jquery": "^3.3.1",
     "method-override": "^3.0.0",
-    "popper.js": "^1.14.3"
+    "popper.js": "^1.14.3",
+    "serve-favicon": "^2.5.0"
   },
   "devDependencies": {
     "autoprefixer": "^9.0.0",
