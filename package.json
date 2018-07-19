@@ -26,6 +26,7 @@
   },
   "homepage": "https://github.com/gm1357/Applytics#readme",
   "dependencies": {
+    "bcrypt": "^3.0.0",
     "body-parser": "^1.18.3",
     "bootstrap": "^4.1.2",
     "dotenv": "^6.0.0",

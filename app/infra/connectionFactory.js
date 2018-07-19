@@ -12,7 +12,7 @@ function createDBConnection() {
         host: 'localhost',
         user: 'root',
         password : process.env.DB_PASS,
-        database: applytics,
+        database: db,
     });
 }
 

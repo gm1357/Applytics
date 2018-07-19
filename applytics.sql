@@ -3,8 +3,10 @@ USE `applytics`;
 
 CREATE TABLE `usuarios` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
-    `email` varchar(20) NOT NULL,
+    `nome` varchar(255) NOT NULL,
+    `email` varchar(255) NOT NULL,
     `senha` varchar(255) NOT NULL,
+    UNIQUE (email),
     PRIMARY KEY (id)
 );
 
@@ -15,7 +17,9 @@ USE `applytics_test`;
 
 CREATE TABLE `usuarios` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
-    `email` varchar(20) NOT NULL,
+    `nome` varchar(255) NOT NULL,
+    `email` varchar(255) NOT NULL,
     `senha` varchar(255) NOT NULL,
+    UNIQUE (email),
     PRIMARY KEY (id)
 );
