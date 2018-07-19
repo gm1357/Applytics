@@ -6,6 +6,10 @@ module.exports = function(app) {
         res.render('usuarios/cadastro', {validationErrors:'',usuario:''});
     });
 
+    app.get('/usuarios/login', function(req, res) {
+        res.render('usuarios/login', {validationErrors:'',usuario:''});
+    });
+
     app.post('/usuarios', [
         check('nome').not().isEmpty().withMessage('Nome deve ser preenchido'),
         check('email').not().isEmpty().withMessage('E-mail deve ser preenchido')
@@ -42,12 +46,10 @@ module.exports = function(app) {
         UsuariosDAO = new app.infra.UsuariosDAO(connection);
 
         UsuariosDAO.confereEmail(usuario, function(err, results) {
-            console.log(results);
             if (!results[0]) {
                 usuario.senha = bcrypt.hashSync(req.body['senha'], 10);
         
                 UsuariosDAO.salva(usuario, function(err, results){
-                    console.log(err);
                     res.redirect('/');
                 });
 
@@ -73,5 +75,61 @@ module.exports = function(app) {
                 connection.end();
             }
         });
+    });
+
+    app.post('/usuarios/login', [
+        check('email').not().isEmpty().withMessage('Digite seu e-mail')
+            .isEmail().withMessage('Forneça um e-mail válido'),
+        check('senha').not().isEmpty().withMessage('Digite sua senha')
+    ], function(req, res) {
+        var usuario = req.body;
+
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            res.status(400);
+            res.format({
+                html: function(){
+                    res.render("usuarios/login", {validationErrors:errors.array(), usuario:usuario});
+                },
+                json: function(){
+                    res.send(errors.array());
+                }
+            });
+            return;
+        }
+
+        connection = app.infra.connectionFactory();
+        UsuariosDAO = new app.infra.UsuariosDAO(connection);
+        
+        UsuariosDAO.confereEmail(usuario, function(err, results) {
+            if (results[0]) {
+                bcrypt.compare(usuario.senha, results[0].senha, function(err, resp) {
+                    if(resp) {
+                        console.log('login feito');
+                        res.redirect('/');
+                    } else {
+                        error = [{
+                            location: 'body',
+                            param: 'email',
+                            msg: 'Email ou senha incorretos',
+                            value: usuario.email
+                        }];
+                        res.status(400);
+                        res.render('usuarios/login', {validationErrors: error, usuario: usuario});
+                    } 
+                });
+            } else {
+                error = [{
+                    location: 'body',
+                    param: 'email',
+                    msg: 'Email não cadastrado no sistema',
+                    value: usuario.email
+                }];
+                res.status(400);
+                res.render('usuarios/login', {validationErrors: error, usuario: usuario});
+            }
+        });
+
+        connection.end();
     });
 }

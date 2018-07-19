@@ -3,6 +3,8 @@ load = require('express-load')
 bodyParser = require('body-parser');
 methodOverride = require('method-override')
 expressValidator = require('express-validator');
+passport = require('passport');
+morgan = require('morgan')
 favicon = require('serve-favicon');
 require('dotenv').load();
 
@@ -12,7 +14,8 @@ module.exports = function() {
     
     app.set('view engine', 'ejs');
     app.set('views', './app/views');
-    
+
+    app.use(morgan('dev'));
     app.use(express.static('./app/public'));
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
