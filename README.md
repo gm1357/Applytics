@@ -9,6 +9,7 @@ Ferramenta analytics para apps desenvolvida para conclusão de curso de bcc.
 ## Bibliotecas utilizadas:
 - Express-load
 - Express-validator
+- Express-session
 - Body-parser
 - Cookie-parser
 - Connect-flash

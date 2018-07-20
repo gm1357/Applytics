@@ -1,11 +1,15 @@
 express = require('express');
 load = require('express-load')
 bodyParser = require('body-parser');
+cookieParser = require('cookie-parser');
+session = require('express-session');
 methodOverride = require('method-override')
 expressValidator = require('express-validator');
 passport = require('passport');
+flash = require('connect-flash');
 morgan = require('morgan')
 favicon = require('serve-favicon');
+mongoose = require('mongoose');
 require('dotenv').load();
 
 
@@ -17,13 +21,21 @@ module.exports = function() {
 
     app.use(morgan('dev'));
     app.use(express.static('./app/public'));
+    app.use(cookieParser());
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
+
+    // app.use(session({ secret: 'analyticstool2018app' }));
+    // app.use(passport.initialize());
+    // app.use(passport.session());
+    // app.use(flash());
+
     app.use(methodOverride('_method'));
     app.use(expressValidator());
     app.use(favicon('app/public/favicon.ico'));
 
     load('routes', {cwd: 'app'})
+    .then('models')
     .then('infra')
     .into(app);
 

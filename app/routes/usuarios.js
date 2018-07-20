@@ -1,4 +1,3 @@
-const bcrypt = require('bcrypt');
 const { check, validationResult } = require('express-validator/check');
 
 module.exports = function(app) {
@@ -24,7 +23,8 @@ module.exports = function(app) {
             }
         })
     ], function(req, res) {
-        var usuario = req.body;
+        var usuario = new app.models.Usuario(req.body);
+        usuario.geraHash();
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -40,14 +40,11 @@ module.exports = function(app) {
             return;
         }
 
-        delete usuario['senha-confirm'];
-
         connection = app.infra.connectionFactory();
         UsuariosDAO = new app.infra.UsuariosDAO(connection);
 
         UsuariosDAO.confereEmail(usuario, function(err, results) {
             if (!results[0]) {
-                usuario.senha = bcrypt.hashSync(req.body['senha'], 10);
         
                 UsuariosDAO.salva(usuario, function(err, results){
                     res.redirect('/');
@@ -82,7 +79,7 @@ module.exports = function(app) {
             .isEmail().withMessage('Forneça um e-mail válido'),
         check('senha').not().isEmpty().withMessage('Digite sua senha')
     ], function(req, res) {
-        var usuario = req.body;
+        var usuario = new app.models.Usuario(req.body);
 
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
@@ -103,7 +100,7 @@ module.exports = function(app) {
         
         UsuariosDAO.confereEmail(usuario, function(err, results) {
             if (results[0]) {
-                bcrypt.compare(usuario.senha, results[0].senha, function(err, resp) {
+                usuario.validaSenha(results[0].senha, function(err, resp) {
                     if(resp) {
                         console.log('login feito');
                         res.redirect('/');
