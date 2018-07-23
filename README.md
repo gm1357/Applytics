@@ -4,7 +4,7 @@ Ferramenta analytics para apps desenvolvida para conclusão de curso de bcc.
 ## Construido com:
 - Node.js
 - Express
-- MySQL
+- MongoDB
 
 ## Bibliotecas utilizadas:
 - Express-load
@@ -23,6 +23,7 @@ Ferramenta analytics para apps desenvolvida para conclusão de curso de bcc.
 - Bcrypt
 - Passport
 - Morgan
+- Mongoose
 - Dev:
     - Mocha
     - Supertest

@@ -1,19 +1,19 @@
 const bcrypt = require('bcrypt');
 
-var Usuario = function(properties){
-    this.nome = properties.nome || '';
-    this.email = properties.email;
-    this.senha = properties.senha;
-}
+var userSchema = mongoose.Schema({
+    local: {
+        nome: String,
+        email: String,
+        senha: String,
+    }
+});
 
-Usuario.prototype.geraHash = function() {
-    this.senha = bcrypt.hashSync(this.senha, 10);
-}
-
-Usuario.prototype.validaSenha = function(senhaComHash, callback) {
-    bcrypt.compare(this.senha, senhaComHash, callback);
+userSchema.methods.generateHash = function(password) {
+    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
-module.exports = function() {
-    return Usuario;
-}
+userSchema.methods.validPassword = function(password) {
+    return bcrypt.compareSync(password, this.local.senha);
+};
+
+module.exports = mongoose.model('Usuarios', userSchema);

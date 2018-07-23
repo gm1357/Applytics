@@ -11,11 +11,15 @@ morgan = require('morgan')
 favicon = require('serve-favicon');
 mongoose = require('mongoose');
 require('dotenv').load();
+require('./passport')(passport);
 
 
 module.exports = function() {
     app = express();
-    
+
+    var configDB = require('./database.js');
+    mongoose.connect(configDB.url);
+
     app.set('view engine', 'ejs');
     app.set('views', './app/views');
 
@@ -25,17 +29,16 @@ module.exports = function() {
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
 
-    // app.use(session({ secret: 'analyticstool2018app' }));
-    // app.use(passport.initialize());
-    // app.use(passport.session());
-    // app.use(flash());
+    app.use(session({ secret: 'analyticstool2018app' }));
+    app.use(passport.initialize());
+    app.use(passport.session());
+    app.use(flash());
 
     app.use(methodOverride('_method'));
     app.use(expressValidator());
     app.use(favicon('app/public/favicon.ico'));
 
     load('routes', {cwd: 'app'})
-    .then('models')
     .then('infra')
     .into(app);
 
