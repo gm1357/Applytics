@@ -18,7 +18,7 @@ module.exports = () => {
     app = express();
 
     var configDB = require('./database.js');
-    mongoose.connect(configDB.url, { useNewUrlParser: true });
+    mongoose.connect(process.env.NODE_ENV === 'test' ? configDB.url_test : configDB.url, { useNewUrlParser: true });
 
     app.set('view engine', 'ejs');
     app.set('views', './app/views');
