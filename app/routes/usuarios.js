@@ -1,15 +1,15 @@
 const { check, validationResult } = require('express-validator/check');
 
 module.exports = function(app) {
-    app.get('/usuarios/cadastro', function(req, res) {
+    app.get('/usuarios/cadastro', (req, res) => {
         res.render('usuarios/cadastro', {validationErrors:'',usuario:'', message: req.flash('signupMessage')});
     });
 
-    app.get('/usuarios/login', function(req, res) {
+    app.get('/usuarios/login', (req, res) => {
         res.render('usuarios/login', {validationErrors:'',usuario:'', message: req.flash('loginMessage')});
     });
 
-    app.get('/usuarios/logout', function(req, res) {
+    app.get('/usuarios/logout', (req, res) => {
         req.logout();
         res.redirect('/');
     });
@@ -27,16 +27,16 @@ module.exports = function(app) {
                 return value;
             }
         })
-    ], function(req, res) {
+    ], (req, res) => {
         const errors = validationResult(req);
 
         if (!errors.isEmpty()) { 
             res.status(400); 
             res.format({ 
-                html: function(){ 
+                html: () => { 
                     res.render("usuarios/cadastro", {validationErrors:errors.array(), usuario: req.body, message: ''}); 
                 }, 
-                json: function(){ 
+                json: () => { 
                     res.send(errors.array()); 
                 } 
             }); 
@@ -54,16 +54,16 @@ module.exports = function(app) {
         check('email').not().isEmpty().withMessage('Digite seu e-mail')
             .isEmail().withMessage('Forneça um e-mail válido'),
         check('senha').not().isEmpty().withMessage('Digite sua senha')
-    ], function(req, res) {
+    ], (req, res) => {
         const errors = validationResult(req); 
 
         if (!errors.isEmpty()) { 
             res.status(400); 
             res.format({ 
-                html: function(){ 
+                html: () => { 
                     res.render("usuarios/login", {validationErrors:errors.array(), usuario:req.body, message: ''}); 
                 }, 
-                json: function(){ 
+                json: () => { 
                     res.send(errors.array()); 
                 } 
             }); 

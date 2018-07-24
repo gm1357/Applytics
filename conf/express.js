@@ -14,11 +14,11 @@ require('dotenv').load();
 require('./passport')(passport);
 
 
-module.exports = function() {
+module.exports = () => {
     app = express();
 
     var configDB = require('./database.js');
-    mongoose.connect(configDB.url);
+    mongoose.connect(configDB.url, { useNewUrlParser: true });
 
     app.set('view engine', 'ejs');
     app.set('views', './app/views');
@@ -29,7 +29,12 @@ module.exports = function() {
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
 
-    app.use(session({ secret: 'analyticstool2018app' }));
+    app.use(session({ 
+        secret: 'analyticstool2018app',
+        resave: false,
+        saveUninitialized: false
+
+    }));
     app.use(passport.initialize());
     app.use(passport.session());
     app.use(flash());
@@ -39,14 +44,13 @@ module.exports = function() {
     app.use(favicon('app/public/favicon.ico'));
 
     load('routes', {cwd: 'app'})
-    .then('infra')
     .into(app);
 
-    app.use(function(req, res, next) {
+    app.use((req, res, next) => {
         res.status(404).render('erros/404');
     });
 
-    app.use(function(error, req, res, next) {
+    app.use((error, req, res, next) => {
         if (process.env.NODE_ENV !== 'development') {
             res.status(500).render('erros/500');
             return;
