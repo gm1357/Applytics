@@ -99,7 +99,7 @@ describe('#UsuariosController', function() {
                 'email': 'test@test.com',
                 'senha': 'test1234'
         }).expect(302)
-        .expect('Location', '/')
+        .expect('Location', '/dashboard')
         .end(done);
     });
 });

@@ -70,17 +70,10 @@ module.exports = function(app) {
             return; 
         } else {
             passport.authenticate('local-login', {
-                successRedirect : '/',
+                successRedirect : '/dashboard',
                 failureRedirect : '/usuarios/login',
                 failureFlash : true
             })(req,res);
         }
     });
-
-    function isLoggedIn(req, res, next) {
-        if (req.isAuthenticated())
-            return next();
-    
-        res.redirect('/');
-    }
 }

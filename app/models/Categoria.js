@@ -1,0 +1,45 @@
+var categoriaSchema = mongoose.Schema({
+    nome: {type: String, required: true },
+});
+
+module.exports = mongoose.model('Categorias', categoriaSchema);
+
+// db.categorias.insert([
+//     {nome: 'Arte e design'},
+//     {nome: 'Beleza'},
+//     {nome: 'Bibliotecas e demos'},
+//     {nome: 'Casa e decoração'},
+//     {nome: 'Clima'},
+//     {nome: 'Comer e beber'},
+//     {nome: 'Compras'},
+//     {nome: 'Comunicação'},
+//     {nome: 'Corporativo'},
+//     {nome: 'Criar os filhos'},
+//     {nome: 'Daydream'},
+//     {nome: 'Educação'},
+//     {nome: 'Encontros'},
+//     {nome: 'Entretenimento'},
+//     {nome: 'Esportes'},
+//     {nome: 'Estilo de vida'},
+//     {nome: 'Eventos'},
+//     {nome: 'Família'},
+//     {nome: 'Ferramentas'},
+//     {nome: 'Finanças'},
+//     {nome: 'Fotografia'},
+//     {nome: 'Google Cast'},
+//     {nome: 'Humor'},
+//     {nome: 'Jogos'},
+//     {nome: 'Livros referências'},
+//     {nome: 'Mapas e navegação'},
+//     {nome: 'Medicina'},
+//     {nome: 'Música e áudio'},
+//     {nome: 'Notícias e revistas'},
+//     {nome: 'Personalização'},
+//     {nome: 'Produtividade'},
+//     {nome: 'Reproduzir e editar vídeos'},
+//     {nome: 'Saúde e fitness'},
+//     {nome: 'Social'},
+//     {nome: 'Turismo e local'},
+//     {nome: 'Veículos'},
+//     {nome: 'Wear OS by Google'}
+// ]);

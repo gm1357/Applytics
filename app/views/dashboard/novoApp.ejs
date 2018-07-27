@@ -1,0 +1,41 @@
+<%- include('../layout/_header'); %>
+
+    <main role="main" class="container">
+        <h1>Cadastrar novo app</h1>
+
+        <form action="/dashboard" method="post">
+            <div class="form-group">
+                <label for="nome">Nome</label>
+                <input type="text" name="nome" id="nome" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="chave">Chave SDK</label>
+                <input type="text" name="chave" id="chave" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="pais">País base</label>
+                <select name="pais" id="pais" class="form-control">
+                    <option value="0" selected disabled>Selecione o país</option>
+                    <% paises.forEach(pais => { %>
+                        <option value="<%= pais.nome %>"><%= pais.nome %></option>
+                    <% }); %>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="categoria">Categoria</label>
+                <select name="categoria" id="categoria" class="form-control">
+                    <option value="0" selected disabled>Selecione a categoria</option>
+                    <% categorias.forEach(categoria => { %>
+                        <option value="<%= categoria.nome %>"><%= categoria.nome %></option>
+                    <% }); %>
+                </select>
+            </div>
+
+            <input type="submit" value="Cadastrar" class="btn btn-primary">
+        </form>
+    </main>
+
+<%- include('../layout/_footer'); %>
