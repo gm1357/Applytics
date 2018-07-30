@@ -15,7 +15,7 @@ module.exports = function() {
             return;
         }
         
-        res.render('dashboard/index');
+        res.render('dashboard/index', {appID: req.user.app});
     });
 
     app.get('/dashboard/novo', (req, res) => {
@@ -47,13 +47,7 @@ module.exports = function() {
 
     app.post('/dashboard', (req, res) => {
         var app = new Aplicativo(req.body);
-        // console.log(app);
-
-        // if (err) {
-        //     console.log(err);
-        //     redirect('/usuarios/login');
-        //     return;
-        // }
+        
         app.id_usuario = req.user._id;
 
         app.save(err => {
