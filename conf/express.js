@@ -39,6 +39,11 @@ module.exports = () => {
     app.use(passport.session());
     app.use(flash());
 
+    app.use(function(req,res,next){
+        res.locals.usuarioLogado = req.user;
+        next();
+    })
+
     app.use(methodOverride('_method'));
     app.use(expressValidator());
     app.use(favicon('app/public/favicon.ico'));

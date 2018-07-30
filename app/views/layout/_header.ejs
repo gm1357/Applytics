@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <link rel="stylesheet" href="css/test.css">
         <title>Applytics</title>
     </head>
 
@@ -23,12 +24,18 @@
                             <li class="nav-item active">
                                 <a class="nav-link" href="/">Home</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/usuarios/cadastro">Sign-up</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="/usuarios/login">Log-in</a>
-                            </li>
+                            <% if (usuarioLogado === undefined) { %>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/usuarios/cadastro">Sign-up</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/usuarios/login">Log-in</a>
+                                </li>
+                            <% } else { %>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">Bem-vindo <%= usuarioLogado.local.nome %></a>
+                                </li>
+                            <% } %>
                         </ul>
                     </div>
                 </div>

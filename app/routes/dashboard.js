@@ -14,8 +14,10 @@ module.exports = function() {
             res.redirect('/dashboard/novo');
             return;
         }
+
+        // TODO: pegar dados da api
         
-        res.render('dashboard/index', {appID: req.user.app});
+        res.render('dashboard/index', {appID: req.user.app, dados: null});
     });
 
     app.get('/dashboard/novo', (req, res) => {

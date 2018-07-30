@@ -3,7 +3,10 @@
     <main role="main" class="container">
         <h1>Dashboard</h1>
 
-        <p>A chave SDK para realizar a integração com o app é: <strong><%= appID %></strong></p>
+        <% if (dados === null) { %>
+            <p>A chave SDK para realizar a integração com o app é: <strong><%= appID %></strong>.</p>
+            <p>Integre o SDK no seu app e atualize essa página quando tiver usado pelo menos uma vez seu app para ver os dados.</p>
+        <% } %>
     </main>
 
 <%- include('../layout/_footer'); %>
