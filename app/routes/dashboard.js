@@ -2,6 +2,7 @@ var request = require("request");
 var Categoria = require('../models/Categoria');
 var Aplicativo = require('../models/Aplicativo');
 var Usuario = require('../models/Usuario');
+const { check, validationResult } = require('express-validator/check');
 
 module.exports = function() {
     app.get('/dashboard', (req, res) => {
@@ -41,27 +42,48 @@ module.exports = function() {
                         paises.push({id: element.numericCode, nome: element.translations.br});
                     });
 
-                    res.render('dashboard/novoApp', {paises: paises, categorias: categorias});
+                    res.render('dashboard/novoApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: req.flash('aplicativo')});
                 });
             }
         });
     });
 
-    app.post('/dashboard', (req, res) => {
-        var app = new Aplicativo(req.body);
-        
-        app.id_usuario = req.user._id;
+    app.post('/dashboard',[
+        check('nome').not().isEmpty().withMessage('Digite o nome do seu app'),
+        check('pais').not().isEmpty().withMessage('Selecione o país base do seu app'),
+        check('categoria').not().isEmpty().withMessage('Selecione uma categoria para seu app')
+    ], (req, res) => {
+        const errors = validationResult(req); 
 
-        app.save(err => {
-            if (err)
-                console.log(err);
+        if (!errors.isEmpty()) { 
+            res.format({ 
+                html: () => { 
+                    req.flash('validationErrors', errors.array());
+                    req.flash('aplicativo', req.body);
+                    res.redirect(400, '/dashboard/novo'); 
+                }, 
+                json: () => { 
+                    res.status(400); 
+                    res.send(errors.array()); 
+                } 
+            }); 
+            return; 
+        } else {
+            var app = new Aplicativo(req.body);
+            
+            app.id_usuario = req.user._id;
 
-            Usuario.update({_id: req.user._id }, { $set: {app: app._id}}, err => {
+            app.save(err => {
                 if (err)
                     console.log(err);
 
-                res.redirect('/dashboard');
+                Usuario.update({_id: req.user._id }, { $set: {app: app._id}}, err => {
+                    if (err)
+                        console.log(err);
+
+                    res.redirect('/dashboard');
+                });
             });
-        });
+        }
     });
 }
