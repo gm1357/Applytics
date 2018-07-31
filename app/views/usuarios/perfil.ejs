@@ -1,0 +1,17 @@
+<%- include('../layout/_header'); %>
+    <main role="main" class="container">
+        <div class="card bg-light mb-3 mx-auto" style="max-width: 30rem; margin-top: 2rem;">
+        <div class="card-header text-center">
+            <h1>Editar perfil</h1>
+        </div>
+        <div class="card-body">
+            <form action="/usuarios/<%= usuario._id %>">
+                <div class="form-group">
+                    <label for="nome">Nome</label>
+                    <input type="text" name="nome" id="nome" class="form-control" value="<%= usuario.local.nome %>">
+                </div>
+                <input type="submit" class="btn btn-primary" value="Alterar">
+            </form>
+        </div>
+    </main>
+<%- include('../layout/_footer'); %>

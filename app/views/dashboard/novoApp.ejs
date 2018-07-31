@@ -1,49 +1,54 @@
 <%- include('../layout/_header'); %>
 
     <main role="main" class="container">
-        <h1>Cadastrar novo app</h1>
-
-        <form action="/dashboard" method="post">
-            <%if(validationErrors.length > 0) { %>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <ul>
-                        <% for(var i=0; i<validationErrors.length; i++) {%>
-                            <li><%=validationErrors[i].msg%></li>
-                        <% } %>
-                    </ul>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-            <%}%>
-
-            <div class="form-group">
-                <label for="nome">Nome</label>
-                <input type="text" name="nome" id="nome" class="form-control" placeholder="Digite o nome do app" required>
+        <div class="card bg-light mb-3 mx-auto" style="max-width: 30rem; margin-top: 2rem;">
+            <div class="card-header text-center">
+                <h1>Cadastrar novo app</h1>
             </div>
+            <div class="card-body">
+                <form action="/dashboard" method="post">
+                    <%if(validationErrors.length > 0) { %>
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <ul>
+                                <% for(var i=0; i<validationErrors.length; i++) {%>
+                                    <li><%=validationErrors[i].msg%></li>
+                                <% } %>
+                            </ul>
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    <%}%>
 
-            <div class="form-group">
-                <label for="pais">País base</label>
-                <select name="pais" id="pais" class="form-control" required>
-                    <option value="" selected disabled>Selecione o país</option>
-                    <% paises.forEach(pais => { %>
-                        <option value="<%= pais.nome %>"><%= pais.nome %></option>
-                    <% }); %>
-                </select>
+                    <div class="form-group">
+                        <label for="nome">Nome</label>
+                        <input type="text" name="nome" id="nome" class="form-control" placeholder="Digite o nome do app" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pais">País base</label>
+                        <select name="pais" id="pais" class="form-control" required>
+                            <option value="" selected disabled>Selecione o país</option>
+                            <% paises.forEach(pais => { %>
+                                <option value="<%= pais.nome %>"><%= pais.nome %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="categoria">Categoria</label>
+                        <select name="categoria" id="categoria" class="form-control" required>
+                            <option value="" selected disabled>Selecione a categoria</option>
+                            <% categorias.forEach(categoria => { %>
+                                <option value="<%= categoria.nome %>"><%= categoria.nome %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+
+                    <input type="submit" value="Cadastrar" class="btn btn-primary">
+                </form>
             </div>
-
-            <div class="form-group">
-                <label for="categoria">Categoria</label>
-                <select name="categoria" id="categoria" class="form-control" required>
-                    <option value="" selected disabled>Selecione a categoria</option>
-                    <% categorias.forEach(categoria => { %>
-                        <option value="<%= categoria.nome %>"><%= categoria.nome %></option>
-                    <% }); %>
-                </select>
-            </div>
-
-            <input type="submit" value="Cadastrar" class="btn btn-primary">
-        </form>
+        </div>
     </main>
 
 <%- include('../layout/_footer'); %>

@@ -1,4 +1,5 @@
 const { check, validationResult } = require('express-validator/check');
+var Usuario = require('../models/Usuario');
 
 module.exports = function(app) {
     app.get('/usuarios/cadastro', (req, res) => {
@@ -7,6 +8,17 @@ module.exports = function(app) {
 
     app.get('/usuarios/login', (req, res) => {
         res.render('usuarios/login', {validationErrors:'',usuario:'', message: req.flash('loginMessage')});
+    });
+
+    app.get('/usuarios/:id', (req, res) => {
+        if (!req.isAuthenticated() || req.user._id != req.params.id) {
+            res.redirect('/usuarios/login');
+            return;
+        }
+
+        Usuario.findById(req.params.id, (err, usuario) => {
+            res.render('usuarios/perfil', {validationErrors:'', usuario: usuario});
+        });
     });
 
     app.get('/usuarios/logout', (req, res) => {
