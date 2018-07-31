@@ -45,8 +45,7 @@ describe('#UsuariosController', function() {
                 'senha': 'test1234',
                 'senha-confirm': 'test1234'
         }).expect(302)
-        .expect('Location', '/')
-        .end(done);
+        .expect('Location', '/', done);
     });
 
     it('#teste de cadastro com email já cadastrado', function(done) {
@@ -56,24 +55,21 @@ describe('#UsuariosController', function() {
                 'senha': 'test1234',
                 'senha-confirm': 'test1234'
         }).expect(302)
-        .expect('Location', '/usuarios/cadastro')
-        .end(done);
+        .expect('Location', '/usuarios/cadastro', done);
     });
 
     it('#teste de login sem email', function(done) {
         request.post('/usuarios/login').send({
                 'email': '',
                 'senha': 'test1234'
-        }).expect(400)
-        .end(done);
+        }).expect(400, done);
     });
 
     it('#teste de login sem senha', function(done) {
         request.post('/usuarios/login').send({
                 'email': 'test@test.com',
                 'senha': ''
-        }).expect(400)
-        .end(done);
+        }).expect(400, done);
     });
     
     it('#teste de login com senha errada', function(done) {
@@ -81,8 +77,7 @@ describe('#UsuariosController', function() {
                 'email': 'test@test.com',
                 'senha': 'test123'
         }).expect(302)
-        .expect('Location', '/usuarios/login')
-        .end(done);
+        .expect('Location', '/usuarios/login', done);
     });
 
     it('#teste de login com email inexistente', function(done) {
@@ -90,8 +85,7 @@ describe('#UsuariosController', function() {
                 'email': 'test2@test.com',
                 'senha': 'test1234'
         }).expect(302)
-        .expect('Location', '/usuarios/login')
-        .end(done);
+        .expect('Location', '/usuarios/login', done);
     });
 
     it('#teste de login com dados válidos', function(done) {
@@ -99,7 +93,6 @@ describe('#UsuariosController', function() {
                 'email': 'test@test.com',
                 'senha': 'test1234'
         }).expect(302)
-        .expect('Location', '/dashboard')
-        .end(done);
+        .expect('Location', '/dashboard', done);
     });
 });
