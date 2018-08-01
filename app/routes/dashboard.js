@@ -60,7 +60,7 @@ module.exports = function() {
                 html: () => { 
                     req.flash('validationErrors', errors.array());
                     req.flash('aplicativo', req.body);
-                    res.redirect(400, '/dashboard/novo'); 
+                    res.redirect('/dashboard/novo'); 
                 }, 
                 json: () => { 
                     res.status(400); 

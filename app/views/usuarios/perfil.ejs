@@ -5,11 +5,35 @@
             <h1>Editar perfil</h1>
         </div>
         <div class="card-body">
-            <form action="/usuarios/<%= usuario._id %>">
+            <form action="/usuarios/<%= usuario._id %>?_method=PUT" method="POST">
+                <%if(validationErrors.length > 0) { %>
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <ul>
+                            <% for(var i=0; i<validationErrors.length; i++) {%>
+                                <li><%=validationErrors[i].msg%></li>
+                            <% } %>
+                        </ul>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                <%}%>
+
                 <div class="form-group">
                     <label for="nome">Nome</label>
-                    <input type="text" name="nome" id="nome" class="form-control" value="<%= usuario.local.nome %>">
+                    <input type="text" name="nome" id="nome" class="form-control" value="<%= usuario.local.nome %>" required>
                 </div>
+                
+                <div class="form-group">
+                    <label for="app">Aplicativo padrão</label>
+                    <select name="app" id="app" class="form-control" required>
+                        <option value="" disabled>Selecione o app padrão</option>
+                        <% apps.forEach((app) => { %>
+                            <option value="<%= app._id %>" <%= usuario.app == app._id ? 'selected' : '' %>><%= app.nome %></option>
+                        <% }); %>
+                    </select>
+                </div>
+
                 <input type="submit" class="btn btn-primary" value="Alterar">
             </form>
         </div>

@@ -1,5 +1,6 @@
 const { check, validationResult } = require('express-validator/check');
 var Usuario = require('../models/Usuario');
+var Aplicativo = require('../models/Aplicativo');
 
 module.exports = function(app) {
     app.get('/usuarios/cadastro', (req, res) => {
@@ -16,9 +17,14 @@ module.exports = function(app) {
             return;
         }
 
-        Usuario.findById(req.params.id, (err, usuario) => {
-            res.render('usuarios/perfil', {validationErrors:'', usuario: usuario});
+        let validationErrors = req.flash('validationErrors');
+
+        Aplicativo.find({ id_usuario: req.params.id}, (err, apps) => {
+            Usuario.findById(req.params.id, (err, usuario) => {
+                res.render('usuarios/perfil', {validationErrors: validationErrors, usuario: usuario, apps: apps});
+            });
         });
+
     });
 
     app.get('/usuarios/logout', (req, res) => {
@@ -86,6 +92,35 @@ module.exports = function(app) {
                 failureRedirect : '/usuarios/login',
                 failureFlash : true
             })(req,res);
+        }
+    });
+
+    app.put('/usuarios/:id', [
+        check('nome').not().isEmpty().withMessage('Digite um nome'),
+        check('app').not().isEmpty().withMessage('Selecione um app')
+    ], (req, res) => {
+        const errors = validationResult(req); 
+
+        if (!errors.isEmpty()) { 
+            res.format({ 
+                html: () => {
+                    req.flash('validationErrors', errors.array());
+                    let redirectUrl = '/usuarios/' + req.params.id;
+                    res.redirect(redirectUrl); 
+                }, 
+                json: () => { 
+                    res.status(400); 
+                    res.send(errors.array()); 
+                } 
+            }); 
+            return; 
+        } else {
+            Usuario.update({ _id: req.params.id }, { $set: {'local.nome': req.body.nome, 'app': req.body.app}}, err => {
+                if (err)
+                    console.log(err);
+
+                res.redirect('/dashboard');
+            });
         }
     });
 }

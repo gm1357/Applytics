@@ -59,7 +59,7 @@ describe('#DashboardController', function() {
             'categoria': 'E-commerce',
         })
         .set('cookie', loginCookie)
-        .expect(400)
+        .expect(302)
         .expect('Location', '/dashboard/novo', done);
     });
 
@@ -70,7 +70,7 @@ describe('#DashboardController', function() {
             'categoria': 'E-commerce',
         })
         .set('cookie', loginCookie)
-        .expect(400)
+        .expect(302)
         .expect('Location', '/dashboard/novo', done);
     });
 
@@ -81,7 +81,7 @@ describe('#DashboardController', function() {
             'categoria': '',
         })
         .set('cookie', loginCookie)
-        .expect(400)
+        .expect(302)
         .expect('Location', '/dashboard/novo', done);
     });
 
