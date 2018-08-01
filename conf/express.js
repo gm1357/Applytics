@@ -43,7 +43,7 @@ module.exports = () => {
     app.use(function(req,res,next){
         res.locals.usuarioLogado = req.user;
         next();
-    })
+    });
 
     app.use(methodOverride('_method'));
     app.use(expressValidator());

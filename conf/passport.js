@@ -40,7 +40,7 @@ module.exports = passport => {
                     newUser.save(err => {
                         if (err)
                             throw err;
-                        return done(null, newUser);
+                        return done(null, newUser, req.flash('message', 'Cadastro feito com sucesso!'));
                     });
                 }
 
@@ -65,7 +65,7 @@ module.exports = passport => {
             if (!user.validPassword(password))
                 return done(null, false, req.flash('loginMessage', 'Senha incorreta.'));
 
-            return done(null, user);
+            return done(null, user, req.flash('message', 'Bem-vindo!'));
         });
 
     }));

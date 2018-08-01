@@ -63,7 +63,8 @@ module.exports = function(app) {
             passport.authenticate('local-signup', {
                 successRedirect : '/',
                 failureRedirect : '/usuarios/cadastro',
-                failureFlash : true
+                failureFlash : true,
+                successFlash: true
             })(req,res);
         }
     });
@@ -90,7 +91,8 @@ module.exports = function(app) {
             passport.authenticate('local-login', {
                 successRedirect : '/dashboard',
                 failureRedirect : '/usuarios/login',
-                failureFlash : true
+                failureFlash : true,
+                successFlash: true
             })(req,res);
         }
     });
@@ -119,6 +121,7 @@ module.exports = function(app) {
                 if (err)
                     console.log(err);
 
+                req.flash('message', 'Dados alterados com sucesso!');
                 res.redirect('/dashboard');
             });
         }

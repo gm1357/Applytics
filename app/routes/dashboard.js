@@ -16,9 +16,11 @@ module.exports = function() {
             return;
         }
 
+        let message = req.flash('message');
+
         // TODO: pegar dados da api
         
-        res.render('dashboard/index', {appID: req.user.app, dados: null});
+        res.render('dashboard/index', {appID: req.user.app, dados: null, message: message});
     });
 
     app.get('/dashboard/novo', (req, res) => {
@@ -81,6 +83,7 @@ module.exports = function() {
                     if (err)
                         console.log(err);
 
+                    req.flash('message', 'Novo app cadastrado com sucesso!')
                     res.redirect('/dashboard');
                 });
             });
