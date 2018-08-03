@@ -17,10 +17,47 @@ module.exports = function() {
         }
 
         let message = req.flash('message');
+        let dados = {};
 
-        // TODO: pegar dados da api
-        
-        res.render('dashboard/index', {appID: req.user.app, dados: null, message: message});
+        request({
+            url: 'http://127.0.0.1:4000/'+req.user.app+'/usuarios',
+            json: true
+        }, function (error, response, dados_usuarios) {
+            if (error) {
+                throw error;
+            }
+            
+            if (dados_usuarios.length) {
+                dados.usuarios_totais = dados_usuarios.length;
+                dados.usuarios_ativos_dia = [];
+                dados.usuarios_ativos_semana = [];
+                dados.usuarios_ativos_mes = [];
+                dados.usuarios_ativos_ano = [];
+                dados_usuarios.forEach(usuario => {
+                    // console.log(moment().diff(usuario.visto_ultimo, 'hours'));
+                    if (moment().diff(usuario.visto_ultimo, 'seconds') <= 24 * 60 * 60) {
+                        dados.usuarios_ativos_dia.push(usuario); 
+                    }
+
+                    if (moment().diff(usuario.visto_ultimo, 'seconds') <= 7*24 * 60 * 60) {
+                        dados.usuarios_ativos_semana.push(usuario); 
+                    }
+
+                    if (moment().diff(usuario.visto_ultimo, 'seconds') <= 30 * 24 * 60 * 60) {
+                        dados.usuarios_ativos_mes.push(usuario); 
+                    }
+
+                    if (moment().diff(usuario.visto_ultimo, 'seconds') <= 365*24 * 60 * 60) {
+                        dados.usuarios_ativos_ano.push(usuario); 
+                    }
+                });
+            } else {
+                dados.usuarios_totais = 0;
+            }
+            // console.log(dados_usuarios);
+            
+            res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});
+        });
     });
 
     app.get('/dashboard/novo', (req, res) => {

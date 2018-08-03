@@ -25,6 +25,7 @@ Ferramenta analytics para apps desenvolvida para conclusão de curso de bcc.
 - Morgan
 - Mongoose
 - Request
+- Moment
 - Dev:
     - Mocha
     - Supertest

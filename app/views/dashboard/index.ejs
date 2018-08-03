@@ -13,10 +13,16 @@
 
         <h1>Dashboard</h1>
 
-        <% if (dados === null) { %>
+        <% if (!dados.usuarios_totais) { %>
             <p>A chave SDK para realizar a integração com o app é: <strong><%= appID %></strong>.</p>
             <p>Integre o SDK no seu app e atualize essa página quando tiver usado pelo menos uma vez seu app para ver os dados.</p>
-        <% } %>
+        <% } else { %>
+            <p>Total de usuários: <strong><%= dados.usuarios_totais %></strong></p>
+            <p>Usuários ativos nas ultimas 24h <strong><%= dados.usuarios_ativos_dia.length %></strong></p>
+            <p>Usuários ativos na última semana <strong><%= dados.usuarios_ativos_semana.length %></strong></p>
+            <p>Usuários ativos no último mês <strong><%= dados.usuarios_ativos_mes.length %></strong></p>
+            <p>Usuários ativos no último ano <strong><%= dados.usuarios_ativos_ano.length %></strong></p>
+            <% } %>
     </main>
 
 <%- include('../layout/_footer'); %>

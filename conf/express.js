@@ -10,12 +10,15 @@ flash = require('connect-flash');
 morgan = require('morgan')
 favicon = require('serve-favicon');
 mongoose = require('mongoose');
+moment = require("moment")
 require('dotenv').load();
 require('./passport')(passport);
 
 
 module.exports = () => {
     app = express();
+
+    moment.locale('pt-br');
 
     var configDB = require('./database.js');
     mongoose.set('debug',true);
