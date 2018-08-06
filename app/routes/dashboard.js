@@ -2,6 +2,7 @@ var request = require("request");
 var Categoria = require('../models/Categoria');
 var Aplicativo = require('../models/Aplicativo');
 var Usuario = require('../models/Usuario');
+const MongoClient = require('mongodb').MongoClient;
 const { check, validationResult } = require('express-validator/check');
 
 module.exports = function() {
@@ -18,46 +19,68 @@ module.exports = function() {
 
         let message = req.flash('message');
         let dados = {};
+        
+        MongoClient.connect("mongodb://localhost:27017/", { useNewUrlParser: true }, async function(err, client) {
+            if(err) { return console.dir(err); }
 
-        request({
-            url: 'http://127.0.0.1:4000/'+req.user.app+'/usuarios',
-            json: true
-        }, function (error, response, dados_usuarios) {
-            if (error) {
-                throw error;
-            }
+            const db = client.db('applytics');
+            const collection = db.collection('app_users'+req.user.app);
+
+            dados.num_usuarios = {};
+
+            dados.num_usuarios.totais = await collection.find().toArray();
+
+            dados.num_usuarios.dia = await collection.find({
+                "visto_ultimo": 
+                {
+                    $gte: new Date((new Date().getTime() - (1 * 24 * 60 * 60 * 1000)))
+                }
+            }).toArray();
+
+            dados.num_usuarios.semana = await collection.find({
+                "visto_ultimo": 
+                {
+                    $gte: new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
+                }
+            }).toArray();
+
+            dados.num_usuarios.mes = await collection.find({
+                "visto_ultimo": 
+                {
+                    $gte: new Date((new Date().getTime() - (30 * 24 * 60 * 60 * 1000)))
+                }
+            }).toArray();
+
+            dados.num_usuarios.ano = await collection.find({
+                "visto_ultimo": 
+                {
+                    $gte: new Date((new Date().getTime() - (365 * 24 * 60 * 60 * 1000)))
+                }
+            }).toArray();
+
+            dados.num_usuarios.masculinos = await collection.find({
+                "sexo": "Male"
+            }).toArray();
             
-            if (dados_usuarios.length) {
-                dados.usuarios_totais = dados_usuarios.length;
-                dados.usuarios_ativos_dia = [];
-                dados.usuarios_ativos_semana = [];
-                dados.usuarios_ativos_mes = [];
-                dados.usuarios_ativos_ano = [];
-                dados_usuarios.forEach(usuario => {
-                    // console.log(moment().diff(usuario.visto_ultimo, 'hours'));
-                    if (moment().diff(usuario.visto_ultimo, 'seconds') <= 24 * 60 * 60) {
-                        dados.usuarios_ativos_dia.push(usuario); 
-                    }
+            dados.plot = {};
+            let dados_novos_por_mes = await collection.aggregate([{$group: { _id:  { $month: '$visto_primeiro'}, count: { $sum: 1} }}, {$sort: {_id: 1}}, { $project: { _id: 0, count: 1}}]);
+            dados.plot.novos = [];
+            await dados_novos_por_mes.forEach(
+                function(row) {
+                    dados.plot.novos.push(row.count);
+            });
 
-                    if (moment().diff(usuario.visto_ultimo, 'seconds') <= 7*24 * 60 * 60) {
-                        dados.usuarios_ativos_semana.push(usuario); 
-                    }
+            let dados_desistentes_por_mes = await collection.aggregate([{$group: { _id:  { $month: '$visto_ultimo'}, count: { $sum: 1} }}, {$sort: {_id: 1}}, { $project: { _id: 0, count: 1}}]);
+            dados.plot.velhos = [];
+            await dados_desistentes_por_mes.forEach(
+                function(row) {
+                    dados.plot.velhos.push(row.count);
+            });
 
-                    if (moment().diff(usuario.visto_ultimo, 'seconds') <= 30 * 24 * 60 * 60) {
-                        dados.usuarios_ativos_mes.push(usuario); 
-                    }
 
-                    if (moment().diff(usuario.visto_ultimo, 'seconds') <= 365*24 * 60 * 60) {
-                        dados.usuarios_ativos_ano.push(usuario); 
-                    }
-                });
-            } else {
-                dados.usuarios_totais = 0;
-            }
-            // console.log(dados_usuarios);
-            
-            res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});
+            await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});
         });
+        
     });
 
     app.get('/dashboard/novo', (req, res) => {
