@@ -24,37 +24,57 @@
             <p>Usuários ativos no último ano <strong><%= dados.num_usuarios.ano.length %></strong></p>
             <p>Total de usuários masculinos <strong><%= dados.num_usuarios.masculinos.length %></strong></p>
             <p>Total de usuários femininos <strong><%= dados.num_usuarios.totais.length - dados.num_usuarios.masculinos.length %></strong></p>
-            <% } %>
-            <canvas id="myChart" width="100" height="50"></canvas>
+            <p>Tempo total de uso do app em segundos <strong><%= dados.tempo_total_sessoes[0].sum %></strong></p>
+            <p>Tempo médio de uso do app por usuário <strong><%= dados.tempo_total_sessoes[0].sum / dados.num_usuarios.totais.length %></strong></p>
+            <canvas id="chartUsuarios" width="100" height="50"></canvas>
+            <canvas id="pieResolucoes" width="100" height="50"></canvas>
             <script>
-                var ctx = document.getElementById("myChart").getContext('2d');
+                var ctx = document.getElementById("chartUsuarios").getContext('2d');
                 var chart = new Chart(ctx, {
-    // The type of chart we want to create
-    type: 'line',
+                    type: 'line',
+                    data: {
+                        labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
+                        datasets: [{
+                            label: "Usuários novos por mês",
+                            backgroundColor: 'rgba(255, 99, 132, 0)',
+                            borderColor: 'rgb(255, 99, 132)',
+                            lineTension: 0,
+                            data: <%- JSON.stringify(dados.plot.novos) %>,
+                        },
+                        {
+                            label: "Usuários desistentes por mês",
+                            backgroundColor: 'rgba(75, 192, 192, 0)',
+                            borderColor: 'rgb(75, 192, 192)',
+                            lineTension: 0,
+                            data: <%- JSON.stringify(dados.plot.velhos) %>,
+                        }]
+                    },
+                    options: {}
+                });
 
-    // The data for our dataset
-    data: {
-        labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
-        datasets: [{
-            label: "Usuários novos por mês",
-            backgroundColor: 'rgba(255, 99, 132, 0)',
-            borderColor: 'rgb(255, 99, 132)',
-            lineTension: 0,
-            data: [<%= dados.plot.novos %>],
-        },
-        {
-            label: "Usuários desistentes por mês",
-            backgroundColor: 'rgba(75, 192, 192, 0)',
-            borderColor: 'rgb(75, 192, 192)',
-            lineTension: 0,
-            data: [<%= dados.plot.velhos %>],
-        }]
-    },
-
-    // Configuration options go here
-    options: {}
-});
+                var cty = document.getElementById('pieResolucoes').getContext('2d');
+                var myPieChart = new Chart(cty,{
+                    type: 'pie',
+                    data: {
+                        datasets: [{
+                            data: <%- JSON.stringify(dados.resolucoes.valores) %>,
+                            backgroundColor: [
+                                'rgb(255, 99, 132)',
+                                'rgb(255, 205, 86)',
+                                'rgb(54, 162, 235)',
+                                'rgb(230, 100, 70)',
+                                'rgb(54, 20, 235)',
+                                'rgb(154, 162, 100)',
+                                'rgb(90, 90, 235)',
+                                'rgb(54, 162, 20)'
+                            ]
+                        }],
+                        labels: <%- JSON.stringify(dados.resolucoes.chaves) %>
+                    },
+                    options: {}
+                });
             </script>
+        <% } %>
     </main>
 
 <%- include('../layout/_footer'); %>

@@ -31,29 +31,25 @@ module.exports = function() {
             dados.num_usuarios.totais = await collection.find().toArray();
 
             dados.num_usuarios.dia = await collection.find({
-                "visto_ultimo": 
-                {
-                    $gte: new Date((new Date().getTime() - (1 * 24 * 60 * 60 * 1000)))
+                "visto_ultimo": {
+                        $gte: new Date((new Date().getTime() - (1 * 24 * 60 * 60 * 1000)))
                 }
             }).toArray();
 
             dados.num_usuarios.semana = await collection.find({
-                "visto_ultimo": 
-                {
+                "visto_ultimo": {
                     $gte: new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
                 }
             }).toArray();
 
             dados.num_usuarios.mes = await collection.find({
-                "visto_ultimo": 
-                {
+                "visto_ultimo": {
                     $gte: new Date((new Date().getTime() - (30 * 24 * 60 * 60 * 1000)))
                 }
             }).toArray();
 
             dados.num_usuarios.ano = await collection.find({
-                "visto_ultimo": 
-                {
+                "visto_ultimo": {
                     $gte: new Date((new Date().getTime() - (365 * 24 * 60 * 60 * 1000)))
                 }
             }).toArray();
@@ -61,22 +57,52 @@ module.exports = function() {
             dados.num_usuarios.masculinos = await collection.find({
                 "sexo": "Male"
             }).toArray();
+
+            dados.tempo_total_sessoes = await collection.aggregate([ 
+                { $group: { 
+                    _id: null, 
+                    sum: { $sum: '$total_duracao_sessao'} 
+                } }, 
+                { $project: { _id: 0, sum: 1} } 
+            ]).toArray();
             
             dados.plot = {};
-            let dados_novos_por_mes = await collection.aggregate([{$group: { _id:  { $month: '$visto_primeiro'}, count: { $sum: 1} }}, {$sort: {_id: 1}}, { $project: { _id: 0, count: 1}}]);
+            let dados_novos_por_mes = await collection.aggregate([
+                { $group: { 
+                    _id:  { $month: '$visto_primeiro'}, 
+                    count: { $sum: 1} }
+                }, 
+                {$sort: {_id: 1}}, 
+                { $project: { _id: 0, count: 1}}
+            ]);
+            
             dados.plot.novos = [];
-            await dados_novos_por_mes.forEach(
-                function(row) {
+            await dados_novos_por_mes.forEach(row => {
                     dados.plot.novos.push(row.count);
             });
 
-            let dados_desistentes_por_mes = await collection.aggregate([{$group: { _id:  { $month: '$visto_ultimo'}, count: { $sum: 1} }}, {$sort: {_id: 1}}, { $project: { _id: 0, count: 1}}]);
+            let dados_desistentes_por_mes = await collection.aggregate([
+                { $group: { 
+                    _id:  { $month: '$visto_ultimo'}, 
+                    count: { $sum: 1} }
+                }, 
+                {$sort: {_id: 1}}, 
+                { $project: { _id: 0, count: 1}}
+            ]);
+            
             dados.plot.velhos = [];
-            await dados_desistentes_por_mes.forEach(
-                function(row) {
+            await dados_desistentes_por_mes.forEach(row => {
                     dados.plot.velhos.push(row.count);
             });
 
+            dados.resolucoes = {};
+            dados.resolucoes.chaves = [];
+            dados.resolucoes.valores = [];
+            let dados_res = await collection.aggregate([ { $group: { _id: '$resolucao_tela', count: {$sum: 1} } } ]);
+            await dados_res.forEach(row => {
+                dados.resolucoes.chaves.push(row._id);
+                dados.resolucoes.valores.push(row.count);
+            });
 
             await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});
         });
