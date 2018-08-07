@@ -10,7 +10,7 @@ flash = require('connect-flash');
 morgan = require('morgan')
 favicon = require('serve-favicon');
 mongoose = require('mongoose');
-moment = require("moment")
+moment = require("moment");
 require('dotenv').load();
 require('./passport')(passport);
 

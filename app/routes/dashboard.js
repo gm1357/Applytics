@@ -95,14 +95,34 @@ module.exports = function() {
                     dados.plot.velhos.push(row.count);
             });
 
-            dados.resolucoes = {};
-            dados.resolucoes.chaves = [];
-            dados.resolucoes.valores = [];
-            let dados_res = await collection.aggregate([ { $group: { _id: '$resolucao_tela', count: {$sum: 1} } } ]);
+            dados.resolucoes = [];
+            let dados_res = await collection.aggregate([ 
+                { $group: { _id: '$resolucao_tela', count: {$sum: 1} } },
+                { $sort: { count: -1}}
+            ]);
             await dados_res.forEach(row => {
-                dados.resolucoes.chaves.push(row._id);
-                dados.resolucoes.valores.push(row.count);
+                dados.resolucoes.push({name: row._id, y: row.count});
             });
+            if (dados.resolucoes[0]) {
+                dados.resolucoes[0].sliced = 'true';
+                dados.resolucoes[0].selected = 'true';
+            }
+
+            dados.bar = {};
+            let dados_tempo_medio_sessao = await collection.aggregate([
+                {$project: { 
+                    nome: 1, 
+                    tempo_medio_sessao: { $divide: ['$total_duracao_sessao', '$numero_sessoes']} 
+                }}
+            ]);
+
+            dados.bar.tempo_medio_sessao = [];
+            dados.bar.nomes = [];
+            await dados_tempo_medio_sessao.forEach(row => {
+                dados.bar.tempo_medio_sessao.push(row.tempo_medio_sessao);
+                dados.bar.nomes.push(row.nome);
+            });
+            console.log(dados.bar.tempo_medio_sessao);
 
             await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});
         });

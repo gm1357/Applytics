@@ -26,7 +26,7 @@ Ferramenta analytics para apps desenvolvida para conclusão de curso de bcc.
 - Mongoose
 - Request
 - Moment
-- Chart.js
+- Highcharts
 - Dev:
     - Mocha
     - Supertest

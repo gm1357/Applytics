@@ -26,52 +26,94 @@
             <p>Total de usuários femininos <strong><%= dados.num_usuarios.totais.length - dados.num_usuarios.masculinos.length %></strong></p>
             <p>Tempo total de uso do app em segundos <strong><%= dados.tempo_total_sessoes[0].sum %></strong></p>
             <p>Tempo médio de uso do app por usuário <strong><%= dados.tempo_total_sessoes[0].sum / dados.num_usuarios.totais.length %></strong></p>
-            <canvas id="chartUsuarios" width="100" height="50"></canvas>
-            <canvas id="pieResolucoes" width="100" height="50"></canvas>
+            <div id="chartUsuarios" style="width:100%; height:400px;"></div>
+            <div id="pieResolucoes" style="width:100%; height:400px;"></div>
+            <div id="barTempoSessao" style="width:100%; height:400px;"></div>
             <script>
-                var ctx = document.getElementById("chartUsuarios").getContext('2d');
-                var chart = new Chart(ctx, {
-                    type: 'line',
-                    data: {
-                        labels: ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"],
-                        datasets: [{
-                            label: "Usuários novos por mês",
-                            backgroundColor: 'rgba(255, 99, 132, 0)',
-                            borderColor: 'rgb(255, 99, 132)',
-                            lineTension: 0,
-                            data: <%- JSON.stringify(dados.plot.novos) %>,
-                        },
-                        {
-                            label: "Usuários desistentes por mês",
-                            backgroundColor: 'rgba(75, 192, 192, 0)',
-                            borderColor: 'rgb(75, 192, 192)',
-                            lineTension: 0,
-                            data: <%- JSON.stringify(dados.plot.velhos) %>,
-                        }]
+                var myLineChart = Highcharts.chart('chartUsuarios', {
+                    chart: {
+                        type: 'line'
                     },
-                    options: {}
+                    title: {
+                        text: 'Fluxo de usuários por mês'
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Número de usuarios'
+                        }
+                    },
+                    xAxis: {
+                        categories: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+                    },
+                    legend: {
+                        layout: 'vertical',
+                        align: 'right',
+                        verticalAlign: 'middle'
+                    },
+                    series: [{
+                        name: 'Usuários novos',
+                        data: <%- JSON.stringify(dados.plot.novos) %>
+                    }, {
+                        name: 'Usuários desistentes',
+                        data: <%- JSON.stringify(dados.plot.velhos) %>
+                    }],
+                    credits: {
+                        enabled: false
+                    }
+                });
+                
+                var myPieChart = Highcharts.chart('pieResolucoes', {
+                    chart: {
+                        type: 'pie'
+                    },
+                    title: {
+                        text: 'Distribuição de usuários por resolução de tela'
+                    },
+                    plotOptions: {
+                        pie: {
+                            allowPointSelect: true,
+                            cursor: 'pointer',
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
+                                style: {
+                                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
+                                }
+                            }
+                        }
+                    },
+                    series: [{
+                        name: 'Usuários',
+                        colorByPoint: true,
+                        data: <%- JSON.stringify(dados.resolucoes) %>
+                    }],
+                    credits: {
+                        enabled: false
+                    }
                 });
 
-                var cty = document.getElementById('pieResolucoes').getContext('2d');
-                var myPieChart = new Chart(cty,{
-                    type: 'pie',
-                    data: {
-                        datasets: [{
-                            data: <%- JSON.stringify(dados.resolucoes.valores) %>,
-                            backgroundColor: [
-                                'rgb(255, 99, 132)',
-                                'rgb(255, 205, 86)',
-                                'rgb(54, 162, 235)',
-                                'rgb(230, 100, 70)',
-                                'rgb(54, 20, 235)',
-                                'rgb(154, 162, 100)',
-                                'rgb(90, 90, 235)',
-                                'rgb(54, 162, 20)'
-                            ]
-                        }],
-                        labels: <%- JSON.stringify(dados.resolucoes.chaves) %>
+                var myBarChart = Highcharts.chart('barTempoSessao', {
+                    chart: {
+                        type: 'column'
                     },
-                    options: {}
+                    title: {
+                        text: 'Tempo médio de sessão dos usuários'
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Tempo em segundos'
+                        }
+                    },
+                    xAxis: {
+                        text: 'Usuários'
+                    },
+                    series: [{
+                        name: 'Usuários',
+                        data: <%- JSON.stringify(dados.bar.tempo_medio_sessao) %>
+                    }],
+                    credits: {
+                        enabled: false
+                    }
                 });
             </script>
         <% } %>
