@@ -23,7 +23,7 @@ module.exports = function() {
         MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true }, async function(err, client) {
             if(err) { return console.dir(err); }
 
-            const db = client.db('applytics');
+            const db = client.db(process.env.MONGODB_URI.split('/')[3]);
             const collection = db.collection('app_users'+req.user.app);
 
             dados.num_usuarios = {};
