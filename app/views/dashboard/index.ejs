@@ -29,7 +29,30 @@
             <div id="chartUsuarios" style="width:100%; height:400px;"></div>
             <div id="pieResolucoes" style="width:100%; height:400px;"></div>
             <div id="barTempoSessao" style="width:100%; height:400px;"></div>
+            <div id="histTempoSessao" style="width:100%; height:400px;"></div>
             <script>
+                Highcharts.setOptions({
+                    lang: {
+                        months: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+                        shortMonths: ['Jan', 'Fev', 'Mar', 'Abr', 'Mai', 'Jun', 'Jul', 'Ago', 'Set', 'Out', 'Nov', 'Dez'],
+                        weekdays: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado'],
+                        loading: ['Atualizando o gráfico...aguarde'],
+                        contextButtonTitle: 'Exportar gráfico',
+                        decimalPoint: ',',
+                        thousandsSep: '.',
+                        downloadJPEG: 'Baixar imagem JPEG',
+                        downloadPDF: 'Baixar arquivo PDF',
+                        downloadPNG: 'Baixar imagem PNG',
+                        downloadSVG: 'Baixar vetor SVG',
+                        printChart: 'Imprimir gráfico',
+                        rangeSelectorFrom: 'De',
+                        rangeSelectorTo: 'Para',
+                        rangeSelectorZoom: 'Zoom',
+                        resetZoom: 'Limpar Zoom',
+                        resetZoomTitle: 'Voltar Zoom para nível 1:1',
+                    }
+                });
+
                 var myLineChart = Highcharts.chart('chartUsuarios', {
                     chart: {
                         type: 'line'
@@ -110,6 +133,43 @@
                     series: [{
                         name: 'Usuários',
                         data: <%- JSON.stringify(dados.bar.tempo_medio_sessao) %>
+                    }],
+                    credits: {
+                        enabled: false
+                    }
+                });
+
+                var myHistChart = Highcharts.chart('histTempoSessao', {
+                    title: {
+                        text: 'Histograma do tempo médio de sessão dos usuários'
+                    },
+                    yAxis: [{
+                        title: { text: 'Tempo em segundos dos usuários individuais' }
+                    }, {
+                        title: { text: 'Número de usuários do histograma'},
+                        opposite: true
+                    }],
+                    xAxis: [{
+                        title: { text: 'Número de usuários individuais' }
+                    }, {
+                        title: { text: 'Tempo em segundos do histograma'},
+                        opposite: true
+                    }],
+                    series: [{
+                        name: 'Histograma',
+                        type: 'histogram',
+                        xAxis: 1,
+                        yAxis: 1,
+                        baseSeries: 's1',
+                        zIndex: -1
+                    }, {
+                        name: 'Usuários individuais',
+                        type: 'scatter',
+                        data: <%- JSON.stringify(dados.bar.tempo_medio_sessao) %>,
+                        id: 's1',
+                        marker: {
+                            radius: 1.1
+                        }
                     }],
                     credits: {
                         enabled: false

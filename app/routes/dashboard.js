@@ -120,7 +120,6 @@ module.exports = function() {
             dados.bar.nomes = [];
             await dados_tempo_medio_sessao.forEach(row => {
                 dados.bar.tempo_medio_sessao.push(row.tempo_medio_sessao);
-                dados.bar.nomes.push(row.nome);
             });
 
             await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});
