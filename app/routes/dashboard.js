@@ -1,4 +1,5 @@
 var request = require("request");
+var fs = require('fs');
 var Categoria = require('../models/Categoria');
 var Aplicativo = require('../models/Aplicativo');
 var Usuario = require('../models/Usuario');
@@ -120,6 +121,15 @@ module.exports = function() {
             dados.bar.nomes = [];
             await dados_tempo_medio_sessao.forEach(row => {
                 dados.bar.tempo_medio_sessao.push(row.tempo_medio_sessao);
+            });
+
+            dados.mapGeo = JSON.parse(fs.readFileSync('app/public/world.geo.json', 'utf8'));
+            dados.paises = [];
+            let paises_sum = await collection.aggregate([
+                { $group: { _id: '$pais', count: { $sum: 1}}}
+            ]);
+            await paises_sum.forEach(row => {
+                dados.paises.push({pais: row._id, value: row.count});
             });
 
             await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});

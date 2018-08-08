@@ -30,6 +30,7 @@
             <div id="pieResolucoes" style="width:100%; height:400px;"></div>
             <div id="barTempoSessao" style="width:100%; height:400px;"></div>
             <div id="histTempoSessao" style="width:100%; height:400px;"></div>
+            <div id="mapaDist" style="width:100%; height:400px;"></div>
             <script>
                 Highcharts.setOptions({
                     lang: {
@@ -174,6 +175,39 @@
                     credits: {
                         enabled: false
                     }
+                });
+
+                var myMap = Highcharts.mapChart('mapaDist', {
+                    chart: {
+                        map: <%- JSON.stringify(dados.mapGeo) %>
+                    },
+                    title: {
+                        text: 'Distribuição de usuários no mundo'
+                    },
+                    mapNavigation: {
+                        enabled: true,
+                        buttonOptions: {
+                            verticalAlign: 'bottom'
+                        }
+                    },
+                    colorAxis: {
+                        tickPixelInterval: 100
+                    },
+                    series: [{
+                        data: <%- JSON.stringify(dados.paises) %>,
+                        keys: ['pais', 'value'],
+                        joinBy:['hc-key', 'pais'],
+                        name: 'Usuários',
+                        states: {
+                            hover: {
+                                color: '#a4edba'
+                            }
+                        },
+                        dataLabels: {
+                            enabled: true,
+                            format: '{point.properties.postal}'
+                        }
+                    }]
                 });
             </script>
         <% } %>
