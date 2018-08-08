@@ -36,6 +36,8 @@ module.exports = function(app) {
         check('nome').not().isEmpty().withMessage('Nome deve ser preenchido'),
         check('email').not().isEmpty().withMessage('E-mail deve ser preenchido')
             .isEmail().withMessage('E-mail deve ser válido'),
+        check('nivel').not().isEmpty().withMessage('O nível de conhecimento deve ser informado')
+            .isIn(['', 'Iniciante', 'Avançado']).withMessage('Deve ser escolhido um dos níveis fornecidos'),
         check('senha').not().isEmpty().withMessage('Senha deve ser preenchida')
             .isLength({ min: 6 }).withMessage('Senha deve ter pelo menos 6 caracteres'),
         check('senha-confirm').custom((value,{req}) => {
@@ -99,6 +101,8 @@ module.exports = function(app) {
 
     app.put('/usuarios/:id', [
         check('nome').not().isEmpty().withMessage('Digite um nome'),
+        check('nivel').not().isEmpty().withMessage('O nível de conhecimento deve ser informado')
+            .isIn(['', 'Iniciante', 'Avançado']).withMessage('Deve ser escolhido um dos níveis fornecidos'),
         check('app').not().isEmpty().withMessage('Selecione um app')
     ], (req, res) => {
         const errors = validationResult(req); 
@@ -117,7 +121,7 @@ module.exports = function(app) {
             }); 
             return; 
         } else {
-            Usuario.update({ _id: req.params.id }, { $set: {'local.nome': req.body.nome, 'app': req.body.app}}, err => {
+            Usuario.update({ _id: req.params.id }, { $set: {'local.nome': req.body.nome, 'nivel': req.body.nivel, 'app': req.body.app}}, err => {
                 if (err)
                     console.log(err);
 

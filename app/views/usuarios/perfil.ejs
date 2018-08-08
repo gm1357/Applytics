@@ -23,6 +23,15 @@
                     <label for="nome">Nome</label>
                     <input type="text" name="nome" id="nome" class="form-control" value="<%= usuario.local.nome %>" required autofocus>
                 </div>
+
+                <div class="form-group">
+                    <label for="nivel">Nível</label>
+                    <select name="nivel" id="nivel" class="form-control" required>
+                        <option value="" disabled>Selecione o seu nível de conhecimento em analytics</option>
+                        <option value="Iniciante" <%= usuario.nivel == 'Iniciante' ? 'selected' : '' %>>Iniciante</option>
+                        <option value="Avançado" <%= usuario.nivel == 'Avançado' ? 'selected' : '' %>>Avançado</option>
+                    </select>
+                </div>
                 
                 <div class="form-group">
                     <label for="app">Aplicativo padrão</label>

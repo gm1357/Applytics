@@ -36,6 +36,14 @@
                         <input type="email" name="email" id="email" class="form-control" value="<%= usuario.email %>" required>
                     </div>
                     <div class="form-group">
+                        <label for="nivel">Nível</label>
+                        <select name="nivel" id="nivel" class="form-control" required>
+                            <option value="" selected disabled>Selecione o seu nível de conhecimento em analytics</option>
+                            <option value="Iniciante">Iniciante</option>
+                            <option value="Avançado">Avançado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
                         <label for="senha">Senha</label>
                         <input type="password" name="senha" id="senha" class="form-control" required>
                     </div>

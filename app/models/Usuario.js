@@ -6,6 +6,7 @@ var userSchema = mongoose.Schema({
         email: { type: String, required: true, trim: true },
         senha: { type: String, required: true},
     },
+    nivel: { type: String, required: true, trim: true },
     app: String
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
