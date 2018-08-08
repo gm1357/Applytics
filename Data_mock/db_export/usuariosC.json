@@ -1,0 +1,1 @@
+[{"_id":{"$oid":"5b623ad5347eed282439ece1"},"local":{"nome":"Gabriel Machado","email":"g_machado1@hotmail.com","senha":"$2b$08$a.e7XNVsFRJcziuKU3Eaf.EscK9TbCeP/3rahZ2.EJp.oiHCG28pG"},"created_at":{"$date":"2018-08-01T22:57:25.906Z"},"updated_at":{"$date":"2018-08-05T19:30:46.081Z"},"__v":0,"app":"5b623bfce580c2224036ebf2"}]
