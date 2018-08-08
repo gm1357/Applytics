@@ -20,7 +20,7 @@ module.exports = function() {
         let message = req.flash('message');
         let dados = {};
         
-        MongoClient.connect(process.env.MONGO_URI, { useNewUrlParser: true }, async function(err, client) {
+        MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true }, async function(err, client) {
             if(err) { return console.dir(err); }
 
             const db = client.db('applytics');
