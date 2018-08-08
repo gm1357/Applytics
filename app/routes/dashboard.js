@@ -29,36 +29,43 @@ module.exports = function() {
 
             dados.num_usuarios = {};
 
+            // Todos usuários
             dados.num_usuarios.totais = await collection.find().toArray();
 
+            // Usuários ativos nas últimas 24h
             dados.num_usuarios.dia = await collection.find({
                 "visto_ultimo": {
                         $gte: new Date((new Date().getTime() - (1 * 24 * 60 * 60 * 1000)))
                 }
             }).toArray();
 
+            // Usuários ativos nos últimos 7 dias
             dados.num_usuarios.semana = await collection.find({
                 "visto_ultimo": {
                     $gte: new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
                 }
             }).toArray();
 
+            // Usuários ativos nos últimos 30 dias
             dados.num_usuarios.mes = await collection.find({
                 "visto_ultimo": {
                     $gte: new Date((new Date().getTime() - (30 * 24 * 60 * 60 * 1000)))
                 }
             }).toArray();
 
+            // Usuários ativos nos últimos 365 dias
             dados.num_usuarios.ano = await collection.find({
                 "visto_ultimo": {
                     $gte: new Date((new Date().getTime() - (365 * 24 * 60 * 60 * 1000)))
                 }
             }).toArray();
 
+            // Usuários homens
             dados.num_usuarios.masculinos = await collection.find({
                 "sexo": "Male"
             }).toArray();
 
+            // Soma total da duração das sessões de todos usuários em segundos (Tempo total do app rodando)
             dados.tempo_total_sessoes = await collection.aggregate([ 
                 { $group: { 
                     _id: null, 
@@ -67,6 +74,7 @@ module.exports = function() {
                 { $project: { _id: 0, sum: 1} } 
             ]).toArray();
             
+            // Soma de quantidade de novos usuários por mês
             dados.plot = {};
             let dados_novos_por_mes = await collection.aggregate([
                 { $group: { 
@@ -76,12 +84,12 @@ module.exports = function() {
                 {$sort: {_id: 1}}, 
                 { $project: { _id: 0, count: 1}}
             ]);
-            
             dados.plot.novos = [];
             await dados_novos_por_mes.forEach(row => {
                     dados.plot.novos.push(row.count);
             });
 
+            // Soma de quantidade de usuários que não usaram mais o app por mês
             let dados_desistentes_por_mes = await collection.aggregate([
                 { $group: { 
                     _id:  { $month: '$visto_ultimo'}, 
@@ -90,12 +98,12 @@ module.exports = function() {
                 {$sort: {_id: 1}}, 
                 { $project: { _id: 0, count: 1}}
             ]);
-            
             dados.plot.velhos = [];
             await dados_desistentes_por_mes.forEach(row => {
                     dados.plot.velhos.push(row.count);
             });
 
+            // Soma de quantidade de usuários por resolução de tela
             dados.resolucoes = [];
             let dados_res = await collection.aggregate([ 
                 { $group: { _id: '$resolucao_tela', count: {$sum: 1} } },
@@ -109,6 +117,7 @@ module.exports = function() {
                 dados.resolucoes[0].selected = 'true';
             }
 
+            // Dados de tempo médio de duração de sessão de cada usuário
             dados.bar = {};
             let dados_tempo_medio_sessao = await collection.aggregate([
                 {$project: { 
@@ -116,13 +125,12 @@ module.exports = function() {
                     tempo_medio_sessao: { $divide: ['$total_duracao_sessao', '$numero_sessoes']} 
                 }}
             ]);
-
             dados.bar.tempo_medio_sessao = [];
-            dados.bar.nomes = [];
             await dados_tempo_medio_sessao.forEach(row => {
                 dados.bar.tempo_medio_sessao.push(row.tempo_medio_sessao);
             });
 
+            // Soma de quantidade de usuários por país
             dados.mapGeo = JSON.parse(fs.readFileSync('app/public/world.geo.json', 'utf8'));
             dados.paises = [];
             let paises_sum = await collection.aggregate([
@@ -130,6 +138,22 @@ module.exports = function() {
             ]);
             await paises_sum.forEach(row => {
                 dados.paises.push({pais: row._id, value: row.count});
+            });
+
+            // Soma de quantidade de usuários por idade
+            dados.idades = {};
+            let dados_idades = await collection.aggregate([
+                {$group: { 
+                    _id: { $subtract: [{$year: new Date()}, '$ano_nascimento']},
+                    count: { $sum: 1}
+                }},
+                {$sort: {_id: 1}}
+            ]);
+            dados.idades.idadesArray = [];
+            dados.idades.quantidade = []
+            await dados_idades.forEach(row => {
+                dados.idades.idadesArray.push(row._id);
+                dados.idades.quantidade.push(row.count);
             });
 
             await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});

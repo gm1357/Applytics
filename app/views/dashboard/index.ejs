@@ -30,6 +30,7 @@
             <div id="pieResolucoes" style="width:100%; height:400px;"></div>
             <div id="barTempoSessao" style="width:100%; height:400px;"></div>
             <div id="histTempoSessao" style="width:100%; height:400px;"></div>
+            <div id="colIdades" style="width:100%; height:400px;"></div>
             <div id="mapaDist" style="width:100%; height:400px;"></div>
             <script>
                 Highcharts.setOptions({
@@ -171,6 +172,31 @@
                         marker: {
                             radius: 1.1
                         }
+                    }],
+                    credits: {
+                        enabled: false
+                    }
+                });
+
+                var myColChart = Highcharts.chart('colIdades', {
+                    chart: {
+                        type: 'column'
+                    },
+                    title: {
+                        text: 'Idade dos usuários'
+                    },
+                    yAxis: {
+                        title: {
+                            text: 'Quantidade de usuários'
+                        }
+                    },
+                    xAxis: {
+                        categories: <%- JSON.stringify(dados.idades.idadesArray) %>,
+                        crosshair: true
+                    },
+                    series: [{
+                        name: 'Usuários',
+                        data: <%- JSON.stringify(dados.idades.quantidade) %>
                     }],
                     credits: {
                         enabled: false
