@@ -38,3 +38,9 @@ Ferramenta analytics para apps desenvolvida para conclusão de curso de bcc.
     - Exports-loader
     - Node-sass
     - Autoprefixer
+
+## Instalação
+- npm install
+- Definir variável de ambiente MONGODB_URI para o endereço do banco mongo
+- Definir variável de ambiente PORT para a porta a ser ouvida
+- npm start
