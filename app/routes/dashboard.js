@@ -122,7 +122,6 @@ module.exports = function() {
                 dados.bar.tempo_medio_sessao.push(row.tempo_medio_sessao);
                 dados.bar.nomes.push(row.nome);
             });
-            console.log(dados.bar.tempo_medio_sessao);
 
             await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});
         });
