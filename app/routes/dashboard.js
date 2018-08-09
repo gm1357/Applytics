@@ -230,8 +230,9 @@ module.exports = function() {
                     data.forEach(element => {
                         paises.push({id: element.numericCode, nome: element.translations.br});
                     });
-
-                    res.render('dashboard/novoApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: req.flash('aplicativo')});
+                    
+                    let app = req.flash('aplicativo')[0] || new Aplicativo();
+                    res.render('dashboard/novoApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: app});
                 });
             }
         });
@@ -240,7 +241,8 @@ module.exports = function() {
     app.post('/dashboard',[
         check('nome').not().isEmpty().withMessage('Digite o nome do seu app'),
         check('pais').not().isEmpty().withMessage('Selecione o país base do seu app'),
-        check('categoria').not().isEmpty().withMessage('Selecione uma categoria para seu app')
+        check('categoria').not().isEmpty().withMessage('Selecione uma categoria para seu app'),
+        check('views').not().isEmpty().withMessage('Adicione pelo menos uma tela')
     ], (req, res) => {
         const errors = validationResult(req);
 
