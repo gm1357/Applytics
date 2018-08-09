@@ -4,6 +4,7 @@ var Categoria = require('../models/Categoria');
 var Aplicativo = require('../models/Aplicativo');
 var Usuario = require('../models/Usuario');
 const MongoClient = require('mongodb').MongoClient;
+var ObjectId = require('mongodb').ObjectID;
 const { check, validationResult } = require('express-validator/check');
 
 module.exports = function() {
@@ -73,6 +74,37 @@ module.exports = function() {
                 } }, 
                 { $project: { _id: 0, sum: 1} } 
             ]).toArray();
+
+            // Média de tempo de sessão por usuário
+            dados.media_tempo_total = dados.tempo_total_sessoes[0].sum / dados.num_usuarios.totais.length;
+
+            // Variância do tempo total de sessões
+            dados.variancia_tempo_total = (dados.num_usuarios.totais.map((num) => {
+                return Math.pow(num.total_duracao_sessao - dados.media_tempo_total, 2);
+            }).reduce((a,b) => a + b, 0)) / dados.num_usuarios.totais.length;
+
+            // Desvio padrão do tempo total de sessões
+            dados.desvio_tempo_total = Math.sqrt(dados.variancia_tempo_total);
+
+            // Soma total de quanto foi gasto no app
+            dados.total_gasto = await collection.aggregate([ 
+                { $group: { 
+                    _id: null, 
+                    sum: { $sum: '$total_gasto'} 
+                } }, 
+                { $project: { _id: 0, sum: 1} } 
+            ]).toArray();
+
+            // Média de quanto foi gasto
+            dados.media_gasto_total = dados.total_gasto[0].sum / dados.num_usuarios.totais.length;
+
+            // Variância de quanto foi gasto
+            dados.variancia_gasto_total = (dados.num_usuarios.totais.map((num) => {
+                return Math.pow(num.total_gasto - dados.media_gasto_total, 2);
+            }).reduce((a,b) => a + b, 0)) / dados.num_usuarios.totais.length;
+
+            // Desvio padrão de quanto foi gasto
+            dados.desvio_gasto_total = Math.sqrt(dados.variancia_gasto_total);
             
             // Soma de quantidade de novos usuários por mês
             dados.plot = {};
@@ -155,6 +187,20 @@ module.exports = function() {
                 dados.idades.idadesArray.push(row._id);
                 dados.idades.quantidade.push(row.count);
             });
+
+            const collectionApps = db.collection('aplicativos');
+            const collectionViews = db.collection('app_views'+req.user.app);
+
+            let views = await collectionApps.find({_id: ObjectId(req.user.app)}).project({_id: 0, views: 1}).toArray();
+            dados.views = [];
+
+            for (view of views[0].views) {
+                let view_total = await collectionViews.aggregate([
+                    { $group: { _id: null, count: {$sum: '$' +view+ '.quantidade'}}}
+                ]).toArray();
+
+                dados.views.push({name: view, y: view_total[0].count});
+            }
 
             await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});
         });
