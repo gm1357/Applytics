@@ -27,6 +27,7 @@ Ferramenta analytics para apps desenvolvida para conclusão de curso de bcc.
 - Request
 - Moment
 - Highcharts
+- Tags-input
 - Dev:
     - Mocha
     - Supertest

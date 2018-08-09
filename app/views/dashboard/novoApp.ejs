@@ -45,10 +45,16 @@
                         </select>
                     </div>
 
+                    <div class="form-group">
+                        <label for="views">Telas</label>
+                        <input type="tags" class="form-control" name="views" placeholder="Nome das telas">
+                    </div>
+
                     <input type="submit" value="Cadastrar" class="btn btn-primary">
                 </form>
             </div>
         </div>
     </main>
+    <script>[].forEach.call(document.querySelectorAll('input[type="tags"]'), TagsInput);</script> 
 
 <%- include('../layout/_footer'); %>

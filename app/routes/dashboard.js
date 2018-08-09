@@ -32,6 +32,9 @@ module.exports = function() {
 
             // Todos usuários
             dados.num_usuarios.totais = await collection.find().toArray();
+            if (dados.num_usuarios.totais.length <= 0) {
+                await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});
+            }
 
             // Usuários ativos nas últimas 24h
             dados.num_usuarios.dia = await collection.find({
@@ -239,7 +242,7 @@ module.exports = function() {
         check('pais').not().isEmpty().withMessage('Selecione o país base do seu app'),
         check('categoria').not().isEmpty().withMessage('Selecione uma categoria para seu app')
     ], (req, res) => {
-        const errors = validationResult(req); 
+        const errors = validationResult(req);
 
         if (!errors.isEmpty()) { 
             res.format({ 
@@ -255,6 +258,7 @@ module.exports = function() {
             }); 
             return; 
         } else {
+            req.body.views = req.body.views.split(',');
             var app = new Aplicativo(req.body);
             
             app.id_usuario = req.user._id;

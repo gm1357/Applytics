@@ -3,6 +3,7 @@ var appSchema = mongoose.Schema({
     pais: {type: String, required: true, trim: true },
     categoria: {type: String, required: true, trim: true },
     id_usuario: {type: String, required: true},
+    views: {type: Array, required: true}
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
 });
