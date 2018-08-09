@@ -194,16 +194,26 @@ module.exports = function() {
             const collectionApps = db.collection('aplicativos');
             const collectionViews = db.collection('app_views'+req.user.app);
 
+            //Somas do total de acesso das views do app
             let views = await collectionApps.find({_id: ObjectId(req.user.app)}).project({_id: 0, views: 1}).toArray();
             dados.views = [];
+            let mais_visitada = {};
+            mais_visitada.acessos = 0;
+            let index = 0;
 
             for (view of views[0].views) {
                 let view_total = await collectionViews.aggregate([
                     { $group: { _id: null, count: {$sum: '$' +view+ '.quantidade'}}}
                 ]).toArray();
-
+                if (view_total[0].count >= mais_visitada.acessos) {
+                    mais_visitada.acessos = view_total[0].count;
+                    mais_visitada.index = index;
+                }
                 dados.views.push({name: view, y: view_total[0].count});
+                index++;
             }
+            dados.views[mais_visitada.index].sliced = 'true';
+            dados.views[mais_visitada.index].selected = 'true';
 
             await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});
         });
@@ -230,7 +240,7 @@ module.exports = function() {
                     data.forEach(element => {
                         paises.push({id: element.numericCode, nome: element.translations.br});
                     });
-                    
+
                     let app = req.flash('aplicativo')[0] || new Aplicativo();
                     res.render('dashboard/novoApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: app});
                 });
