@@ -248,6 +248,36 @@ module.exports = function() {
         });
     });
 
+    app.get('/dashboard/editar', (req, res) => {
+        if (!req.isAuthenticated()) {
+            res.redirect('/usuarios/login');
+            return;
+        }
+
+        request({
+            url: 'https://restcountries.eu/rest/v2/all?fields=translations;numericCode',
+            json: true
+        }, function (error, response, data) {
+        
+            if (!error && response.statusCode === 200) {
+
+                Categoria.find(function(err, categorias) {
+                    if (err) return console.error(err);
+                    
+                    var paises = [];
+                    data.forEach(element => {
+                        paises.push({id: element.numericCode, nome: element.translations.br});
+                    });
+
+                    Aplicativo.findById(req.user.app, (err, app) => {
+                        console.log(app);
+                        res.render('dashboard/editarApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: app});
+                    });
+                });
+            }
+        });
+    });
+
     app.post('/dashboard',[
         check('nome').not().isEmpty().withMessage('Digite o nome do seu app'),
         check('pais').not().isEmpty().withMessage('Selecione o país base do seu app'),
@@ -287,6 +317,41 @@ module.exports = function() {
                     res.redirect('/dashboard');
                 });
             });
+        }
+    });
+
+    app.put('/dashboard',[
+        check('nome').not().isEmpty().withMessage('Digite o nome do seu app'),
+        check('pais').not().isEmpty().withMessage('Selecione o país base do seu app'),
+        check('categoria').not().isEmpty().withMessage('Selecione uma categoria para seu app'),
+        check('views').not().isEmpty().withMessage('Adicione pelo menos uma tela')
+    ], (req, res) => {
+        const errors = validationResult(req);
+
+        if (!errors.isEmpty()) { 
+            res.format({ 
+                html: () => { 
+                    req.flash('validationErrors', errors.array());
+                    req.flash('aplicativo', req.body);
+                    res.redirect('/dashboard/editar'); 
+                }, 
+                json: () => { 
+                    res.status(400); 
+                    res.send(errors.array()); 
+                } 
+            }); 
+            return; 
+        } else {
+            req.body.views = req.body.views.split(',');
+
+            Aplicativo.update({ _id: req.user.app}, { $set: {'nome': req.body.nome, 'pais': req.body.pais, 'categoria': req.body.categoria, 'views': req.body.views}}, (err, app) => {
+                if (err)
+                    console.log(err);
+
+                req.flash('message', 'App alterado com sucesso!')
+                res.redirect('/dashboard');
+            });
+
         }
     });
 }
