@@ -11,35 +11,68 @@
                 </div>
             <%}%>
 
-        <h1>Dashboard</h1>
+        <h1 class="text-center">Dashboard</h1>
 
         <% if (!dados.num_usuarios.totais.length) { %>
             <p>A chave SDK para realizar a integração com o app é: <strong><%= appID %></strong>.</p>
             <p>Integre o SDK no seu app e atualize essa página quando tiver usado pelo menos uma vez seu app para ver os dados.</p>
         <% } else { %>
-            <p>Total de usuários: <strong><%= dados.num_usuarios.totais.length %></strong></p>
-            <p>Usuários ativos nas ultimas 24h <strong><%= dados.num_usuarios.dia.length %></strong></p>
-            <p>Usuários ativos na última semana <strong><%= dados.num_usuarios.semana.length %></strong></p>
-            <p>Usuários ativos no último mês <strong><%= dados.num_usuarios.mes.length %></strong></p>
-            <p>Usuários ativos no último ano <strong><%= dados.num_usuarios.ano.length %></strong></p>
-            <p>Total de usuários masculinos <strong><%= dados.num_usuarios.masculinos.length %></strong></p>
-            <p>Total de usuários femininos <strong><%= dados.num_usuarios.totais.length - dados.num_usuarios.masculinos.length %></strong></p>
-            <p>Tempo total de uso do app em segundos <strong><%= dados.tempo_total_sessoes[0].sum.toFixed(2) %>s</strong></p>
-            <p>Tempo médio de uso do app por usuário <strong><%= dados.media_tempo_total.toFixed(2) %>s</strong></p>
-            <p>Variância do tempo total de uso do app <strong><%= dados.variancia_tempo_total.toFixed(2) %>s</strong></p>
-            <p>Desvio padrão do tempo total de uso do app <strong><%= dados.desvio_tempo_total.toFixed(2) %>s</strong></p>
-            <p>Total monetário feito pelo app <strong>R$ <%= dados.total_gasto[0].sum.toFixed(2) %></strong></p>
-            <p>Média de gastos por usuários <strong>R$ <%= dados.media_gasto_total.toFixed(2) %></strong></p>
-            <p>Variância de gastos por usuários <strong>R$ <%= dados.variancia_gasto_total.toFixed(2) %></strong></p>
-            <p>Desvio padrão de gastos por usuários <strong>R$ <%= dados.desvio_gasto_total.toFixed(2) %></strong></p>
-            
-            <div id="chartUsuarios" style="width:100%; height:400px;"></div>
-            <div id="pieResolucoes" style="width:100%; height:400px;"></div>
-            <div id="barTempoSessao" style="width:100%; height:400px;"></div>
-            <div id="histTempoSessao" style="width:100%; height:400px;"></div>
-            <div id="colIdades" style="width:100%; height:400px;"></div>
-            <div id="mapaDist" style="width:100%; height:400px;"></div>
-            <div id="pieViewsAcessos" style="width:100%; height:400px;"></div>
+            <div class="row justify-content-around">
+                <div class="shadow bg-white border rounded col-md-5" style="padding: 10px; margin: 15px 0;">
+                    <p>Total de usuários: <strong><%= dados.num_usuarios.totais.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
+                    <div class="progress" style="height: 2px;">
+                        <div class="progress-bar" style="width: <%= (dados.num_usuarios.totais.length / dados.num_usuarios.totais.length) * 100 %>%" role="progressbar" aria-valuenow="<%= dados.num_usuarios.totais.length %>" aria-valuemin="0" aria-valuemax="<%= dados.num_usuarios.totais.length %>"></div>
+                    </div>
+                    <p>Usuários ativos nas ultimas 24h <strong><%= dados.num_usuarios.dia.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
+                    <div class="progress" style="height: 2px;">
+                        <div class="progress-bar" style="width: <%= (dados.num_usuarios.dia.length / dados.num_usuarios.totais.length) * 100 %>%" role="progressbar" aria-valuenow="<%= dados.num_usuarios.dia.length %>" aria-valuemin="0" aria-valuemax="<%= dados.num_usuarios.totais.length %>"></div>
+                    </div>
+                    <p>Usuários ativos na última semana <strong><%= dados.num_usuarios.semana.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
+                    <div class="progress" style="height: 2px;">
+                        <div class="progress-bar" style="width: <%= (dados.num_usuarios.semana.length / dados.num_usuarios.totais.length) * 100 %>%" role="progressbar" aria-valuenow="<%= dados.num_usuarios.semana.length %>" aria-valuemin="0" aria-valuemax="<%= dados.num_usuarios.totais.length %>"></div>
+                    </div>
+                    <p>Usuários ativos no último mês <strong><%= dados.num_usuarios.mes.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
+                    <div class="progress" style="height: 2px;">
+                        <div class="progress-bar" style="width: <%= (dados.num_usuarios.mes.length / dados.num_usuarios.totais.length) * 100 %>%" role="progressbar" aria-valuenow="<%= dados.num_usuarios.mes.length %>" aria-valuemin="0" aria-valuemax="<%= dados.num_usuarios.totais.length %>"></div>
+                    </div>
+                    <p>Usuários ativos no último ano <strong><%= dados.num_usuarios.ano.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
+                    <div class="progress" style="height: 2px;">
+                        <div class="progress-bar" style="width: <%= (dados.num_usuarios.ano.length / dados.num_usuarios.totais.length) * 100 %>%" role="progressbar" aria-valuenow="<%= dados.num_usuarios.ano.length %>" aria-valuemin="0" aria-valuemax="<%= dados.num_usuarios.totais.length %>"></div>
+                    </div>
+                    <p>Total de usuários masculinos <strong><%= dados.num_usuarios.masculinos.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
+                    <div class="progress" style="height: 2px;">
+                        <div class="progress-bar" style="width: <%= (dados.num_usuarios.masculinos.length / dados.num_usuarios.totais.length) * 100 %>%" role="progressbar" aria-valuenow="<%= dados.num_usuarios.masculinos.length %>" aria-valuemin="0" aria-valuemax="<%= dados.num_usuarios.totais.length %>"></div>
+                    </div>
+                    <p>Total de usuários femininos <strong><%= (dados.num_usuarios.totais.length - dados.num_usuarios.masculinos.length).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
+                    <div class="progress" style="height: 2px;">
+                        <div class="progress-bar" style="width: <%= ((dados.num_usuarios.totais.length - dados.num_usuarios.masculinos.length) / dados.num_usuarios.totais.length) * 100 %>%" role="progressbar" aria-valuenow="<%= (dados.num_usuarios.totais.length - dados.num_usuarios.masculinos.length) %>" aria-valuemin="0" aria-valuemax="<%= dados.num_usuarios.totais.length %>"></div>
+                    </div>
+                </div>
+
+                <div class="shadow bg-white border rounded col-md-5" style="padding: 10px; margin: 15px 0;">
+                    <p>Tempo total de uso do app em segundos <strong><%= dados.tempo_total_sessoes[0].sum.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>s</strong></p>
+                    <p>Tempo médio de uso do app por usuário <strong><%= dados.media_tempo_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>s</strong></p>
+                    <p>Variância do tempo total de uso do app <strong><%= dados.variancia_tempo_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>s</strong></p>
+                    <p>Desvio padrão do tempo total de uso do app <strong><%= dados.desvio_tempo_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>s</strong></p>
+                    <p>Total monetário feito pelo app <strong>R$ <%= dados.total_gasto[0].sum.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
+                    <p>Média de gastos por usuários <strong>R$ <%= dados.media_gasto_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
+                    <p>Variância de gastos por usuários <strong>R$ <%= dados.variancia_gasto_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
+                    <p>Desvio padrão de gastos por usuários <strong>R$ <%= dados.desvio_gasto_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
+                </div>
+            </div>
+
+            <div class="row justify-content-around">
+                <div class="col-md-11 shadow bg-white border rounded" style="padding: 10px; margin: 15px 0;">
+                    <div id="chartUsuarios" style="width:100%; height:400px;"></div>
+                    <div id="pieResolucoes" style="width:100%; height:400px;"></div>
+                    <div id="barTempoSessao" style="width:100%; height:400px;"></div>
+                    <div id="histTempoSessao" style="width:100%; height:400px;"></div>
+                    <div id="colIdades" style="width:100%; height:400px;"></div>
+                    <div id="mapaDist" style="width:100%; height:400px;"></div>
+                    <div id="pieViewsAcessos" style="width:100%; height:400px;"></div>
+                </div>
+            </div>
+
             <script>
                 Highcharts.setOptions({
                     lang: {
@@ -79,9 +112,8 @@
                         categories: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
                     },
                     legend: {
-                        layout: 'vertical',
-                        align: 'right',
-                        verticalAlign: 'middle'
+                        align: 'center',
+                        verticalAlign: 'top'
                     },
                     series: [{
                         name: 'Usuários novos',
@@ -107,13 +139,14 @@
                             allowPointSelect: true,
                             cursor: 'pointer',
                             dataLabels: {
-                                enabled: true,
-                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                                style: {
-                                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                                }
-                            }
+                                enabled: false
+                            },
+                            showInLegend: true
                         }
+                    },
+                    legend: {
+                        align: 'center',
+                        verticalAlign: 'top'
                     },
                     series: [{
                         name: 'Usuários',
@@ -140,6 +173,10 @@
                     xAxis: {
                         text: 'Usuários'
                     },
+                    legend: {
+                        align: 'center',
+                        verticalAlign: 'top'
+                    },
                     series: [{
                         name: 'Usuários',
                         data: <%- JSON.stringify(dados.bar.tempo_medio_sessao) %>
@@ -154,9 +191,9 @@
                         text: 'Histograma do tempo médio de sessão dos usuários'
                     },
                     yAxis: [{
-                        title: { text: 'Tempo em segundos dos usuários individuais' }
+                        title: { text: 'Tempo em segundos' }
                     }, {
-                        title: { text: 'Número de usuários do histograma'},
+                        title: { text: 'Número de usuários'},
                         opposite: true
                     }],
                     xAxis: [{
@@ -165,6 +202,10 @@
                         title: { text: 'Tempo em segundos do histograma'},
                         opposite: true
                     }],
+                    legend: {
+                        align: 'center',
+                        verticalAlign: 'top'
+                    },
                     series: [{
                         name: 'Histograma',
                         type: 'histogram',
@@ -201,6 +242,10 @@
                     xAxis: {
                         categories: <%- JSON.stringify(dados.idades.idadesArray) %>,
                         crosshair: true
+                    },
+                    legend: {
+                        align: 'center',
+                        verticalAlign: 'top'
                     },
                     series: [{
                         name: 'Usuários',
@@ -259,13 +304,14 @@
                             allowPointSelect: true,
                             cursor: 'pointer',
                             dataLabels: {
-                                enabled: true,
-                                format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                                style: {
-                                    color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
-                                }
-                            }
+                                enabled: false
+                            },
+                            showInLegend: true
                         }
+                    },
+                    legend: {
+                        align: 'center',
+                        verticalAlign: 'top'
                     },
                     series: [{
                         name: 'Usuários',
