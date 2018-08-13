@@ -1,6 +1,6 @@
 <%- include('../layout/_header'); %>
 
-    <main role="main" class="container index">
+    <main role="main" class="container index shadow">
 
         <%if (message != '') { %>
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -15,17 +15,48 @@
         <hr>
         <section class="what-index">
             <h2>O que é?</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur egestas quis mauris vel sodales. Curabitur ullamcorper ultricies urna eget lacinia. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Pellentesque bibendum, neque sit amet interdum dapibus, felis nisl condimentum dui, quis suscipit ex sem a est. Integer viverra rhoncus nibh, et accumsan nunc rutrum eget. Nulla libero massa, tempus nec velit vel, ultricies luctus ipsum. Vestibulum at turpis ex. Cras a urna in justo semper sodales. Aliquam tristique eros ac eros imperdiet dapibus. Vestibulum hendrerit hendrerit ligula at consequat.</p>
+            <p>Applytics é um sistema de analytics voltados ao mercado de aplicativos mobile com o intuito de ser uma alternativa simples e rápida para aprender a consultar e analisar dados de navegações dos usuários.</p>
         </section>
 
+        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                  <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+                  <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+                  <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+                </ol>
+                <div class="carousel-inner">
+                  <div class="carousel-item active">
+                    <img class="d-block w-100" src="/img/estatisticas.PNG" alt="First slide" style="height: 400px">
+                    <div class="carousel-caption d-none d-md-block bg-dark" style="opacity: 0.6;">
+                        <h5>Estatísticas</h5>
+                        <p>Para facilmente visualizar a eficácia do seu app</p>
+                    </div>
+                  </div>
+                  <div class="carousel-item">
+                    <img class="d-block w-100" src="/img/graficos.PNG" alt="Second slide" style="height: 400px">
+                    <div class="carousel-caption d-none d-md-block bg-dark" style="opacity: 0.6;">
+                        <h5>Gráficos</h5>
+                        <p>Para poder comparar dados de forma simples</p>
+                    </div>
+                  </div>
+                  <div class="carousel-item">
+                    <img class="d-block w-100" src="/img/mapas.PNG" alt="Third slide" style="height: 400px">
+                    <div class="carousel-caption d-none d-md-block bg-dark" style="opacity: 0.6;">
+                        <h5>Mapas</h5>
+                        <p>Para saber de onde vem seu público</p>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
         <section class="who-index">
-            <h2>Pra quem?</h2>
-            <p>Aliquam suscipit, enim nec ultrices consequat, enim urna efficitur neque, eu porta sapien dui eu mauris. Sed euismod, eros in pulvinar cursus, ligula sapien pellentesque justo, vel tempor nisl odio fringilla nunc. Sed fermentum, sapien et ornare porttitor, massa est ornare odio, quis rhoncus enim turpis at quam. Suspendisse feugiat interdum dui id tempus. Donec iaculis sagittis sodales. Curabitur eget urna sodales, cursus orci ac, laoreet est. Donec sed nulla hendrerit magna venenatis bibendum. Praesent blandit nibh lectus, a elementum enim malesuada vel. Nam et ante est. Nulla condimentum metus a tortor efficitur, sed elementum diam auctor. Phasellus aliquam gravida mauris, vitae aliquam ipsum ornare quis. Nam molestie, nunc sed tempor congue, ipsum massa dictum purus, eu ultricies nisi augue ut lacus. Aliquam arcu dolor, mollis non volutpat volutpat, placerat ut tortor. Phasellus blandit quam lectus, quis efficitur tortor ultricies molestie. Proin auctor nibh nisl, finibus ultrices risus tincidunt nec.</p>
+            <h2>Para quem?</h2>
+            <p>Feito para todos que possuem apps em mercado Android, seja ele de qualquer categoria ou tipo, mas com foco em principiantes na área de analytics que tem a pretensão de aprender a como melhor utilizar essa tecnologia pra melhorar seu app.</p>
         </section>
 
         <section class="how-index">
             <h2>Como utilizar?</h2>
-            <p>Sed aliquet, neque vel ultricies ullamcorper, risus purus pellentesque mi, et porttitor est mauris eu leo. In eget dictum lorem, sed egestas magna. Aenean at diam ac ipsum laoreet mattis in non dui. Nam molestie purus ut nisl iaculis lobortis vitae at sapien. In sed aliquet nibh. Maecenas euismod nulla quam, vel ultrices felis tempus dignissim. Ut pulvinar volutpat lobortis. Vivamus tincidunt, risus vel rhoncus molestie, tellus ex blandit nisi, in euismod purus turpis eget est. Fusce luctus purus ipsum, vel viverra nisl vehicula quis. Maecenas at neque eu justo blandit egestas. Vestibulum eget semper nisi. Nunc vitae orci odio. Quisque feugiat dolor sodales iaculis volutpat. Interdum et malesuada fames ac ante ipsum primis in faucibus. Aliquam ullamcorper, urna id aliquet fermentum, nunc arcu sodales leo, eget sagittis tellus massa ac tortor.</p>
+            <p>O sistema tem apenas um plano gratuito, então basta se cadastrar, criar um novo aplicativo no dashboard, e com ajuda da nossa <a href="#">documentação</a>, usar o código SKD fornecido e implementar os ganchos que capturaram os dados do seu app android, depois só esperar as interações de usuários e recarregar a dashboard para já poder visualizar os dados obtidos.</p>
         </section>
     </main>
 
