@@ -20,7 +20,6 @@ module.exports = () => {
 
     moment.locale('pt-br');
 
-    var configDB = require('./database.js');
     mongoose.set('debug',true);
     mongoose.connect(process.env.MONGODB_URI + (process.env.NODE_ENV === 'test' ? '_test' : ''), { useNewUrlParser: true });
 

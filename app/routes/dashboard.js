@@ -78,6 +78,15 @@ module.exports = function() {
                 { $project: { _id: 0, sum: 1} } 
             ]).toArray();
 
+            let num_sessoes = await collection.aggregate([ 
+                { $group: { 
+                    _id: null, 
+                    sum: { $sum: '$numero_sessoes'} 
+                } }, 
+                { $project: { _id: 0, sum: 1} } 
+            ]).toArray();
+            dados.media_sessao = dados.tempo_total_sessoes[0].sum / num_sessoes[0].sum;
+
             // Média de tempo de sessão por usuário
             dados.media_tempo_total = dados.tempo_total_sessoes[0].sum / dados.num_usuarios.totais.length;
 

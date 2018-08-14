@@ -17,12 +17,26 @@
             <p>A chave SDK para realizar a integração com o app é: <strong><%= appID %></strong>.</p>
             <p>Integre o SDK no seu app e atualize essa página quando tiver usado pelo menos uma vez seu app para ver os dados.</p>
         <% } else { %>
+            <hr>
             <div class="row justify-content-around">
-                <div class="shadow bg-white border rounded col-md-5" style="padding: 10px; margin: 15px 0;">
-                    <p>Total de usuários: <strong><%= dados.num_usuarios.totais.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
-                    <div class="progress" style="height: 2px;">
-                        <div class="progress-bar" style="width: <%= (dados.num_usuarios.totais.length / dados.num_usuarios.totais.length) * 100 %>%" role="progressbar" aria-valuenow="<%= dados.num_usuarios.totais.length %>" aria-valuemin="0" aria-valuemax="<%= dados.num_usuarios.totais.length %>"></div>
-                    </div>
+                <div class="shadow bg-white border rounded col-md-2 stats-box text-center">
+                    <p>Total usuários</p>
+                    <p><strong><%= dados.num_usuarios.totais.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
+                </div>
+                <div class="shadow bg-white border border-primar rounded col-md-2 stats-box text-center">
+                    <p>Tempo médio de sessão</p>
+                    <p><strong><%= dados.media_sessao.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>s</strong></p>
+                </div>
+                <div class="shadow bg-white border border-primar rounded col-md-2 stats-box text-center">
+                    <p>Total monetário ganho</p>
+                    <p><strong>R$ <%= dados.total_gasto[0].sum.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
+                </div>
+                <div class="shadow bg-white border border-primar rounded col-md-2 stats-box text-center">
+                    <p>Total de travamentos</p>
+                    <p><strong>127</strong></p>
+                </div>
+            </div>
+            
             <div class="row justify-content-around">
                 <div class="shadow bg-white border rounded col-md-5 stats-box">
                     <p>Usuários ativos nas ultimas 24h <strong><%= dados.num_usuarios.dia.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
@@ -56,7 +70,6 @@
                     <p>Tempo médio de uso do app por usuário <strong><%= dados.media_tempo_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>s</strong></p>
                     <p>Variância do tempo total de uso do app <strong><%= dados.variancia_tempo_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>s</strong></p>
                     <p>Desvio padrão do tempo total de uso do app <strong><%= dados.desvio_tempo_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %>s</strong></p>
-                    <p>Total monetário feito pelo app <strong>R$ <%= dados.total_gasto[0].sum.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
                     <p>Média de gastos por usuários <strong>R$ <%= dados.media_gasto_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
                     <p>Variância de gastos por usuários <strong>R$ <%= dados.variancia_gasto_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>
                     <p>Desvio padrão de gastos por usuários <strong>R$ <%= dados.desvio_gasto_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") %></strong></p>

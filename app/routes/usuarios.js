@@ -6,9 +6,14 @@ module.exports = function(app) {
     app.get('/usuarios/cadastro', (req, res) => {
         res.render('usuarios/cadastro', {validationErrors:'',usuario:'', message: req.flash('signupMessage')});
     });
-
+    
     app.get('/usuarios/login', (req, res) => {
         res.render('usuarios/login', {validationErrors:'',usuario:'', message: req.flash('loginMessage')});
+    });
+
+    app.get('/usuarios/logout', (req, res) => {
+        req.logout();
+        res.redirect('/');
     });
 
     app.get('/usuarios/:id', (req, res) => {
@@ -25,11 +30,6 @@ module.exports = function(app) {
             });
         });
 
-    });
-
-    app.get('/usuarios/logout', (req, res) => {
-        req.logout();
-        res.redirect('/');
     });
 
     app.post('/usuarios', [
@@ -93,8 +93,7 @@ module.exports = function(app) {
             passport.authenticate('local-login', {
                 successRedirect : '/dashboard',
                 failureRedirect : '/usuarios/login',
-                failureFlash : true,
-                successFlash: true
+                failureFlash : true
             })(req,res);
         }
     });
