@@ -6,7 +6,35 @@ body {
     background-color: #f1f1f1 !important;
 }
 
+header {
+    margin-bottom: 20px;
+}
+
 .index {
     border-radius: 15px;
     background-color: white;
+    padding: 20px 0;
+    margin-bottom: 15px;
+}
+
+.features-slide .carousel-caption {
+    opacity: 0.6;
+}
+
+.form-box {
+    max-width: 30rem;
+    margin-top: 2rem;
+}
+
+.stats-box {
+    padding: 10px; 
+    margin: 15px 0;
+}
+
+.stats-box .progress {
+    height: 2px;
+}
+
+.tags-input {
+    width:100% !important;
 }
