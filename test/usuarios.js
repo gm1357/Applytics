@@ -15,6 +15,7 @@ describe('#UsuariosController', function() {
         request.post('/usuarios').send({
                 'nome': '',
                 'email': 'test@test.com',
+                'nivel': 'Iniciante',
                 'senha': 'test1234',
                 'senha-confirm': 'test1234'
         }).expect(400, done);
@@ -24,6 +25,17 @@ describe('#UsuariosController', function() {
         request.post('/usuarios').send({
                 'nome': 'TESTER',
                 'email': 'test',
+                'nivel': 'Iniciante',
+                'senha': 'test1234',
+                'senha-confirm': 'test1234'
+        }).expect(400, done);
+    });
+
+    it('#teste de cadastro sem nivel', function(done) {
+        request.post('/usuarios').send({
+                'nome': 'TESTER',
+                'email': 'test',
+                'nivel': '',
                 'senha': 'test1234',
                 'senha-confirm': 'test1234'
         }).expect(400, done);
@@ -33,6 +45,7 @@ describe('#UsuariosController', function() {
         request.post('/usuarios').send({
                 'nome': 'TESTER',
                 'email': 'test@test.com',
+                'nivel': 'Iniciante',
                 'senha': 'test1234',
                 'senha-confirm': 'test'
         }).expect(400, done);
@@ -42,6 +55,7 @@ describe('#UsuariosController', function() {
         request.post('/usuarios').send({
                 'nome': 'TESTER',
                 'email': 'test@test.com',
+                'nivel': 'Iniciante',
                 'senha': 'test1234',
                 'senha-confirm': 'test1234'
         }).expect(302)
@@ -52,6 +66,7 @@ describe('#UsuariosController', function() {
         request.post('/usuarios').send({
                 'nome': 'TESTER',
                 'email': 'test@test.com',
+                'nivel': 'Iniciante',
                 'senha': 'test1234',
                 'senha-confirm': 'test1234'
         }).expect(302)

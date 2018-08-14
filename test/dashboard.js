@@ -24,6 +24,7 @@ describe('#DashboardController', function() {
         request.post('/usuarios').send({
                 'nome': 'TESTER',
                 'email': 'test@test.com',
+                'nivel': 'Iniciante',
                 'senha': 'test1234',
                 'senha-confirm': 'test1234'
         }).expect(302)
@@ -56,6 +57,7 @@ describe('#DashboardController', function() {
         request.post('/dashboard').send({
             'nome': '',
             'pais': 'Brasil',
+            'views': 'teste',
             'categoria': 'E-commerce',
         })
         .set('cookie', loginCookie)
@@ -67,6 +69,7 @@ describe('#DashboardController', function() {
         request.post('/dashboard').send({
             'nome': 'TESTE-APP',
             'pais': '',
+            'views': 'teste',
             'categoria': 'E-commerce',
         })
         .set('cookie', loginCookie)
@@ -74,10 +77,23 @@ describe('#DashboardController', function() {
         .expect('Location', '/dashboard/novo', done);
     });
 
-    it('#teste de cadastro de app sem nome', function(done) {
+    it('#teste de cadastro de app sem views', function(done) {
+        request.post('/dashboard').send({
+            'nome': 'TESTE-APP',
+            'pais': '',
+            'views': '',
+            'categoria': 'E-commerce',
+        })
+        .set('cookie', loginCookie)
+        .expect(302)
+        .expect('Location', '/dashboard/novo', done);
+    });
+
+    it('#teste de cadastro de app sem categoria', function(done) {
         request.post('/dashboard').send({
             'nome': 'TESTE-APP',
             'pais': 'Brasil',
+            'views': 'teste',
             'categoria': '',
         })
         .set('cookie', loginCookie)
@@ -89,6 +105,7 @@ describe('#DashboardController', function() {
         request.post('/dashboard').send({
             'nome': 'TESTE-APP',
             'pais': 'Brasil',
+            'views': 'teste',
             'categoria': 'E-commerce',
         })
         .set('cookie', loginCookie)
