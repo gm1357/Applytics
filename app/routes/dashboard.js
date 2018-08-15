@@ -3,8 +3,8 @@ var dashboard_validation = require('../validations/dashboardValidation');
 
 module.exports = function() {
     app.get('/dashboard', dashboard_controller.index);
-    app.get('/dashboard/novo', dashboard_controller.novo_app);
-    app.get('/dashboard/editar', dashboard_controller.editar_app);
+    app.get('/dashboard/novo', (req,res,next) => {res.locals.isNovo = 1;next()}, dashboard_controller.monta_form);
+    app.get('/dashboard/editar', (req,res,next) => {res.locals.isNovo = 0;next()}, dashboard_controller.monta_form);
     app.post('/dashboard', dashboard_validation.cadastro, dashboard_controller.criar_app);
     app.put('/dashboard',dashboard_validation.alterar, dashboard_controller.atualizar_app);
 }

@@ -228,7 +228,7 @@ exports.index = (req, res) => {
     
 };
 
-exports.novo_app = (req, res) => {
+exports.monta_form = (req, res) => {
     if (!req.isAuthenticated()) {
         res.redirect('/usuarios/login');
         return;
@@ -248,13 +248,20 @@ exports.novo_app = (req, res) => {
                 data.forEach(element => {
                     paises.push({id: element.numericCode, nome: element.translations.br});
                 });
-
-                let app = req.flash('aplicativo')[0] || new Aplicativo();
-                res.render('dashboard/novoApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: app});
+                
+                if (res.locals.isNovo) {
+                    let app = req.flash('aplicativo')[0] || new Aplicativo();
+                    res.render('dashboard/formApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: app, nomeForm: "Cadastrar novo app", metodoForm: "POST"});
+                } else {
+                    Aplicativo.findById(req.user.app, (err, app) => {
+                        console.log(app);
+                        res.render('dashboard/formApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: app, nomeForm: "Editar app selecionado", metodoForm: "PUT"});
+                    });    
+                }
             });
         }
     });
-};
+}
 
 exports.editar_app = (req, res) => {
     if (!req.isAuthenticated()) {

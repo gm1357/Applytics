@@ -3,10 +3,10 @@
     <main role="main" class="container">
         <div class="card bg-light mb-3 mx-auto shadow form-box">
             <div class="card-header text-center">
-                <h1>Cadastrar novo app</h1>
+                <h1><%= nomeForm %></h1>
             </div>
             <div class="card-body">
-                <form action="/dashboard" method="post">
+                <form action="/dashboard?_method=<%= metodoForm %>" method="post">
                     <%if(validationErrors.length > 0) { %>
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
                             <ul>
@@ -47,14 +47,14 @@
 
                     <div class="form-group">
                         <label for="views">Telas</label>
-                        <input type="tags" class="form-control" name="views" placeholder="Nome das telas">
+                        <input type="tags" class="form-control" name="views" value="<%= aplicativo.views %>" placeholder="Nome das telas">
                     </div>
 
-                    <input type="submit" value="Cadastrar" class="btn btn-primary">
+                    <input type="submit" value="Editar" class="btn btn-primary">
                 </form>
             </div>
         </div>
     </main>
-    <script>[].forEach.call(document.querySelectorAll('input[type="tags"]'), TagsInput);</script> 
+    <script>[].forEach.call(document.querySelectorAll('input[type="tags"]'), TagsInput);</script>
 
 <%- include('../layout/_footer'); %>
