@@ -4,12 +4,12 @@
 <!-- Trocar $date por ISODate para gerar datas de forma correta -->
 
 <!-- Insere usuarios -->
-# mongoimport --jsonArray --db applytics --collection app_users5b5b77161932d925589d4ea1 --file .\dataset_app_users.json
+# mongoimport --jsonArray --db applytics --collection app_users5b69f648537da10190857934 --file .\dataset_app_users.json
 
 <!-- Gera arquivo com os ids dos usuarios (Precisa limpar arquivo depois) -->
 # mongo | tee ids.txt
 # use applytics
-# db.app_users5b5b77161932d925589d4ea1.find({},{_id: 1}).toArray()
+# db.app_users5b69f648537da10190857934.find({},{_id: 1}).toArray()
 
 <!-- Adiciona ids gerados para o schema de geração do app_views -->
 
@@ -18,10 +18,20 @@
 
 <!-- Trocar $date por ISODate para gerar datas de forma correta -->
 
-<!-- Insere usuarios_viewa -->
-# mongoimport --jsonArray --db applytics --collection app_views5b5b77161932d925589d4ea1 --file .\dataset_app_views.json
+<!-- Insere usuarios_views -->
+# mongoimport --jsonArray --db applytics --collection app_views5b69f648537da10190857934 --file .\dataset_app_views.json
 
 <!-- Limpa entradas duplicadas -->
 # mongo
 # use applytics
-# db.app_views5b5b77161932d925589d4ea1.find({}, {"id_usuario":1}).sort({_id:1}).forEach(function(doc){ db.app_views5b5b77161932d925589d4ea1.remove({_id:{$gt:doc._id}, "id_usuario":doc.id_usuario}); });
+# db.app_views5b69f648537da10190857934.find({}, {"id_usuario":1}).sort({_id:1}).forEach(function(doc){ db.app_views5b69f648537da10190857934.remove({_id:{$gt:doc._id}, "id_usuario":doc.id_usuario}); });
+
+<!-- Adiciona ids gerados para o schema de geração do app_crashes -->
+
+<!-- Gera 500 entradas -->
+# mongodb-dataset-generator .\app_crashes_schema.json -n 500 -o dataset_app_crashes.json
+
+<!-- Trocar $date por ISODate para gerar datas de forma correta -->
+
+<!-- Insere crashes -->
+# mongoimport --jsonArray --db applytics --collection app_crashes5b69f648537da10190857934 --file .\dataset_app_crashes.json
