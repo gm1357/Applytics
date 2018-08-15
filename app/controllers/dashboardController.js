@@ -124,7 +124,7 @@ exports.index = (req, res) => {
                 _id:  { $month: '$visto_primeiro'}, 
                 count: { $sum: 1} }
             }, 
-            {$sort: {_id: 1}}, 
+            { $sort: {_id: 1}}, 
             { $project: { _id: 0, count: 1}}
         ]);
         dados.plot.novos = [];
@@ -138,7 +138,7 @@ exports.index = (req, res) => {
                 _id:  { $month: '$visto_ultimo'}, 
                 count: { $sum: 1} }
             }, 
-            {$sort: {_id: 1}}, 
+            { $sort: {_id: 1}}, 
             { $project: { _id: 0, count: 1}}
         ]);
         dados.plot.velhos = [];
@@ -222,6 +222,32 @@ exports.index = (req, res) => {
         }
         dados.views[mais_visitada.index].sliced = 'true';
         dados.views[mais_visitada.index].selected = 'true';
+
+        const collectionCrashes = db.collection('app_crashes'+req.user.app);
+
+        // Número de travamentos
+        dados.num_crashes = await collectionCrashes.countDocuments();
+
+        // Número de travamento por mês
+        let crashes_por_mes_tratadas = await collectionCrashes.aggregate([
+            { $match: { nonfatal: 1}},
+            { $group: { _id: { $month: '$crashed_at'}, count: { $sum: 1}}}, 
+            { $sort: { _id: 1}} 
+        ]).toArray();
+        let crashes_por_mes_nao_tratadas = await collectionCrashes.aggregate([
+            { $match: { nonfatal: 1}},
+            { $group: { _id: { $month: '$crashed_at'}, count: { $sum: 1}}}, 
+            { $sort: { _id: 1}} 
+        ]).toArray();
+
+        dados.crashes_mes_tratadas = [];
+        for (crash of crashes_por_mes_tratadas) {
+            await dados.crashes_mes_tratadas.push(crash.count);
+        }
+        dados.crashes_mes_nao_tratadas = [];
+        for (crash of crashes_por_mes_nao_tratadas) {
+            await dados.crashes_mes_nao_tratadas.push(crash.count);
+        }
 
         await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});
     });
