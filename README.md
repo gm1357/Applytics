@@ -13,7 +13,8 @@ Ferramenta analytics para apps desenvolvida para conclusão de curso de bcc.
 - Body-parser
 - Cookie-parser
 - Connect-flash
-- Ejs
+- Handlebars
+- Hbs
 - Method-override
 - Bootstrap
 - jQuery

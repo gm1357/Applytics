@@ -3,11 +3,25 @@ var Aplicativo = require('../models/Aplicativo');
 const { validationResult } = require('express-validator/check');
 
 exports.cadastro = (req, res) => {
-    res.render('usuarios/cadastro', {validationErrors:'',usuario:'', message: req.flash('signupMessage')});
+    let erroMsg = '';
+    const flashMsg = req.flash('signupMessage');
+    
+    if (flashMsg != '') {
+        erroMsg = [{msg: flashMsg}];
+    }
+
+    res.render('usuarios/cadastro', {validationErrors: erroMsg,usuario:''});
 };
 
 exports.login = (req, res) => {
-    res.render('usuarios/login', {validationErrors:'',usuario:'', message: req.flash('loginMessage')});
+    let erroMsg = '';
+    const flashMsg = req.flash('loginMessage');
+    
+    if (flashMsg != '') {
+        erroMsg = [{msg: flashMsg}];
+    }
+
+    res.render('usuarios/login', {validationErrors: erroMsg,usuario:''});
 };
 
 exports.logout = (req, res) => {
@@ -38,7 +52,7 @@ exports.cria_usuario = (req, res) => {
         res.status(400); 
         res.format({ 
             html: () => { 
-                res.render("usuarios/cadastro", {validationErrors:errors.array(), usuario: req.body, message: ''}); 
+                res.render("usuarios/cadastro", {validationErrors:errors.array(), usuario: req.body}); 
             }, 
             json: () => { 
                 res.send(errors.array()); 
@@ -62,7 +76,7 @@ exports.executa_login = (req, res) => {
         res.status(400); 
         res.format({ 
             html: () => { 
-                res.render("usuarios/login", {validationErrors:errors.array(), usuario:req.body, message: ''}); 
+                res.render("usuarios/login", {validationErrors:errors.array(), usuario:req.body}); 
             }, 
             json: () => { 
                 res.send(errors.array()); 

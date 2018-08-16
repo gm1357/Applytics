@@ -1,0 +1,41 @@
+{{> _header}}
+
+    <main role="main" class="container">
+        <div class="card bg-light mb-3 mx-auto shadow form-box">
+        <div class="card-header text-center">
+            <h1>Editar perfil</h1>
+        </div>
+        <div class="card-body">
+            <form action="/usuarios/{{ usuario._id }}?_method=PUT" method="POST">
+                {{> _mensagensValidacao}}
+
+                <div class="form-group">
+                    <label for="nome">Nome</label>
+                    <input type="text" name="nome" id="nome" class="form-control" value="{{ usuario.local.nome }}" required autofocus>
+                </div>
+
+                <div class="form-group">
+                    <label for="nivel">Nível</label>
+                    <select name="nivel" id="nivel" class="form-control" required>
+                        <option value="" disabled>Selecione o seu nível de conhecimento em analytics</option>
+                        <option value="Iniciante" {{#if (is_equal usuario.nivel 'Iniciante') }}selected{{/if}}>Iniciante</option>
+                        <option value="Avançado" {{#if (is_equal usuario.nivel 'Avançado') }}selected{{/if}}>Avançado</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="app">Aplicativo padrão</label>
+                    <select name="app" id="app" class="form-control" required>
+                        <option value="" disabled>Selecione o app padrão</option>
+                        {{#each apps }}
+                            <option value="{{ this._id }}" {{#if (is_equal ../usuario.app this._id) }}selected{{/if}}>{{ this.nome }}</option>
+                        {{/each}}
+                    </select>
+                </div>
+
+                <input type="submit" class="btn btn-primary" value="Alterar">
+            </form>
+        </div>
+    </main>
+
+{{> _footer}}

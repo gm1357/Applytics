@@ -1,0 +1,49 @@
+{{> _header}}
+
+    <main role="main" class="container">
+        <div class="card bg-light mb-3 mx-auto shadow form-box">
+            <div class="card-header text-center">
+                <h1>{{ nomeForm }}</h1>
+            </div>
+            <div class="card-body">
+                <form action="/dashboard?_method={{ metodoForm }}" method="post">
+                    {{> _mensagensValidacao}}
+
+                    <div class="form-group">
+                        <label for="nome">Nome</label>
+                        <input type="text" name="nome" id="nome" class="form-control" value="{{ aplicativo.nome }}" placeholder="Digite o nome do app" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pais">País base</label>
+                        <select name="pais" id="pais" class="form-control" required>
+                            <option value="" selected disabled>Selecione o país</option>
+                            {{#each paises }}
+                                <option value="{{ this.nome }}" {{#if (is_equal ../aplicativo.pais this.nome) }}selected{{/if}} >{{ this.nome }}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="categoria">Categoria</label>
+                        <select name="categoria" id="categoria" class="form-control" required>
+                            <option value="" selected disabled>Selecione a categoria</option>
+                            {{#each categorias }}
+                                <option value="{{ this.nome }}" {{#if (is_equal ../aplicativo.categoria this.nome) }}selected{{/if}}>{{ this.nome }}</option>
+                            {{/each}}
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="views">Telas</label>
+                        <input type="tags" class="form-control" name="views" value="{{ aplicativo.views }}" placeholder="Nome das telas">
+                    </div>
+
+                    <input type="submit" value="Editar" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </main>
+    <script>[].forEach.call(document.querySelectorAll('input[type="tags"]'), TagsInput);</script>
+
+{{> _footer}}

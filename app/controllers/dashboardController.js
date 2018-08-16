@@ -20,6 +20,8 @@ exports.index = (req, res) => {
 
     let message = req.flash('message');
     let dados = {};
+    dados.stats = {};
+    dados.graphs = {};
     
     MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true }, async function(err, client) {
         if(err) { return console.dir(err); }
@@ -27,49 +29,47 @@ exports.index = (req, res) => {
         const db = client.db(process.env.MONGODB_URI.split('/')[3]);
         const collection = db.collection('app_users'+req.user.app);
 
-        dados.num_usuarios = {};
-
         // Todos usuários
-        dados.num_usuarios.totais = await collection.find().toArray();
-        if (dados.num_usuarios.totais.length <= 0) {
+        dados.stats.num_usuarios_totais = await collection.find().toArray();
+        if (dados.stats.num_usuarios_totais.length <= 0) {
             await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});
         }
 
         // Usuários ativos nas últimas 24h
-        dados.num_usuarios.dia = await collection.find({
+        dados.stats.num_usuarios_dia = await collection.find({
             "visto_ultimo": {
                     $gte: new Date((new Date().getTime() - (1 * 24 * 60 * 60 * 1000)))
             }
-        }).toArray();
+        }).count();
 
         // Usuários ativos nos últimos 7 dias
-        dados.num_usuarios.semana = await collection.find({
+        dados.stats.num_usuarios_semana = await collection.find({
             "visto_ultimo": {
                 $gte: new Date((new Date().getTime() - (7 * 24 * 60 * 60 * 1000)))
             }
-        }).toArray();
+        }).count();
 
         // Usuários ativos nos últimos 30 dias
-        dados.num_usuarios.mes = await collection.find({
+        dados.stats.num_usuarios_mes = await collection.find({
             "visto_ultimo": {
                 $gte: new Date((new Date().getTime() - (30 * 24 * 60 * 60 * 1000)))
             }
-        }).toArray();
+        }).count();
 
         // Usuários ativos nos últimos 365 dias
-        dados.num_usuarios.ano = await collection.find({
+        dados.stats.num_usuarios_ano = await collection.find({
             "visto_ultimo": {
                 $gte: new Date((new Date().getTime() - (365 * 24 * 60 * 60 * 1000)))
             }
-        }).toArray();
+        }).count();
 
         // Usuários homens
-        dados.num_usuarios.masculinos = await collection.find({
+        dados.stats.num_usuarios_masculinos = await collection.find({
             "sexo": "Male"
-        }).toArray();
+        }).count();
 
         // Soma total da duração das sessões de todos usuários em segundos (Tempo total do app rodando)
-        dados.tempo_total_sessoes = await collection.aggregate([ 
+        dados.stats.tempo_total_sessoes = await collection.aggregate([ 
             { $group: { 
                 _id: null, 
                 sum: { $sum: '$total_duracao_sessao'} 
@@ -84,21 +84,21 @@ exports.index = (req, res) => {
             } }, 
             { $project: { _id: 0, sum: 1} } 
         ]).toArray();
-        dados.media_sessao = dados.tempo_total_sessoes[0].sum / num_sessoes[0].sum;
+        dados.stats.media_sessao = dados.stats.tempo_total_sessoes[0].sum / num_sessoes[0].sum;
 
         // Média de tempo de sessão por usuário
-        dados.media_tempo_total = dados.tempo_total_sessoes[0].sum / dados.num_usuarios.totais.length;
+        dados.stats.media_tempo_total = dados.stats.tempo_total_sessoes[0].sum / dados.stats.num_usuarios_totais.length;
 
         // Variância do tempo total de sessões
-        dados.variancia_tempo_total = (dados.num_usuarios.totais.map((num) => {
-            return Math.pow(num.total_duracao_sessao - dados.media_tempo_total, 2);
-        }).reduce((a,b) => a + b, 0)) / dados.num_usuarios.totais.length;
+        dados.stats.variancia_tempo_total = (dados.stats.num_usuarios_totais.map((num) => {
+            return Math.pow(num.total_duracao_sessao - dados.stats.media_tempo_total, 2);
+        }).reduce((a,b) => a + b, 0)) / dados.stats.num_usuarios_totais.length;
 
         // Desvio padrão do tempo total de sessões
-        dados.desvio_tempo_total = Math.sqrt(dados.variancia_tempo_total);
+        dados.stats.desvio_tempo_total = Math.sqrt(dados.stats.variancia_tempo_total);
 
         // Soma total de quanto foi gasto no app
-        dados.total_gasto = await collection.aggregate([ 
+        dados.stats.total_gasto = await collection.aggregate([ 
             { $group: { 
                 _id: null, 
                 sum: { $sum: '$total_gasto'} 
@@ -107,18 +107,18 @@ exports.index = (req, res) => {
         ]).toArray();
 
         // Média de quanto foi gasto
-        dados.media_gasto_total = dados.total_gasto[0].sum / dados.num_usuarios.totais.length;
+        dados.stats.media_gasto_total = dados.stats.total_gasto[0].sum / dados.stats.num_usuarios_totais.length;
 
         // Variância de quanto foi gasto
-        dados.variancia_gasto_total = (dados.num_usuarios.totais.map((num) => {
-            return Math.pow(num.total_gasto - dados.media_gasto_total, 2);
-        }).reduce((a,b) => a + b, 0)) / dados.num_usuarios.totais.length;
+        dados.stats.variancia_gasto_total = (dados.stats.num_usuarios_totais.map((num) => {
+            return Math.pow(num.total_gasto - dados.stats.media_gasto_total, 2);
+        }).reduce((a,b) => a + b, 0)) / dados.stats.num_usuarios_totais.length;
 
         // Desvio padrão de quanto foi gasto
-        dados.desvio_gasto_total = Math.sqrt(dados.variancia_gasto_total);
+        dados.stats.desvio_gasto_total = Math.sqrt(dados.stats.variancia_gasto_total);
         
         // Soma de quantidade de novos usuários por mês
-        dados.plot = {};
+        dados.graphs.usuarios_mes = {};
         let dados_novos_por_mes = await collection.aggregate([
             { $group: { 
                 _id:  { $month: '$visto_primeiro'}, 
@@ -127,9 +127,9 @@ exports.index = (req, res) => {
             { $sort: {_id: 1}}, 
             { $project: { _id: 0, count: 1}}
         ]);
-        dados.plot.novos = [];
+        dados.graphs.usuarios_mes.novos = [];
         await dados_novos_por_mes.forEach(row => {
-                dados.plot.novos.push(row.count);
+            dados.graphs.usuarios_mes.novos.push(row.count);
         });
 
         // Soma de quantidade de usuários que não usaram mais o app por mês
@@ -141,50 +141,49 @@ exports.index = (req, res) => {
             { $sort: {_id: 1}}, 
             { $project: { _id: 0, count: 1}}
         ]);
-        dados.plot.velhos = [];
+        dados.graphs.usuarios_mes.velhos = [];
         await dados_desistentes_por_mes.forEach(row => {
-                dados.plot.velhos.push(row.count);
+            dados.graphs.usuarios_mes.velhos.push(row.count);
         });
 
         // Soma de quantidade de usuários por resolução de tela
-        dados.resolucoes = [];
+        dados.graphs.resolucoes = [];
         let dados_res = await collection.aggregate([ 
             { $group: { _id: '$resolucao_tela', count: {$sum: 1} } },
             { $sort: { count: -1}}
         ]);
         await dados_res.forEach(row => {
-            dados.resolucoes.push({name: row._id, y: row.count});
+            dados.graphs.resolucoes.push({name: row._id, y: row.count});
         });
-        if (dados.resolucoes[0]) {
-            dados.resolucoes[0].sliced = 'true';
-            dados.resolucoes[0].selected = 'true';
+        if (dados.graphs.resolucoes[0]) {
+            dados.graphs.resolucoes[0].sliced = 'true';
+            dados.graphs.resolucoes[0].selected = 'true';
         }
 
         // Dados de tempo médio de duração de sessão de cada usuário
-        dados.bar = {};
         let dados_tempo_medio_sessao = await collection.aggregate([
             {$project: { 
                 nome: 1, 
                 tempo_medio_sessao: { $divide: ['$total_duracao_sessao', '$numero_sessoes']} 
             }}
         ]);
-        dados.bar.tempo_medio_sessao = [];
+        dados.graphs.sessao_media_usuario = [];
         await dados_tempo_medio_sessao.forEach(row => {
-            dados.bar.tempo_medio_sessao.push(row.tempo_medio_sessao);
+            dados.graphs.sessao_media_usuario.push(row.tempo_medio_sessao);
         });
 
         // Soma de quantidade de usuários por país
         dados.mapGeo = JSON.parse(fs.readFileSync('app/public/world.geo.json', 'utf8'));
-        dados.paises = [];
+        dados.graphs.paises = [];
         let paises_sum = await collection.aggregate([
             { $group: { _id: '$pais', count: { $sum: 1}}}
         ]);
         await paises_sum.forEach(row => {
-            dados.paises.push({pais: row._id, value: row.count});
+            dados.graphs.paises.push({pais: row._id, value: row.count});
         });
 
         // Soma de quantidade de usuários por idade
-        dados.idades = {};
+        dados.graphs.idades = {};
         let dados_idades = await collection.aggregate([
             {$group: { 
                 _id: { $subtract: [{$year: new Date()}, '$ano_nascimento']},
@@ -192,11 +191,11 @@ exports.index = (req, res) => {
             }},
             {$sort: {_id: 1}}
         ]);
-        dados.idades.idadesArray = [];
-        dados.idades.quantidade = []
+        dados.graphs.idades.idadesArray = [];
+        dados.graphs.idades.quantidade = []
         await dados_idades.forEach(row => {
-            dados.idades.idadesArray.push(row._id);
-            dados.idades.quantidade.push(row.count);
+            dados.graphs.idades.idadesArray.push(row._id);
+            dados.graphs.idades.quantidade.push(row.count);
         });
 
         const collectionApps = db.collection('aplicativos');
@@ -204,7 +203,7 @@ exports.index = (req, res) => {
 
         //Somas do total de acesso das views do app
         let views = await collectionApps.find({_id: ObjectId(req.user.app)}).project({_id: 0, views: 1}).toArray();
-        dados.views = [];
+        dados.graphs.views = [];
         let mais_visitada = {};
         mais_visitada.acessos = 0;
         let index = 0;
@@ -217,16 +216,16 @@ exports.index = (req, res) => {
                 mais_visitada.acessos = view_total[0].count;
                 mais_visitada.index = index;
             }
-            dados.views.push({name: view, y: view_total[0].count});
+            dados.graphs.views.push({name: view, y: view_total[0].count});
             index++;
         }
-        dados.views[mais_visitada.index].sliced = 'true';
-        dados.views[mais_visitada.index].selected = 'true';
+        dados.graphs.views[mais_visitada.index].sliced = 'true';
+        dados.graphs.views[mais_visitada.index].selected = 'true';
 
         const collectionCrashes = db.collection('app_crashes'+req.user.app);
 
         // Número de travamentos
-        dados.num_crashes = await collectionCrashes.countDocuments();
+        dados.stats.num_crashes = await collectionCrashes.countDocuments();
 
         // Número de travamento por mês
         let crashes_por_mes_tratadas = await collectionCrashes.aggregate([
@@ -240,15 +239,43 @@ exports.index = (req, res) => {
             { $sort: { _id: 1}} 
         ]).toArray();
 
-        dados.crashes_mes_tratadas = [];
+        dados.graphs.crashes_mes_tratadas = [];
         for (crash of crashes_por_mes_tratadas) {
-            await dados.crashes_mes_tratadas.push(crash.count);
+            await dados.graphs.crashes_mes_tratadas.push(crash.count);
         }
-        dados.crashes_mes_nao_tratadas = [];
+        dados.graphs.crashes_mes_nao_tratadas = [];
         for (crash of crashes_por_mes_nao_tratadas) {
-            await dados.crashes_mes_nao_tratadas.push(crash.count);
-        }
+            await dados.graphs.crashes_mes_nao_tratadas.push(crash.count);
+        }    
+        
+        // Porcentagens com relação ao total de usuários
+        dados.porcentagens = {};
+        dados.porcentagens.num_usuarios_dia = (dados.stats.num_usuarios_dia / dados.stats.num_usuarios_totais.length) * 100;
+        dados.porcentagens.num_usuarios_semana = (dados.stats.num_usuarios_semana / dados.stats.num_usuarios_totais.length) * 100;
+        dados.porcentagens.num_usuarios_mes = (dados.stats.num_usuarios_mes / dados.stats.num_usuarios_totais.length) * 100;
+        dados.porcentagens.num_usuarios_ano = (dados.stats.num_usuarios_ano / dados.stats.num_usuarios_totais.length) * 100;
+        dados.porcentagens.num_usuarios_masculinos = (dados.stats.num_usuarios_masculinos / dados.stats.num_usuarios_totais.length) * 100;
+        dados.porcentagens.num_usuarios_femininos = 100 - dados.porcentagens.num_usuarios_masculinos;
 
+        // Formatação dos dados
+        dados.stats.num_usuarios_femininos = (dados.stats.num_usuarios_totais.length - dados.stats.num_usuarios_masculinos).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        dados.stats.num_usuarios_totais = dados.stats.num_usuarios_totais.length.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        dados.stats.num_usuarios_dia = dados.stats.num_usuarios_dia.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        dados.stats.num_usuarios_semana = dados.stats.num_usuarios_semana.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        dados.stats.num_usuarios_mes = dados.stats.num_usuarios_mes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        dados.stats.num_usuarios_ano = dados.stats.num_usuarios_ano.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        dados.stats.num_usuarios_masculinos = dados.stats.num_usuarios_masculinos.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        dados.stats.tempo_total_sessoes = dados.stats.tempo_total_sessoes[0].sum.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        dados.stats.media_sessao = dados.stats.media_sessao.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        dados.stats.media_tempo_total = dados.stats.media_tempo_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        dados.stats.variancia_tempo_total = dados.stats.variancia_tempo_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        dados.stats.desvio_tempo_total = dados.stats.desvio_tempo_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        dados.stats.total_gasto = dados.stats.total_gasto[0].sum.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        dados.stats.media_gasto_total = dados.stats.media_gasto_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        dados.stats.variancia_gasto_total = dados.stats.variancia_gasto_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        dados.stats.desvio_gasto_total = dados.stats.desvio_gasto_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        dados.stats.num_crashes = dados.stats.num_crashes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        
         await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});
     });
     
@@ -280,7 +307,6 @@ exports.monta_form = (req, res) => {
                     res.render('dashboard/formApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: app, nomeForm: "Cadastrar novo app", metodoForm: "POST"});
                 } else {
                     Aplicativo.findById(req.user.app, (err, app) => {
-                        console.log(app);
                         res.render('dashboard/formApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: app, nomeForm: "Editar app selecionado", metodoForm: "PUT"});
                     });    
                 }
@@ -311,7 +337,6 @@ exports.editar_app = (req, res) => {
                 });
 
                 Aplicativo.findById(req.user.app, (err, app) => {
-                    console.log(app);
                     res.render('dashboard/editarApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: app});
                 });
             });

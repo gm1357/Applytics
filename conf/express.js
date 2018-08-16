@@ -11,6 +11,8 @@ morgan = require('morgan')
 favicon = require('serve-favicon');
 mongoose = require('mongoose');
 moment = require("moment");
+Handlebars = require('handlebars');
+hbs = require('hbs');
 require('dotenv').load();
 require('./passport')(passport);
 
@@ -23,8 +25,23 @@ module.exports = () => {
     mongoose.set('debug',true);
     mongoose.connect(process.env.MONGODB_URI + (process.env.NODE_ENV === 'test' ? '_test' : ''), { useNewUrlParser: true });
 
-    app.set('view engine', 'ejs');
+    hbs.registerHelper('json', function (content) {
+        return JSON.stringify(content);
+    });
+
+    hbs.registerHelper('is_equal', function(a, b, opts) {
+        if(a == b)
+            return true;
+        else
+            return false;
+    });
+
+    // app.set('view engine', 'ejs');
+    app.set('view engine', 'hbs');
+    hbs.registerPartials('./app/views/layout');
     app.set('views', './app/views');
+
+    
 
     app.use(morgan('dev'));
     app.use(express.static('./app/public'));

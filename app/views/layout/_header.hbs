@@ -23,27 +23,27 @@
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
-                            <% if (usuarioLogado === undefined) { %>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/usuarios/cadastro">Sign-up</a>
-                                </li>
-                                <li class="nav-item">
-                                    <a class="nav-link" href="/usuarios/login">Log-in</a>
-                                </li>
-                            <% } else { %>
+                            {{#if usuarioLogado}}
                                 <li class="nav-item">
                                     <div class="dropdown">
-                                        <a href="#" class="nav-link dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Bem-vindo <%= usuarioLogado.local.nome %></a>
+                                        <a href="#" class="nav-link dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Bem-vindo {{usuarioLogado.local.nome}}</a>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item" href="/dashboard">Dashboard</a>
-                                            <a class="dropdown-item" href="/usuarios/<%= usuarioLogado._id %>">Alterar perfil</a>
+                                            <a class="dropdown-item" href="/usuarios/{{ usuarioLogado._id }}">Alterar perfil</a>
                                             <a class="dropdown-item" href="/dashboard/novo">Cadastrar novo app</a>
                                             <a class="dropdown-item" href="/dashboard/editar">Editar app selecionado</a>
                                             <a class="dropdown-item" href="/usuarios/logout">Log-out</a>
                                         </div>
                                     </div>
                                 </li>
-                            <% } %>
+                            {{else}}
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/usuarios/cadastro">Sign-up</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="/usuarios/login">Log-in</a>
+                                </li>
+                            {{/if}}
                         </ul>
                     </div>
                 </div>
