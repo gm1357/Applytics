@@ -410,3 +410,53 @@ exports.atualizar_app = (req, res) => {
 
     }
 };
+
+exports.lista_crashes = (req, res) => {
+    if (!req.isAuthenticated()) {
+        res.redirect('/usuarios/login');
+        return;
+    }
+
+    if (req.user.app == null) {
+        res.redirect('/dashboard/novo');
+        return;
+    }
+
+    MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true }, async function(err, client) {
+        if(err) { return console.dir(err); }
+
+        const db = client.db(process.env.MONGODB_URI.split('/')[3]);
+        const collection = db.collection('app_crashes'+req.user.app);      
+
+        collection.find().toArray((err, crashes) => {
+            if(err) { return console.dir(err); }
+            
+            res.render('dashboard/crashes', {crashes: crashes});
+        });
+    });
+};
+
+exports.lista_usuarios = (req, res) => {
+    if (!req.isAuthenticated()) {
+        res.redirect('/usuarios/login');
+        return;
+    }
+
+    if (req.user.app == null) {
+        res.redirect('/dashboard/novo');
+        return;
+    }
+
+    MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true }, async function(err, client) {
+        if(err) { return console.dir(err); }
+
+        const db = client.db(process.env.MONGODB_URI.split('/')[3]);
+        const collection = db.collection('app_users'+req.user.app);      
+
+        collection.find().toArray((err, users) => {
+            if(err) { return console.dir(err); }
+            console.log(users);
+            res.render('dashboard/usuarios', {users: users});
+        });
+    });
+};

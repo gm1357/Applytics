@@ -10,7 +10,14 @@
             <p>A chave SDK para realizar a integração com o app é: <strong>{{ appID }}</strong>.</p>
             <p>Integre o SDK no seu app e atualize essa página quando tiver usado pelo menos uma vez seu app para ver os dados.</p>
         {{else}}
+            <nav class="nav nav-pills nav-fill justify-content-around mt-5">
+                <a class="nav-link active" href="/dashboard">Dados gerais</a>
+                <a class="nav-link" href="/dashboard/crashes">Crashes</a>
+                <a class="nav-link" href="/dashboard/usuarios">Usuarios</a>
+            </nav>
+
             <hr>
+            
             <div class="row justify-content-around">
                 <div class="shadow bg-white border rounded col-md-2 stats-box text-center">
                     <p>Total usuários</p>

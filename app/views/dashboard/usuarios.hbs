@@ -1,0 +1,131 @@
+{{> _header}}
+
+    <main role="main" class="container">
+        <h1 class="text-center">Usuários</h1>
+
+        <nav class="nav nav-pills nav-fill justify-content-around mt-5">
+            <a class="nav-link" href="/dashboard">Dados gerais</a>
+            <a class="nav-link" href="/dashboard/crashes">Crashes</a>
+            <a class="nav-link active" href="/dashboard/usuarios">Usuarios</a>
+        </nav>
+
+        <hr>
+
+        <div class="index">
+            <div class="row justify-content-around">
+                <div class="col col-md-11">
+                    <table id="crashes" class="table table-striped responsive table-bordered" width="100%">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th>Sexo</th>
+                                <th>Ano de nascimento</th>
+                                <th>País</th>
+                                <th>Cidade</th>
+                                <th>Dispositivo</th>
+                                <th>Resolução da tela</th>
+                                <th>DPI da tela</th>
+                                <th>Operadora</th>
+                                <th>OS</th>
+                                <th>Versão OS</th>
+                                <th>Versão app</th>
+                                <th>Visto pela primeira vez</th>
+                                <th>Visto por último</th>
+                                <th>Número de sessões</th>
+                                <th>Duração da última sessão</th>
+                                <th>Duração total das sessões</th>
+                                <th>Última view visitada</th>
+                                <th>Data da última compra</th>
+                                <th>Total da última compra</th>
+                                <th>Total gasto</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nome</th>
+                                <th>Email</th>
+                                <th>Telefone</th>
+                                <th>Sexo</th>
+                                <th>Ano de nascimento</th>
+                                <th>País</th>
+                                <th>Cidade</th>
+                                <th>Dispositivo</th>
+                                <th>Resolução da tela</th>
+                                <th>DPI da tela</th>
+                                <th>Operadora</th>
+                                <th>OS</th>
+                                <th>Versão OS</th>
+                                <th>Versão app</th>
+                                <th>Visto pela primeira vez</th>
+                                <th>Visto por último</th>
+                                <th>Número de sessões</th>
+                                <th>Duração da última sessão</th>
+                                <th>Duração total das sessões</th>
+                                <th>Última view visitada</th>
+                                <th>Data da última compra</th>
+                                <th>Total da última compra</th>
+                                <th>Total gasto</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        $(document).ready(function() {
+            $('#crashes').DataTable( {
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
+                },
+                "data": {{{json users}}},
+                responsive: {
+                    details: {
+                        display: $.fn.dataTable.Responsive.display.modal( {
+                            header: function ( row ) {
+                                var data = row.data();
+                                return 'Detalhes do erro';
+                            }
+                        } ),
+                        renderer: $.fn.dataTable.Responsive.renderer.tableAll( {
+                            tableClass: 'table'
+                        } )
+                    }
+                },
+                "columns" : [
+                    { "data" : "_id" },
+                    { "data" : "nome" },
+                    { "data" : "email" },
+                    { "data" : "telefone" },
+                    { "data" : "sexo" },
+                    { "data" : "ano_nascimento" },
+                    { "data" : "pais" },
+                    { "data" : "cidade" },
+                    { "data" : "dispositivo" },
+                    { "data" : "resolucao_tela" },
+                    { "data" : "densidade_tela" },
+                    { "data" : "operadora" },
+                    { "data" : "os" },
+                    { "data" : "versao_os" },
+                    { "data" : "versao_app" },
+                    { "data" : "visto_primeiro" },
+                    { "data" : "visto_ultimo" },
+                    { "data" : "numero_sessoes" },
+                    { "data" : "duracao_sessao" },
+                    { "data" : "total_duracao_sessao" },
+                    { "data" : "ultima_view" },
+                    { "data" : "ultima_compra" },
+                    { "data" : "total_ultima_compra" },
+                    { "data" : "total_gasto" }
+                ]
+            });
+        });
+    </script>
+
+{{> _footer}}

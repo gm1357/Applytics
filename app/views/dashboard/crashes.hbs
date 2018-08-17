@@ -1,0 +1,101 @@
+{{> _header}}
+
+    <main role="main" class="container">
+        <h1 class="text-center">Crashes</h1>
+
+        <nav class="nav nav-pills nav-fill justify-content-around mt-5">
+            <a class="nav-link" href="/dashboard">Dados gerais</a>
+            <a class="nav-link active" href="/dashboard/crashes">Crashes</a>
+            <a class="nav-link" href="/dashboard/usuarios">Usuarios</a>
+        </nav>
+
+        <hr>
+
+        <div class="index">
+            <div class="row justify-content-around">
+                <div class="col col-md-11">
+                    <table id="crashes" class="table table-striped responsive table-bordered" width="100%">
+                        <thead>
+                            <tr>
+                                <th>ID usuário</th>
+                                <th>Data</th>
+                                <th>CPU</th>
+                                <th>Ram atual</th>
+                                <th>Ram total</th>
+                                <th>Capacidade atual</th>
+                                <th>Capacidade total</th>
+                                <th>Bateria atual</th>
+                                <th>Orientação da tela</th>
+                                <th>Silenciado?</th>
+                                <th>Processo de fundo?</th>
+                                <th>Tratado?</th>
+                                <th>Tempo de funcionamento</th>
+                                <th>Stack-trace</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                        <tfoot>
+                            <tr>
+                                <th>ID usuário</th>
+                                <th>Data</th>
+                                <th>CPU</th>
+                                <th>Ram atual</th>
+                                <th>Ram total</th>
+                                <th>Capacidade atual</th>
+                                <th>Capacidade total</th>
+                                <th>Bateria atual</th>
+                                <th>Orientação da tela</th>
+                                <th>Silenciado?</th>
+                                <th>Processo de fundo?</th>
+                                <th>Tratado?</th>
+                                <th>Tempo de funcionamento</th>
+                                <th>Stack-trace</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        $(document).ready(function() {
+            $('#crashes').DataTable( {
+                "language": {
+                    "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
+                },
+                "data": {{{json crashes}}},
+                responsive: {
+                    details: {
+                        display: $.fn.dataTable.Responsive.display.modal( {
+                            header: function ( row ) {
+                                var data = row.data();
+                                return 'Detalhes do erro';
+                            }
+                        } ),
+                        renderer: $.fn.dataTable.Responsive.renderer.tableAll( {
+                            tableClass: 'table'
+                        } )
+                    }
+                },
+                "columns" : [
+                    { "data" : "id_usuario" },
+                    { "data" : "crashed_at" },
+                    { "data" : "cpu" },
+                    { "data" : "ram_current" },
+                    { "data" : "ram_total" },
+                    { "data" : "disk_current" },
+                    { "data" : "disk_total" },
+                    { "data" : "bateria_current" },
+                    { "data" : "orientacao" },
+                    { "data" : "muted" },
+                    { "data" : "background" },
+                    { "data" : "nonfatal" },
+                    { "data" : "run_time" },
+                    { "data" : "stack_trace" }
+                ]
+            });
+        });
+    </script>
+
+{{> _footer}}
