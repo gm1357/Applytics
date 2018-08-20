@@ -422,16 +422,38 @@ exports.lista_crashes = (req, res) => {
         return;
     }
 
+    let dados = {};
+    dados.graphs = {};
     MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true }, async function(err, client) {
         if(err) { return console.dir(err); }
 
         const db = client.db(process.env.MONGODB_URI.split('/')[3]);
-        const collection = db.collection('app_crashes'+req.user.app);      
+        const collection = db.collection('app_crashes'+req.user.app);
+        
+        let crashes_por_mes_tratadas = await collection.aggregate([
+            { $match: { nonfatal: 1}},
+            { $group: { _id: { $month: '$crashed_at'}, count: { $sum: 1}}}, 
+            { $sort: { _id: 1}} 
+        ]).toArray();
+        let crashes_por_mes_nao_tratadas = await collection.aggregate([
+            { $match: { nonfatal: 1}},
+            { $group: { _id: { $month: '$crashed_at'}, count: { $sum: 1}}}, 
+            { $sort: { _id: 1}} 
+        ]).toArray();
+
+        dados.graphs.crashes_mes_tratadas = [];
+        for (crash of crashes_por_mes_tratadas) {
+            await dados.graphs.crashes_mes_tratadas.push(crash.count);
+        }
+        dados.graphs.crashes_mes_nao_tratadas = [];
+        for (crash of crashes_por_mes_nao_tratadas) {
+            await dados.graphs.crashes_mes_nao_tratadas.push(crash.count);
+        }
 
         collection.find().toArray((err, crashes) => {
             if(err) { return console.dir(err); }
             
-            res.render('dashboard/crashes', {crashes: crashes});
+            res.render('dashboard/crashes', {crashes: crashes, dados: dados});
         });
     });
 };
@@ -455,8 +477,18 @@ exports.lista_usuarios = (req, res) => {
 
         collection.find().toArray((err, users) => {
             if(err) { return console.dir(err); }
-            console.log(users);
-            res.render('dashboard/usuarios', {users: users});
+            
+            Aplicativo.findById(req.user.app, (err, app) => {
+                if(err) { return console.dir(err); }
+
+                const collectionViews = db.collection('app_views'+req.user.app);    
+
+                collectionViews.find().toArray((err, views) => {
+                    if(err) { return console.dir(err); }
+
+                    res.render('dashboard/usuarios', {users: users, aplicativo: app, views: views});
+                });
+            });
         });
     });
 };

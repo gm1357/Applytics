@@ -84,20 +84,59 @@
                         } )
                     }
                 },
+                columnDefs: [
+                    { responsivePriority: 1, targets: 0 },
+                    { responsivePriority: 2, targets: 1 },
+                    { responsivePriority: 3, targets: -1 }
+                ],
                 "columns" : [
                     { "data" : "id_usuario" },
-                    { "data" : "crashed_at" },
+                    { 
+                        "data" : "crashed_at",
+                        "render": (data) => {
+                            var date = new Date(data);
+                            var month = date.getMonth() + 1;
+                            return (date.getDate() >= 10 ? date.getDate() : "0" + date.getDate()) + "/" + (month >= 10 ? month : "0" + month) + "/" + date.getFullYear();
+                        }    
+                    },
                     { "data" : "cpu" },
-                    { "data" : "ram_current" },
-                    { "data" : "ram_total" },
-                    { "data" : "disk_current" },
-                    { "data" : "disk_total" },
-                    { "data" : "bateria_current" },
+                    { 
+                        "data" : "ram_current",
+                        "render": (data) => { return data + "Kb"; }
+                    },
+                    { 
+                        "data" : "ram_total",
+                        "render": (data) => { return data + "Kb"; }
+                    },
+                    { 
+                        "data" : "disk_current",
+                        "render": (data) => { return data + "Kb"; }
+                    },
+                    { 
+                        "data" : "disk_total",
+                        "render": (data) => { return data + "Kb"; }
+                    },
+                    { 
+                        "data" : "bateria_current",
+                        "render": (data) => { return data + "%"; }
+                    },
                     { "data" : "orientacao" },
-                    { "data" : "muted" },
-                    { "data" : "background" },
-                    { "data" : "nonfatal" },
-                    { "data" : "run_time" },
+                    { 
+                        "data" : "muted",
+                        "render": (data) => { return (data ? "Sim" : "Não"); }
+                    },
+                    { 
+                        "data" : "background",
+                        "render": (data) => { return (data ? "Sim" : "Não"); }
+                    },
+                    { 
+                        "data" : "nonfatal",
+                        "render": (data) => { return (data ? "Sim" : "Não"); }
+                    },
+                    { 
+                        "data" : "run_time",
+                        "render": (data) => { return data + "s"; }
+                    },
                     { "data" : "stack_trace" }
                 ]
             });
