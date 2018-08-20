@@ -21,7 +21,7 @@
         }
     });
 
-    var myLineChart = Highcharts.chart('chartUsuarios', {
+    Highcharts.chart('chartUsuarios', {
         chart: {
             type: 'line'
         },
@@ -52,7 +52,7 @@
         }
     });
     
-    var myPieChart = Highcharts.chart('pieResolucoes', {
+    Highcharts.chart('pieResolucoes', {
         chart: {
             type: 'pie'
         },
@@ -83,7 +83,7 @@
         }
     });
 
-    var myBarChart = Highcharts.chart('barTempoSessao', {
+    Highcharts.chart('barTempoSessao', {
         chart: {
             type: 'column'
         },
@@ -111,7 +111,7 @@
         }
     });
 
-    var myHistChart = Highcharts.chart('histTempoSessao', {
+    Highcharts.chart('histTempoSessao', {
         title: {
             text: 'Histograma do tempo médio de sessão dos usuários'
         },
@@ -152,7 +152,7 @@
         }
     });
 
-    var myColChart = Highcharts.chart('colIdades', {
+    Highcharts.chart('colIdades', {
         chart: {
             type: 'column'
         },
@@ -181,7 +181,7 @@
         }
     });
 
-    var myMap = Highcharts.mapChart('mapaDist', {
+    Highcharts.mapChart('mapaDist', {
         chart: {
             map: {{{json dados.mapGeo }}}
         },
@@ -217,7 +217,7 @@
         }
     });
 
-    var myPieViewChart = Highcharts.chart('pieViewsAcessos', {
+    Highcharts.chart('pieViewsAcessos', {
         chart: {
             type: 'pie'
         },
@@ -242,57 +242,6 @@
             name: 'Usuários',
             colorByPoint: true,
             data: {{{json dados.graphs.views }}}
-        }],
-        credits: {
-            enabled: false
-        }
-    });
-
-    var myCrashLineChart = Highcharts.chart('chartCrashes', {
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: 'Quantidade de travamentos por mês'
-        },
-        yAxis: {
-            title: {
-                text: 'Número de travementos'
-            },
-            stackLabels: {
-                enabled: true,
-                style: {
-                    fontWeight: 'bold',
-                    color: (Highcharts.theme && Highcharts.theme.textColor) || 'gray'
-                }
-            }
-        },
-        xAxis: {
-            categories: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
-        },
-        legend: {
-            align: 'center',
-            verticalAlign: 'top'
-        },
-        tooltip: {
-            headerFormat: '<b>{point.x}</b><br/>',
-            pointFormat: '{series.name}: {point.y}<br/>Total: {point.stackTotal}'
-        },
-        plotOptions: {
-            column: {
-                stacking: 'normal',
-                dataLabels: {
-                    enabled: false,
-                    color: (Highcharts.theme && Highcharts.theme.dataLabelsColor) || 'white'
-                }
-            }
-        },
-        series: [{
-            name: 'Travamentos tratados',
-            data: {{{json dados.graphs.crashes_mes_tratadas }}}
-        }, {
-            name: 'Travamentos fatais',
-            data: {{{json dados.graphs.crashes_mes_nao_tratadas }}}
         }],
         credits: {
             enabled: false
