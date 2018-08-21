@@ -247,4 +247,56 @@
             enabled: false
         }
     });
+
+    Highcharts.chart('heatMapAcessos', {
+        chart: {
+            type: 'heatmap',
+            marginTop: 40,
+            marginBottom: 80,
+            plotBorderWidth: 1
+        },
+        title: {
+            text: 'Acessos por hora do dia'
+        },
+        xAxis: {
+            categories: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
+        },
+
+        yAxis: {
+            categories: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00',
+                         '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+            title: null
+        },
+        colorAxis: {
+            min: 0,
+            minColor: '#FFFFFF',
+            maxColor: Highcharts.getOptions().colors[0]
+        },
+        legend: {
+            align: 'right',
+            layout: 'vertical',
+            margin: 0,
+            verticalAlign: 'top',
+            y: 25,
+            symbolHeight: 280
+        },
+        tooltip: {
+            formatter: function () {
+                return '<b>' +this.point.value+ '</b> sessões no(a) <b>' + this.series.xAxis.categories[this.point.x] + '</b> às <b>' +
+                    this.series.yAxis.categories[this.point.y] + '</b>';
+            }
+        },
+        series: [{
+            name: 'Sessões',
+            borderWidth: 1,
+            data: {{json dados.graphs.sessoes_por_hora_dia }},
+            dataLabels: {
+                enabled: false,
+                color: '#000000'
+            }
+        }],
+        credits: {
+            enabled: false
+        }
+    });
 </script>

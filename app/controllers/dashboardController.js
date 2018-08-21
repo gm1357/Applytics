@@ -246,7 +246,32 @@ exports.index = (req, res) => {
         dados.graphs.crashes_mes_nao_tratadas = [];
         for (crash of crashes_por_mes_nao_tratadas) {
             await dados.graphs.crashes_mes_nao_tratadas.push(crash.count);
-        }    
+        }
+
+        const collectionSessoes = db.collection('app_sessoes'+req.user.app);
+
+        // Array com o número de sessões a cada hora por dia da semana
+        let sessoes_dia_semana_hora = await collectionSessoes.aggregate([
+            { $group: { 
+                        _id: {"dia_semana": { $dayOfWeek: {date: "$data", timezone: "America/Sao_Paulo"}}, "hora": {$hour: "$data"}}, 
+                        sum: { $sum: 1}
+            }},
+            {$sort: { "_id": 1}}
+        ]).toArray();
+
+        dados.graphs.sessoes_por_hora_dia = [];
+        for (let i = 0; i < 7; i++) {
+            for (let j = 0; j < 24; j++) {
+                dados.graphs.sessoes_por_hora_dia.push([i, j, 0]);
+            }
+        }
+
+        for (let dia_hora of sessoes_dia_semana_hora) {
+            let index = dados.graphs.sessoes_por_hora_dia.indexOf([dia_hora._id.dia_semana - 1, dia_hora._id.hora, 0]);
+            delete dados.graphs.sessoes_por_hora_dia[index];
+
+            dados.graphs.sessoes_por_hora_dia.push([dia_hora._id.dia_semana - 1, dia_hora._id.hora, dia_hora.sum]);
+        }
         
         // Porcentagens com relação ao total de usuários
         dados.porcentagens = {};
