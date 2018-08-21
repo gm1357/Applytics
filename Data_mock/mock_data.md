@@ -35,3 +35,11 @@
 
 <!-- Insere crashes -->
 # mongoimport --jsonArray --db applytics --collection app_crashes5b69f648537da10190857934 --file .\dataset_app_crashes.json
+
+<!-- Gera 10000 entradas -->
+# mongodb-dataset-generator .\app_sessoes_schema.json -n 10000 -o dataset_app_sessoes.json
+
+<!-- Trocar $date por ISODate para gerar datas de forma correta -->
+
+<!-- Insere sessoes -->
+# mongoimport --jsonArray --db applytics --collection app_sessoes5b69f648537da10190857934 --file .\dataset_app_sessoes.json
