@@ -4,7 +4,7 @@
 
         {{> _mensagens}}
 
-        <h1 class="text-center">Dashboard</h1>
+        <h1 class="text-center" data-intro="Bem vindo! A seguir será apresentado as funções da dashboard">Dashboard</h1>
 
         {{#unless dados.stats.num_usuarios_totais }}
             <p>A chave SDK para realizar a integração com o app é: <strong>{{ appID }}</strong>.</p>
@@ -18,7 +18,7 @@
 
             <hr>
             
-            <div class="row justify-content-around">
+            <div class="row justify-content-around" data-intro="Aqui é mostrado os dados rápidos e importantes para seu app">
                 <div class="shadow bg-white border rounded col-md-2 stats-box text-center">
                     <p>Total usuários</p>
                     <p><strong>{{ dados.stats.num_usuarios_totais }}</strong></p>
@@ -38,7 +38,7 @@
             </div>
             
             <div class="row justify-content-around">
-                <div class="shadow bg-white border rounded col-md-5 stats-box">
+                <div class="shadow bg-white border rounded col-md-5 stats-box" data-intro="Aqui são mostrado dados sobre os usuários que utilizam o app">
                     <p>Usuários ativos nas ultimas 24h <strong>{{ dados.stats.num_usuarios_dia }}</strong></p>
                     <div class="progress">
                         <div class="progress-bar" style="width: {{ dados.porcentagens.num_usuarios_dia }}%" role="progressbar" aria-valuenow="{{ dados.stats.num_usuarios_dia }}" aria-valuemin="0" aria-valuemax="{{ dados.stats.num_usuarios_totais }}"></div>
@@ -65,7 +65,7 @@
                     </div>
                 </div>
 
-                <div class="shadow bg-white border rounded col-md-5 stats-box">
+                <div class="shadow bg-white border rounded col-md-5 stats-box" data-intro="Aqui são mostrado mais alguns dados, incluindo dados monetários (se tiver)">
                     <p>Tempo total de uso do app em segundos <strong>{{ dados.stats.tempo_total_sessoes }}s</strong></p>
                     <p>Tempo médio de uso do app por usuário <strong>{{ dados.stats.media_tempo_total }}s</strong></p>
                     <p>Variância do tempo total de uso do app <strong>{{ dados.stats.variancia_tempo_total }}s</strong></p>
@@ -76,20 +76,47 @@
                 </div>
             </div>
 
-            <div class="row justify-content-around">
+            <div class="row justify-content-around" data-intro="Aqui temos os gráficos para melhor visualizar as informações obtidas" data-scrollTo="tooltip">
                 <div class="col-md-11 shadow bg-white border rounded stats-box">
-                    <div id="chartUsuarios" style="width:100%; height:400px;"></div>
-                    <div id="pieResolucoes" style="width:100%; height:400px;"></div>
-                    <div id="barTempoSessao" style="width:100%; height:400px;"></div>
-                    <div id="histTempoSessao" style="width:100%; height:400px;"></div>
-                    <div id="colIdades" style="width:100%; height:400px;"></div>
-                    <div id="mapaDist" style="width:100%; height:400px;"></div>
-                    <div id="pieViewsAcessos" style="width:100%; height:400px;"></div>
-                    <div id="heatMapAcessos" style="width:100%; height:600px;"></div>
+                    <div id="chartUsuarios" style="width:100%; height:400px;" data-hint="Aqui é mostrado a quantidade de usuários que foram visto pela primeira vez e pela última vez nos meses"></div>
+                    <div id="pieResolucoes" style="width:100%; height:400px;" data-hint="Gráfico de distribuição das resoluções dos dispositivos dos usuários"></div>
+                    <div id="barTempoSessao" style="width:100%; height:400px;" data-hint="Gráfico de distribuição das resoluções dos dispositivos dos usuários"></div>
+                    <div id="histTempoSessao" style="width:100%; height:400px;" data-hint="Gráfico de distribuição das resoluções dos dispositivos dos usuários"></div>
+                    <div id="colIdades" style="width:100%; height:400px;" data-hint="Gráfico de distribuição das resoluções dos dispositivos dos usuários"></div>
+                    <div id="mapaDist" style="width:100%; height:400px;" data-hint="Gráfico de distribuição das resoluções dos dispositivos dos usuários"></div>
+                    <div id="pieViewsAcessos" style="width:100%; height:400px;" data-hint="Gráfico de distribuição das resoluções dos dispositivos dos usuários"></div>
+                    <div id="heatMapAcessos" style="width:100%; height:600px;" data-hint="Gráfico de distribuição das resoluções dos dispositivos dos usuários"></div>
                 </div>
             </div>
 
             {{> _graficosIndex}}
+            <script>
+                let intro = introJs().setOptions({
+                    'skipLabel': 'Pular tour',
+                    'doneLabel': 'Concluir',
+                    'nextLabel': 'Próximo >',
+                    'prevLabel': '< Anterior',
+                    'exitOnOverlayClick': false,
+                    'showStepNumbers': false,
+                    'scrollTo': 'element',
+                    'overlayOpacity': 0.9
+                });
+
+                {{#if (is_equal usuarioLogado.nivel 'Iniciante') }}
+                    {{#if usuarioNovo }}
+                        intro.start();
+                    {{/if}}
+                {{/if}}
+
+                document.getElementById('ver-tour').addEventListener('click', () => {
+                    intro.start();
+                });
+
+                introJs().setOptions({
+                    'hintButtonLabel': '',
+                    'hintPosition': 'top-left'
+                }).addHints();
+            </script>
         {{/unless}}
     </main>
 

@@ -22,6 +22,21 @@ exports.index = (req, res) => {
     let dados = {};
     dados.stats = {};
     dados.graphs = {};
+    let userState = -1;
+
+    if (req.user.novo == 2) {
+        userState = 1;
+    } else if (req.user.novo == 1) {
+        userState = 0;
+    }
+
+    if (userState != -1) {
+        Usuario.update({ _id: req.user._id }, { $set: {'novo': userState}}, err => {
+            if(err) { return console.dir(err); }
+
+            req.user.novo = userState;
+        });
+    }
     
     MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true }, async function(err, client) {
         if(err) { return console.dir(err); }
@@ -227,27 +242,6 @@ exports.index = (req, res) => {
         // Número de travamentos
         dados.stats.num_crashes = await collectionCrashes.countDocuments();
 
-        // Número de travamento por mês
-        let crashes_por_mes_tratadas = await collectionCrashes.aggregate([
-            { $match: { nonfatal: 1}},
-            { $group: { _id: { $month: '$crashed_at'}, count: { $sum: 1}}}, 
-            { $sort: { _id: 1}} 
-        ]).toArray();
-        let crashes_por_mes_nao_tratadas = await collectionCrashes.aggregate([
-            { $match: { nonfatal: 1}},
-            { $group: { _id: { $month: '$crashed_at'}, count: { $sum: 1}}}, 
-            { $sort: { _id: 1}} 
-        ]).toArray();
-
-        dados.graphs.crashes_mes_tratadas = [];
-        for (crash of crashes_por_mes_tratadas) {
-            await dados.graphs.crashes_mes_tratadas.push(crash.count);
-        }
-        dados.graphs.crashes_mes_nao_tratadas = [];
-        for (crash of crashes_por_mes_nao_tratadas) {
-            await dados.graphs.crashes_mes_nao_tratadas.push(crash.count);
-        }
-
         const collectionSessoes = db.collection('app_sessoes'+req.user.app);
 
         // Array com o número de sessões a cada hora por dia da semana
@@ -301,7 +295,7 @@ exports.index = (req, res) => {
         dados.stats.desvio_gasto_total = dados.stats.desvio_gasto_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         dados.stats.num_crashes = dados.stats.num_crashes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         
-        await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});
+        await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message, usuarioNovo: req.user.novo});
     });
     
 };

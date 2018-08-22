@@ -11,4 +11,6 @@ window.$ = $;
 import dt from 'datatables.net-bs4';
 import 'datatables.net-responsive-bs4';
 window.$.DataTable = dt;
+import introJs from 'intro.js';
+window.introJs = introJs;
 import './scss/app.scss';

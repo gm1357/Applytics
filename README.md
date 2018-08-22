@@ -30,6 +30,7 @@ Ferramenta analytics para apps desenvolvida para conclusão de curso de bcc.
 - Highcharts
 - Tags-input
 - DataTables
+- Intro.Js
 - Dev:
     - Mocha
     - Supertest

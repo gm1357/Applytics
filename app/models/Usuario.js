@@ -7,6 +7,7 @@ var userSchema = mongoose.Schema({
         senha: { type: String, required: true},
     },
     nivel: { type: String, required: true, trim: true },
+    novo: Number,
     app: String
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }
