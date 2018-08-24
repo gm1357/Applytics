@@ -17,23 +17,41 @@
             </nav>
 
             <hr>
-            
-            <div class="row justify-content-around" data-intro="Aqui é mostrado os dados rápidos e importantes para seu app">
-                <div class="shadow bg-white border rounded col-md-2 stats-box text-center">
-                    <p>Total usuários</p>
-                    <p><strong>{{ dados.stats.num_usuarios_totais }}</strong></p>
-                </div>
-                <div class="shadow bg-white border border-primar rounded col-md-2 stats-box text-center">
-                    <p>Tempo médio de sessão</p>
-                    <p><strong>{{ dados.stats.media_sessao }}s</strong></p>
-                </div>
-                <div class="shadow bg-white border border-primar rounded col-md-2 stats-box text-center">
-                    <p>Total monetário ganho</p>
-                    <p><strong>R$ {{ dados.stats.total_gasto }}</strong></p>
-                </div>
-                <div class="shadow bg-white border border-primar rounded col-md-2 stats-box text-center">
-                    <p>Total de travamentos</p>
-                    <p><strong>{{ dados.stats.num_crashes }}</strong></p>
+
+            <div class="row justify-content-around" data-intro="Aqui é mostrado um slide com os dados rápidos e importantes para seu app">
+                <div class="col-md-11">
+                    <ul class="stats-slider">
+                        <li>
+                            <div class="shadow bg-white border rounded stats-box text-center">
+                                <p>Total usuários</p>
+                                <p><strong>{{ dados.stats.num_usuarios_totais }}</strong></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="shadow bg-white border rounded stats-box text-center">
+                                <p>Tempo médio de sessão</p>
+                                <p><strong>{{ dados.stats.media_sessao }}s</strong></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="shadow bg-white border rounded stats-box text-center">
+                                <p>Total monetário ganho</p>
+                                <p><strong>R$ {{ dados.stats.total_gasto }}</strong></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="shadow bg-white border rounded stats-box text-center">
+                                <p>Total de travamentos</p>
+                                <p><strong>{{ dados.stats.num_crashes }}</strong></p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="shadow bg-white border rounded stats-box text-center">
+                                <p>Total de sessões</p>
+                                <p><strong>{{ dados.stats.num_total_sessoes }}</strong></p>
+                            </div>
+                        </li>
+                    </ul>
                 </div>
             </div>
             
@@ -116,6 +134,23 @@
                     'hintButtonLabel': '',
                     'hintPosition': 'top-left'
                 }).addHints();
+
+                $(document).ready(function() {
+                    $(".stats-slider").lightSlider({
+                        item: 3,
+                        slideMargin: 20,
+                        autoWidth: false,
+                        speed: 400, //ms'
+                        auto: true,
+                        loop: true,
+                        slideEndAnimation: true,
+                        pause: 10000,
+                        enableTouch:true,
+                        enableDrag:true,
+                        pager: false,
+                        adaptiveHeight:true,
+                    });
+                });
             </script>
         {{/unless}}
     </main>

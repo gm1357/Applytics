@@ -244,6 +244,8 @@ exports.index = (req, res) => {
 
         const collectionSessoes = db.collection('app_sessoes'+req.user.app);
 
+        dados.stats.num_total_sessoes = await collectionSessoes.countDocuments();
+
         // Array com o número de sessões a cada hora por dia da semana
         let sessoes_dia_semana_hora = await collectionSessoes.aggregate([
             { $group: { 
@@ -294,6 +296,7 @@ exports.index = (req, res) => {
         dados.stats.variancia_gasto_total = dados.stats.variancia_gasto_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         dados.stats.desvio_gasto_total = dados.stats.desvio_gasto_total.toFixed(2).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         dados.stats.num_crashes = dados.stats.num_crashes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        dados.stats.num_total_sessoes = dados.stats.num_total_sessoes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         
         await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message, usuarioNovo: req.user.novo});
     });

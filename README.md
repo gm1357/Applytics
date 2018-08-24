@@ -31,6 +31,7 @@ Ferramenta analytics para apps desenvolvida para conclusão de curso de bcc.
 - Tags-input
 - DataTables
 - Intro.Js
+- JQuery lightSlider
 - Dev:
     - Mocha
     - Supertest
