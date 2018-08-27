@@ -53,6 +53,7 @@
     "popper.js": "^1.14.3",
     "request": "^2.87.0",
     "serve-favicon": "^2.5.0",
+    "simple-statistics": "^6.1.0",
     "tags-input": "^1.1.1"
   },
   "devDependencies": {

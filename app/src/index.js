@@ -1,9 +1,11 @@
 import 'bootstrap';
 import Highcharts from 'highcharts/highstock';
-window.Highcharts = Highcharts;
 require('highcharts/modules/exporting')(Highcharts);
+require('highcharts/modules/export-data')(Highcharts);
 require('highcharts/modules/histogram-bellcurve')(Highcharts);
 require('highcharts/modules/map')(Highcharts);
+require('highcharts/highcharts-more')(Highcharts);
+window.Highcharts = Highcharts;
 import TagsInput from 'tags-input';
 window.TagsInput = TagsInput;
 import $ from 'jquery';
