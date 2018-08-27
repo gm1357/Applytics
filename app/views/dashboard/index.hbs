@@ -104,6 +104,7 @@
                     <div id="mapaDist" style="width:100%; height:400px;" data-hint="Mapa que mostra a quantidade de usuários em cada país"></div>
                     <div id="pieViewsAcessos" style="width:100%; height:400px;" data-hint="Gráfico de pizza que mostrada a quantidade de acessos em cada tela do seu app (são considerados múltiplos acessos por usuário)"></div>
                     <div id="heatMapAcessos" style="width:100%; height:600px;" data-hint="Mapa de calor que mostra sessões iniciadas a cada hora dos dias da semana. Quanto mais escuro, mais acessos)."></div>
+                    <div id="boxPlotDuracao" style="width:100%; height:600px;" data-hint="Box plot dos dados de tempo de sessão total dos usuários no app."></div>
                 </div>
             </div>
 
@@ -130,11 +131,6 @@
                     intro.start();
                 });
 
-                introJs().setOptions({
-                    'hintButtonLabel': '',
-                    'hintPosition': 'top-left'
-                }).addHints();
-
                 $(document).ready(function() {
                     $(".stats-slider").lightSlider({
                         item: 3,
@@ -150,6 +146,11 @@
                         pager: false,
                         adaptiveHeight:true,
                     });
+
+                    introJs().setOptions({
+                        'hintButtonLabel': '',
+                        'hintPosition': 'top-left'
+                    }).addHints();
                 });
             </script>
         {{/unless}}

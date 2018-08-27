@@ -299,4 +299,46 @@
             enabled: false
         }
     });
+
+    Highcharts.chart('boxPlotDuracao', {
+        chart: {
+            type: 'boxplot'
+        },
+        tooltip: {
+            pointFormat: '<span style="color:{point.color}">●</span> <b> {series.name}</b><br/>Máximo: {point.high}<br/>Quartil superior: {point.q3}<br/>Mediana: {point.median}<br/>Quartil inferior: {point.q1}<br/>Mínimo: {point.low}<br/>'
+        },
+        title: {
+            text: 'Boxplot de duração de sessão'
+        },
+        legend: {
+            enabled: false
+        },
+        xAxis: {
+            categories: ['0 - 20', '20 - 30', '30 - 40', '40 - 50', '50+'],
+            title: {
+                text: 'Idade de usuários'
+            }
+        },
+        yAxis: {
+            title: {
+                text: 'Tempo em segundos'
+            }
+        },
+        series: [{
+            name: 'Duração de sessões',
+            data: [
+                {{json dados.graphs.boxPlotDuracao.array1}},
+                {{json dados.graphs.boxPlotDuracao.array2}},
+                {{json dados.graphs.boxPlotDuracao.array3}},
+                {{json dados.graphs.boxPlotDuracao.array4}},
+                {{json dados.graphs.boxPlotDuracao.array5}}
+            ],
+            tooltip: {
+                headerFormat: '<em>Faixa de idade {point.key}</em><br/>'
+            }
+        }],
+        credits: {
+            enabled: false
+        }
+    });
 </script>

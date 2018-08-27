@@ -6,6 +6,7 @@ var Usuario = require('../models/Usuario');
 const MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 const { validationResult } = require('express-validator/check');
+var ss = require('simple-statistics');
 
 exports.index = (req, res) => {
     if (!req.isAuthenticated()) {
@@ -212,6 +213,77 @@ exports.index = (req, res) => {
             dados.graphs.idades.idadesArray.push(row._id);
             dados.graphs.idades.quantidade.push(row.count);
         });
+
+        // Arrays e contas para fazer boxplot de duração de sessão
+        // Menor ou igual a 20
+        let array20 = [];
+        let menor20 = await collection.find(
+            { $expr: { 
+                $lte: [{ $subtract: [{$year: new Date()}, '$ano_nascimento']}, 20]
+            }}
+        ).project({total_duracao_sessao: 1, _id: 0}).toArray();
+        
+        for (usuario of menor20) {
+            array20.push(usuario.total_duracao_sessao);
+        }
+
+        // Maior que 20 e menor ou igual a 30
+        let array20_30 = [];
+        let entre20_30 = await collection.find(
+            { $and: [
+                { $expr: { $gt: [{ $subtract: [{$year: new Date()}, '$ano_nascimento']}, 20]}}, 
+                { $expr: { $lte: [{ $subtract: [{$year: new Date()}, '$ano_nascimento']}, 30]}}
+            ]}
+        ).project({total_duracao_sessao: 1, _id: 0}).toArray();
+        
+        for (usuario of entre20_30) {
+            array20_30.push(usuario.total_duracao_sessao);
+        }
+
+        // Maior que 30 e menor ou igual a 40
+        let array30_40 = [];
+        let entre30_40 = await collection.find(
+            { $and: [
+                { $expr: { $gt: [{ $subtract: [{$year: new Date()}, '$ano_nascimento']}, 30]}}, 
+                { $expr: { $lte: [{ $subtract: [{$year: new Date()}, '$ano_nascimento']}, 40]}}
+            ]}
+        ).project({total_duracao_sessao: 1, _id: 0}).toArray();
+        
+        for (usuario of entre30_40) {
+            array30_40.push(usuario.total_duracao_sessao);
+        }
+
+        // Maior que 40 e menor ou igual a 50
+        let array40_50 = [];
+        let entre40_50 = await collection.find(
+            { $and: [
+                { $expr: { $gt: [{ $subtract: [{$year: new Date()}, '$ano_nascimento']}, 40]}}, 
+                { $expr: { $lte: [{ $subtract: [{$year: new Date()}, '$ano_nascimento']}, 50]}}
+            ]}
+        ).project({total_duracao_sessao: 1, _id: 0}).toArray();
+        
+        for (usuario of entre40_50) {
+            array40_50.push(usuario.total_duracao_sessao);
+        }
+
+        // Maior que 50
+        let array50 = [];
+        let maior50 = await collection.find(
+            { $expr: { 
+                $gt: [{ $subtract: [{$year: new Date()}, '$ano_nascimento']}, 50]
+            }}
+        ).project({total_duracao_sessao: 1, _id: 0}).toArray();
+        
+        for (usuario of maior50) {
+            array50.push(usuario.total_duracao_sessao);
+        }
+
+        dados.graphs.boxPlotDuracao = {};
+        dados.graphs.boxPlotDuracao.array1 = formaBoxPlot(array20);
+        dados.graphs.boxPlotDuracao.array2 = formaBoxPlot(array20_30);
+        dados.graphs.boxPlotDuracao.array3 = formaBoxPlot(array30_40);
+        dados.graphs.boxPlotDuracao.array4 = formaBoxPlot(array40_50);
+        dados.graphs.boxPlotDuracao.array5 = formaBoxPlot(array50);
 
         const collectionApps = db.collection('aplicativos');
         const collectionViews = db.collection('app_views'+req.user.app);
@@ -514,3 +586,16 @@ exports.lista_usuarios = (req, res) => {
         });
     });
 };
+
+// Gera uma array com os dados necessários para o gráfico box plot através de uma array de dados
+function formaBoxPlot(dados) {
+    array = [];
+
+    array.push(ss.min(dados));
+    array.push(ss.quantile(dados, 0.25));
+    array.push(ss.median(dados));
+    array.push(ss.quantile(dados, 0.75));
+    array.push(ss.max(dados));
+
+    return array;
+}
