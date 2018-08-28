@@ -1,4 +1,5 @@
 var ss = require('simple-statistics');
+var Usuario = require('../models/Usuario');
 
 // Gera uma array com os dados necessários para o gráfico box plot através de uma array de dados
 exports.formaBoxPlot = (dados) => {
@@ -13,14 +14,20 @@ exports.formaBoxPlot = (dados) => {
     return array;
 }
 
-exports.isAutenticado = (req, res) => {
-    if (!req.isAuthenticated()) {
-        res.redirect('/usuarios/login');
-    }
-}
+exports.verificaNovoUsuario = (req, pagina) => {
+    let userState = -1;
 
-exports.temApp = (req, res) => {
-    if (req.user.app == null) {
-        res.redirect('/dashboard/novo');
+    if (req.user[pagina] == 2) {
+        userState = 1;
+    } else if (req.user[pagina] == 1) {
+        userState = 0;
     }
+    
+    if (userState != -1) {
+        Usuario.update({ _id: req.user._id }, { $set: { [pagina] : userState}}, err => {
+            if(err) { return console.dir(err); }   
+        });
+        return userState;
+    }
+    return 0;
 }

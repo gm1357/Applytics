@@ -7,7 +7,9 @@ var userSchema = mongoose.Schema({
         senha: { type: String, required: true},
     },
     nivel: { type: String, required: true, trim: true },
-    novo: Number,
+    novoD: Number, // Para identificar a primeira visíta a pagina inicial da dashboard
+    novoC: Number, // Para identificar a primeira visíta a pagina crashes da dashboard
+    novoU: Number, // Para identificar a primeira visíta a pagina usuarios da dashboard
     app: String
 }, {
     timestamps: { createdAt: 'created_at', updatedAt: 'updated_at' }

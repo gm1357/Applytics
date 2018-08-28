@@ -9,28 +9,17 @@ const { validationResult } = require('express-validator/check');
 var Helper = require('../helpers/dashboardHelper');
 
 exports.index = (req, res) => {
-    Helper.isAutenticado(req, res);
-    Helper.temApp(req, res);
+    if (!req.isAuthenticated()) {
+        return res.redirect('/usuarios/login');
+    }
+    if (req.user.app == null) {
+        return res.redirect('/dashboard/novo');
+    }
 
     let message = req.flash('message');
     let dados = {};
     dados.stats = {};
     dados.graphs = {};
-    let userState = -1;
-
-    // Para identificar se é o primeiro acesso de um usuário à dashboard
-    if (req.user.novo == 2) {
-        userState = 1;
-    } else if (req.user.novo == 1) {
-        userState = 0;
-    }
-    if (userState != -1) {
-        Usuario.update({ _id: req.user._id }, { $set: {'novo': userState}}, err => {
-            if(err) { return console.dir(err); }
-
-            req.user.novo = userState;
-        });
-    }
     
     MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true }, async function(err, client) {
         if(err) { return console.dir(err); }
@@ -41,8 +30,11 @@ exports.index = (req, res) => {
         // Todos usuários
         dados.stats.num_usuarios_totais = await collection.find().toArray();
         if (dados.stats.num_usuarios_totais.length <= 0) {
-            await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});
+            return res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message});
         }
+        
+        // Para identificar se é o primeiro acesso de um usuário à dashboard
+        req.user.novoD = Helper.verificaNovoUsuario(req, 'novoD');
 
         // Usuários ativos nas últimas 24h
         dados.stats.num_usuarios_dia = await collection.find({
@@ -363,13 +355,15 @@ exports.index = (req, res) => {
         dados.stats.num_crashes = dados.stats.num_crashes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         dados.stats.num_total_sessoes = dados.stats.num_total_sessoes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         
-        await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message, usuarioNovo: req.user.novo});
+        await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message, usuarioNovo: req.user.novoD});
     });
     
 };
 
 exports.monta_form = (req, res) => {
-    Helper.isAutenticado(req, res);
+    if (!req.isAuthenticated()) {
+        return res.redirect('/usuarios/login');
+    }
 
     request({
         url: 'https://restcountries.eu/rest/v2/all?fields=translations;numericCode',
@@ -390,7 +384,10 @@ exports.monta_form = (req, res) => {
                     let app = req.flash('aplicativo')[0] || new Aplicativo();
                     res.render('dashboard/formApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: app, nomeForm: "Cadastrar novo app", acaoForm: "Criar", metodoForm: "POST"});
                 } else {
-                    Helper.temApp(req, res);
+                    if (req.user.app == null) {
+                        return res.redirect('/dashboard/novo');
+                    }
+
                     Aplicativo.findById(req.user.app, (err, app) => {
                         res.render('dashboard/formApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: app, nomeForm: "Editar app selecionado", acaoForm: "Editar", metodoForm: "PUT"});
                     });    
@@ -468,9 +465,15 @@ exports.atualizar_app = (req, res) => {
 };
 
 exports.lista_crashes = (req, res) => {
-    Helper.isAutenticado(req, res);
+    if (!req.isAuthenticated()) {
+        return res.redirect('/usuarios/login');
+    }
+    if (req.user.app == null) {
+        return res.redirect('/dashboard/novo');
+    }
 
-    Helper.temApp(req, res);
+    // Para identificar se é o primeiro acesso de um usuário à pagina de crashes
+    req.user.novoC = Helper.verificaNovoUsuario(req, 'novoC');
 
     let dados = {};
     dados.graphs = {};
@@ -503,14 +506,21 @@ exports.lista_crashes = (req, res) => {
         collection.find().toArray((err, crashes) => {
             if(err) { return console.dir(err); }
             
-            res.render('dashboard/crashes', {crashes: crashes, dados: dados});
+            res.render('dashboard/crashes', {crashes: crashes, dados: dados, usuarioNovo: req.user.novoC});
         });
     });
 };
 
 exports.lista_usuarios = (req, res) => {
-    Helper.isAutenticado(req, res);
-    Helper.temApp(req, res);
+    if (!req.isAuthenticated()) {
+        return res.redirect('/usuarios/login');
+    }
+    if (req.user.app == null) {
+        return res.redirect('/dashboard/novo');
+    }
+
+    // Para identificar se é o primeiro acesso de um usuário à pagina de usuários
+    req.user.novoU = Helper.verificaNovoUsuario(req, 'novoU');
 
     MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true }, async function(err, client) {
         if(err) { return console.dir(err); }
@@ -529,7 +539,7 @@ exports.lista_usuarios = (req, res) => {
                 collectionViews.find().toArray((err, views) => {
                     if(err) { return console.dir(err); }
 
-                    res.render('dashboard/usuarios', {users: users, aplicativo: app, views: views});
+                    res.render('dashboard/usuarios', {users: users, aplicativo: app, views: views, usuarioNovo: req.user.novoU});
                 });
             });
         });

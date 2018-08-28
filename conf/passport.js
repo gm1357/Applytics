@@ -36,7 +36,9 @@ module.exports = passport => {
                     newUser.local.nome = req.body.nome;
                     newUser.local.email = email;
                     newUser.nivel = req.body.nivel;
-                    newUser.novo = 2;
+                    newUser.novoD = 2;
+                    newUser.novoC = 2;
+                    newUser.novoU = 2;
                     newUser.local.senha = newUser.generateHash(password);
 
                     newUser.save(err => {
