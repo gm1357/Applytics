@@ -6,18 +6,11 @@ var Usuario = require('../models/Usuario');
 const MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 const { validationResult } = require('express-validator/check');
-var ss = require('simple-statistics');
+var Helper = require('../helpers/dashboardHelper');
 
 exports.index = (req, res) => {
-    if (!req.isAuthenticated()) {
-        res.redirect('/usuarios/login');
-        return;
-    }
-
-    if (req.user.app == null) {
-        res.redirect('/dashboard/novo');
-        return;
-    }
+    Helper.isAutenticado(req, res);
+    Helper.temApp(req, res);
 
     let message = req.flash('message');
     let dados = {};
@@ -25,12 +18,12 @@ exports.index = (req, res) => {
     dados.graphs = {};
     let userState = -1;
 
+    // Para identificar se é o primeiro acesso de um usuário à dashboard
     if (req.user.novo == 2) {
         userState = 1;
     } else if (req.user.novo == 1) {
         userState = 0;
     }
-
     if (userState != -1) {
         Usuario.update({ _id: req.user._id }, { $set: {'novo': userState}}, err => {
             if(err) { return console.dir(err); }
@@ -279,11 +272,11 @@ exports.index = (req, res) => {
         }
 
         dados.graphs.boxPlotDuracao = {};
-        dados.graphs.boxPlotDuracao.array1 = formaBoxPlot(array20);
-        dados.graphs.boxPlotDuracao.array2 = formaBoxPlot(array20_30);
-        dados.graphs.boxPlotDuracao.array3 = formaBoxPlot(array30_40);
-        dados.graphs.boxPlotDuracao.array4 = formaBoxPlot(array40_50);
-        dados.graphs.boxPlotDuracao.array5 = formaBoxPlot(array50);
+        dados.graphs.boxPlotDuracao.array1 = Helper.formaBoxPlot(array20);
+        dados.graphs.boxPlotDuracao.array2 = Helper.formaBoxPlot(array20_30);
+        dados.graphs.boxPlotDuracao.array3 = Helper.formaBoxPlot(array30_40);
+        dados.graphs.boxPlotDuracao.array4 = Helper.formaBoxPlot(array40_50);
+        dados.graphs.boxPlotDuracao.array5 = Helper.formaBoxPlot(array50);
 
         const collectionApps = db.collection('aplicativos');
         const collectionViews = db.collection('app_views'+req.user.app);
@@ -376,10 +369,7 @@ exports.index = (req, res) => {
 };
 
 exports.monta_form = (req, res) => {
-    if (!req.isAuthenticated()) {
-        res.redirect('/usuarios/login');
-        return;
-    }
+    Helper.isAutenticado(req, res);
 
     request({
         url: 'https://restcountries.eu/rest/v2/all?fields=translations;numericCode',
@@ -398,45 +388,17 @@ exports.monta_form = (req, res) => {
                 
                 if (res.locals.isNovo) {
                     let app = req.flash('aplicativo')[0] || new Aplicativo();
-                    res.render('dashboard/formApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: app, nomeForm: "Cadastrar novo app", metodoForm: "POST"});
+                    res.render('dashboard/formApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: app, nomeForm: "Cadastrar novo app", acaoForm: "Criar", metodoForm: "POST"});
                 } else {
+                    Helper.temApp(req, res);
                     Aplicativo.findById(req.user.app, (err, app) => {
-                        res.render('dashboard/formApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: app, nomeForm: "Editar app selecionado", metodoForm: "PUT"});
+                        res.render('dashboard/formApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: app, nomeForm: "Editar app selecionado", acaoForm: "Editar", metodoForm: "PUT"});
                     });    
                 }
             });
         }
     });
 }
-
-exports.editar_app = (req, res) => {
-    if (!req.isAuthenticated()) {
-        res.redirect('/usuarios/login');
-        return;
-    }
-
-    request({
-        url: 'https://restcountries.eu/rest/v2/all?fields=translations;numericCode',
-        json: true
-    }, function (error, response, data) {
-    
-        if (!error && response.statusCode === 200) {
-
-            Categoria.find(function(err, categorias) {
-                if (err) return console.error(err);
-                
-                var paises = [];
-                data.forEach(element => {
-                    paises.push({id: element.numericCode, nome: element.translations.br});
-                });
-
-                Aplicativo.findById(req.user.app, (err, app) => {
-                    res.render('dashboard/editarApp', {paises: paises, categorias: categorias, validationErrors: req.flash('validationErrors'), aplicativo: app});
-                });
-            });
-        }
-    });
-};
 
 exports.criar_app = (req, res) => {
     const errors = validationResult(req);
@@ -506,15 +468,9 @@ exports.atualizar_app = (req, res) => {
 };
 
 exports.lista_crashes = (req, res) => {
-    if (!req.isAuthenticated()) {
-        res.redirect('/usuarios/login');
-        return;
-    }
+    Helper.isAutenticado(req, res);
 
-    if (req.user.app == null) {
-        res.redirect('/dashboard/novo');
-        return;
-    }
+    Helper.temApp(req, res);
 
     let dados = {};
     dados.graphs = {};
@@ -553,15 +509,8 @@ exports.lista_crashes = (req, res) => {
 };
 
 exports.lista_usuarios = (req, res) => {
-    if (!req.isAuthenticated()) {
-        res.redirect('/usuarios/login');
-        return;
-    }
-
-    if (req.user.app == null) {
-        res.redirect('/dashboard/novo');
-        return;
-    }
+    Helper.isAutenticado(req, res);
+    Helper.temApp(req, res);
 
     MongoClient.connect(process.env.MONGODB_URI, { useNewUrlParser: true }, async function(err, client) {
         if(err) { return console.dir(err); }
@@ -586,16 +535,3 @@ exports.lista_usuarios = (req, res) => {
         });
     });
 };
-
-// Gera uma array com os dados necessários para o gráfico box plot através de uma array de dados
-function formaBoxPlot(dados) {
-    array = [];
-
-    array.push(ss.min(dados));
-    array.push(ss.quantile(dados, 0.25));
-    array.push(ss.median(dados));
-    array.push(ss.quantile(dados, 0.75));
-    array.push(ss.max(dados));
-
-    return array;
-}
