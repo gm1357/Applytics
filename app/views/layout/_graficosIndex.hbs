@@ -111,47 +111,6 @@
         }
     });
 
-    Highcharts.chart('histTempoSessao', {
-        title: {
-            text: 'Histograma do tempo médio de sessão dos usuários'
-        },
-        yAxis: [{
-            title: { text: 'Tempo em segundos' }
-        }, {
-            title: { text: 'Número de usuários'},
-            opposite: true
-        }],
-        xAxis: [{
-            title: { text: 'Número de usuários individuais' }
-        }, {
-            title: { text: 'Tempo em segundos do histograma'},
-            opposite: true
-        }],
-        legend: {
-            align: 'center',
-            verticalAlign: 'top'
-        },
-        series: [{
-            name: 'Histograma',
-            type: 'histogram',
-            xAxis: 1,
-            yAxis: 1,
-            baseSeries: 's1',
-            zIndex: -1
-        }, {
-            name: 'Usuários individuais',
-            type: 'scatter',
-            data: {{{json dados.graphs.sessao_media_usuario }}},
-            id: 's1',
-            marker: {
-                radius: 1.1
-            }
-        }],
-        credits: {
-            enabled: false
-        }
-    });
-
     Highcharts.chart('colIdades', {
         chart: {
             type: 'column'
@@ -248,97 +207,141 @@
         }
     });
 
-    Highcharts.chart('heatMapAcessos', {
-        chart: {
-            type: 'heatmap',
-            marginTop: 40,
-            marginBottom: 80,
-            plotBorderWidth: 1
-        },
-        title: {
-            text: 'Acessos por hora do dia'
-        },
-        xAxis: {
-            categories: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
-        },
+    {{#if (is_equal usuarioLogado.nivel 'Avançado') }}
 
-        yAxis: {
-            categories: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00',
-                         '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
-            title: null
-        },
-        colorAxis: {
-            min: 0,
-            minColor: '#FFFFFF',
-            maxColor: Highcharts.getOptions().colors[0]
-        },
-        legend: {
-            align: 'right',
-            layout: 'vertical',
-            margin: 0,
-            verticalAlign: 'top',
-            y: 25,
-            symbolHeight: 280
-        },
-        tooltip: {
-            formatter: function () {
-                return '<b>' +this.point.value+ '</b> sessões no(a) <b>' + this.series.xAxis.categories[this.point.x] + '</b> às <b>' +
-                    this.series.yAxis.categories[this.point.y] + '</b>';
+        Highcharts.chart('histTempoSessao', {
+            title: {
+                text: 'Histograma do tempo médio de sessão dos usuários'
+            },
+            yAxis: [{
+                title: { text: 'Tempo em segundos' }
+            }, {
+                title: { text: 'Número de usuários'},
+                opposite: true
+            }],
+            xAxis: [{
+                title: { text: 'Número de usuários individuais' }
+            }, {
+                title: { text: 'Tempo em segundos do histograma'},
+                opposite: true
+            }],
+            legend: {
+                align: 'center',
+                verticalAlign: 'top'
+            },
+            series: [{
+                name: 'Histograma',
+                type: 'histogram',
+                xAxis: 1,
+                yAxis: 1,
+                baseSeries: 's1',
+                zIndex: -1
+            }, {
+                name: 'Usuários individuais',
+                type: 'scatter',
+                data: {{{json dados.graphs.sessao_media_usuario }}},
+                id: 's1',
+                marker: {
+                    radius: 1.1
+                }
+            }],
+            credits: {
+                enabled: false
             }
-        },
-        series: [{
-            name: 'Sessões',
-            borderWidth: 1,
-            data: {{json dados.graphs.sessoes_por_hora_dia }},
-            dataLabels: {
-                enabled: false,
-                color: '#000000'
-            }
-        }],
-        credits: {
-            enabled: false
-        }
-    });
+        });
 
-    Highcharts.chart('boxPlotDuracao', {
-        chart: {
-            type: 'boxplot'
-        },
-        tooltip: {
-            pointFormat: '<span style="color:{point.color}">●</span> <b> {series.name}</b><br/>Máximo: {point.high}<br/>Quartil superior: {point.q3}<br/>Mediana: {point.median}<br/>Quartil inferior: {point.q1}<br/>Mínimo: {point.low}<br/>'
-        },
-        title: {
-            text: 'Boxplot de duração de sessão'
-        },
-        legend: {
-            enabled: false
-        },
-        xAxis: {
-            categories: ['0 - 20', '20 - 30', '30 - 40', '40 - 50', '50+'],
+        Highcharts.chart('heatMapAcessos', {
+            chart: {
+                type: 'heatmap',
+                marginTop: 40,
+                marginBottom: 80,
+                plotBorderWidth: 1
+            },
             title: {
-                text: 'Idade de usuários'
-            }
-        },
-        yAxis: {
-            title: {
-                text: 'Tempo em segundos'
-            }
-        },
-        series: [{
-            name: 'Duração de sessões',
-            data: [
-                {{json dados.graphs.boxPlotDuracao.array1}},
-                {{json dados.graphs.boxPlotDuracao.array2}},
-                {{json dados.graphs.boxPlotDuracao.array3}},
-                {{json dados.graphs.boxPlotDuracao.array4}},
-                {{json dados.graphs.boxPlotDuracao.array5}}
-            ],
+                text: 'Acessos por hora do dia'
+            },
+            xAxis: {
+                categories: ['Domingo', 'Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado']
+            },
+
+            yAxis: {
+                categories: ['00:00', '01:00', '02:00', '03:00', '04:00', '05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00', '12:00',
+                            '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00', '23:00'],
+                title: null
+            },
+            colorAxis: {
+                min: 0,
+                minColor: '#FFFFFF',
+                maxColor: Highcharts.getOptions().colors[0]
+            },
+            legend: {
+                align: 'right',
+                layout: 'vertical',
+                margin: 0,
+                verticalAlign: 'top',
+                y: 25,
+                symbolHeight: 280
+            },
             tooltip: {
-                headerFormat: '<em>Faixa de idade {point.key}</em><br/>'
+                formatter: function () {
+                    return '<b>' +this.point.value+ '</b> sessões no(a) <b>' + this.series.xAxis.categories[this.point.x] + '</b> às <b>' +
+                        this.series.yAxis.categories[this.point.y] + '</b>';
+                }
+            },
+            series: [{
+                name: 'Sessões',
+                borderWidth: 1,
+                data: {{json dados.graphs.sessoes_por_hora_dia }},
+                dataLabels: {
+                    enabled: false,
+                    color: '#000000'
+                }
+            }],
+            credits: {
+                enabled: false
             }
-        }],
-        credits: {
-            enabled: false
-        }
-    });
+        });
+
+        Highcharts.chart('boxPlotDuracao', {
+            chart: {
+                type: 'boxplot'
+            },
+            tooltip: {
+                pointFormat: '<span style="color:{point.color}">●</span> <b> {series.name}</b><br/>Máximo: {point.high}<br/>Quartil superior: {point.q3}<br/>Mediana: {point.median}<br/>Quartil inferior: {point.q1}<br/>Mínimo: {point.low}<br/>'
+            },
+            title: {
+                text: 'Boxplot de duração de sessão'
+            },
+            legend: {
+                enabled: false
+            },
+            xAxis: {
+                categories: ['0 - 20', '20 - 30', '30 - 40', '40 - 50', '50+'],
+                title: {
+                    text: 'Idade de usuários'
+                }
+            },
+            yAxis: {
+                title: {
+                    text: 'Tempo em segundos'
+                }
+            },
+            series: [{
+                name: 'Duração de sessões',
+                data: [
+                    {{json dados.graphs.boxPlotDuracao.array1}},
+                    {{json dados.graphs.boxPlotDuracao.array2}},
+                    {{json dados.graphs.boxPlotDuracao.array3}},
+                    {{json dados.graphs.boxPlotDuracao.array4}},
+                    {{json dados.graphs.boxPlotDuracao.array5}}
+                ],
+                tooltip: {
+                    headerFormat: '<em>Faixa de idade {point.key}</em><br/>'
+                }
+            }],
+            credits: {
+                enabled: false
+            }
+        });
+    {{/if}}
 </script>

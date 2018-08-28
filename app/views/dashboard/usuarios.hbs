@@ -1,7 +1,7 @@
 {{> _header}}
 
     <main role="main" class="container">
-        <h1 class="text-center">Usuários</h1>
+        <h1 class="text-center" data-intro="Essa página fornece informações mais aprofundadas dos usuários do app.">Usuários</h1>
 
         <nav class="nav nav-pills nav-fill justify-content-around mt-5">
             <a class="nav-link" href="/dashboard">Dados gerais</a>
@@ -11,102 +11,121 @@
 
         <hr>
 
-        <div class="index shadow">
-            <div class="row justify-content-around">
-                <div class="col col-md-11">
-                    <h2 class="text-center">Tabela de usuários do app</h2>
+        <div class="row justify-content-around" data-intro="Aqui são mostrado tabelas que fornecem mais informações sobre cada usuário que já utilizou seu app." data-scrollTo="tooltip">
+            <div class="col-md-11 shadow bg-white border rounded stats-box">
+                <h2 class="text-center">Tabela de usuários do app</h2>
 
-                    <table id="usuarios" class="table table-striped responsive table-bordered" width="100%">
-                        <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nome</th>
-                                <th>Email</th>
-                                <th>Telefone</th>
-                                <th>Sexo</th>
-                                <th>Ano de nascimento</th>
-                                <th>País</th>
-                                <th>Cidade</th>
-                                <th>Dispositivo</th>
-                                <th>Resolução da tela</th>
-                                <th>DPI da tela</th>
-                                <th>Operadora</th>
-                                <th>OS</th>
-                                <th>Versão OS</th>
-                                <th>Versão app</th>
-                                <th>Visto pela primeira vez</th>
-                                <th>Visto por último</th>
-                                <th>Número de sessões</th>
-                                <th>Duração da última sessão</th>
-                                <th>Duração total das sessões</th>
-                                <th>Última view visitada</th>
-                                <th>Data da última compra</th>
-                                <th>Total da última compra</th>
-                                <th>Total gasto</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                        <tfoot>
-                            <tr>
-                                <th>ID</th>
-                                <th>Nome</th>
-                                <th>Email</th>
-                                <th>Telefone</th>
-                                <th>Sexo</th>
-                                <th>Ano de nascimento</th>
-                                <th>País</th>
-                                <th>Cidade</th>
-                                <th>Dispositivo</th>
-                                <th>Resolução da tela</th>
-                                <th>DPI da tela</th>
-                                <th>Operadora</th>
-                                <th>OS</th>
-                                <th>Versão OS</th>
-                                <th>Versão app</th>
-                                <th>Visto pela primeira vez</th>
-                                <th>Visto por último</th>
-                                <th>Número de sessões</th>
-                                <th>Duração da última sessão</th>
-                                <th>Duração total das sessões</th>
-                                <th>Última view visitada</th>
-                                <th>Data da última compra</th>
-                                <th>Total da última compra</th>
-                                <th>Total gasto</th>
-                            </tr>
-                        </tfoot>
-                    </table>
+                <table id="usuarios" class="table table-striped responsive table-bordered" width="100%" data-hint="Cada linha é um usuário, O ID é o identificador usado pelo nosso sistema para referenciar a esse usuário.">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Telefone</th>
+                            <th>Sexo</th>
+                            <th>Ano de nascimento</th>
+                            <th>País</th>
+                            <th>Cidade</th>
+                            <th>Dispositivo</th>
+                            <th>Resolução da tela</th>
+                            <th>DPI da tela</th>
+                            <th>Operadora</th>
+                            <th>OS</th>
+                            <th>Versão OS</th>
+                            <th>Versão app</th>
+                            <th>Visto pela primeira vez</th>
+                            <th>Visto por último</th>
+                            <th>Número de sessões</th>
+                            <th>Duração da última sessão</th>
+                            <th>Duração total das sessões</th>
+                            <th>Última view visitada</th>
+                            <th>Data da última compra</th>
+                            <th>Total da última compra</th>
+                            <th>Total gasto</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Email</th>
+                            <th>Telefone</th>
+                            <th>Sexo</th>
+                            <th>Ano de nascimento</th>
+                            <th>País</th>
+                            <th>Cidade</th>
+                            <th>Dispositivo</th>
+                            <th>Resolução da tela</th>
+                            <th>DPI da tela</th>
+                            <th>Operadora</th>
+                            <th>OS</th>
+                            <th>Versão OS</th>
+                            <th>Versão app</th>
+                            <th>Visto pela primeira vez</th>
+                            <th>Visto por último</th>
+                            <th>Número de sessões</th>
+                            <th>Duração da última sessão</th>
+                            <th>Duração total das sessões</th>
+                            <th>Última view visitada</th>
+                            <th>Data da última compra</th>
+                            <th>Total da última compra</th>
+                            <th>Total gasto</th>
+                        </tr>
+                    </tfoot>
+                </table>
 
-                    <hr>
+                <hr>
 
-                    <h2 class="text-center">Tabela de acesso de views por usuários</h2>
+                <h2 class="text-center">Tabela de acesso de views por usuários</h2>
 
-                    <table id="views" class="table table-striped responsive table-bordered" width="100%">
-                        <thead>
-                            <tr>
-                                <th>ID do Usuário</th>
-                                {{#each aplicativo.views}}
-                                    <th>{{ this }} - quantidade</th>
-                                    <th>{{ this }} - data da última visita</th>
-                                {{/each}}
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                        <tfoot>
-                            <tr>
-                                <th>ID do Usuário</th>
-                                {{#each aplicativo.views}}
-                                    <th>{{ this }} - quantidade</th>
-                                    <th>{{ this }} - data da última visita</th>
-                                {{/each}}
-                            </tr>
-                        </tfoot>
-                    </table>
-                </div>
+                <table id="views" class="table table-striped responsive table-bordered" width="100%" data-hint="Nessa tabela existe duas colunas para cada tela cadastrada do seu app, a primeira coluna mostra o número de vezes que ela foi acessada pelo usuário e a segunda a data do último acesso.">
+                    <thead>
+                        <tr>
+                            <th>ID do Usuário</th>
+                            {{#each aplicativo.views}}
+                                <th>{{ this }} - quantidade</th>
+                                <th>{{ this }} - data da última visita</th>
+                            {{/each}}
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <th>ID do Usuário</th>
+                            {{#each aplicativo.views}}
+                                <th>{{ this }} - quantidade</th>
+                                <th>{{ this }} - data da última visita</th>
+                            {{/each}}
+                        </tr>
+                    </tfoot>
+                </table>
             </div>
         </div>
     </main>
 
     <script>
+        let intro = introJs().setOptions({
+            'skipLabel': 'Pular tour',
+            'doneLabel': 'Concluir',
+            'nextLabel': 'Próximo >',
+            'prevLabel': '< Anterior',
+            'exitOnOverlayClick': false,
+            'showStepNumbers': false,
+            'scrollTo': 'element',
+            'overlayOpacity': 0.9
+        });
+
+        {{#if (is_equal usuarioLogado.nivel 'Iniciante') }}
+            {{#if usuarioNovo }}
+                intro.start();
+            {{/if}}
+        {{/if}}
+
+        document.getElementById('ver-tour').addEventListener('click', () => {
+            intro.start();
+        });
+
         $(document).ready(function() {
             $('#usuarios').DataTable( {
                 "language": {
@@ -218,7 +237,15 @@
                             }
                         },
                     {{/each}}
-                ]
+                ],
+                "initComplete": function(settings, json) {
+                    {{#if (is_equal usuarioLogado.nivel 'Iniciante') }}
+                        introJs().setOptions({
+                            'hintButtonLabel': '',
+                            'hintPosition': 'top-left'
+                        }).addHints();
+                    {{/if}}
+                }
             });
         });
     </script>

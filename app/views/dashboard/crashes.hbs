@@ -1,7 +1,7 @@
 {{> _header}}
 
     <main role="main" class="container">
-        <h1 class="text-center">Crashes</h1>
+        <h1 class="text-center" data-intro="Essa página é dedicada para mostrar informações sobre os travamentos que ocorrem com os usuários, informações importantes para poder melhorar seu app!">Crashes</h1>
 
         <nav class="nav nav-pills nav-fill justify-content-around mt-5">
             <a class="nav-link" href="/dashboard">Dados gerais</a>
@@ -11,55 +11,55 @@
 
         <hr>
 
-        <div class="index shadow">
-            <div class="row justify-content-around">
-                <div class="col col-md-11">
-                    <h2 class="text-center">Tabela de travamento do app</h2>
+        <div class="row justify-content-around" data-intro="Aqui é mostrado uma tabela com todos os erros e informações gravadas no seu app." data-scrollTo="tooltip">
+            <div class="col-md-11 shadow bg-white border rounded stats-box">
+                <h2 class="text-center">Tabela de travamento do app</h2>
 
-                    <table id="crashes" class="table table-striped responsive table-bordered" width="100%">
-                        <thead>
-                            <tr>
-                                <th>ID usuário</th>
-                                <th>Data</th>
-                                <th>CPU</th>
-                                <th>Ram atual</th>
-                                <th>Ram total</th>
-                                <th>Capacidade atual</th>
-                                <th>Capacidade total</th>
-                                <th>Bateria atual</th>
-                                <th>Orientação da tela</th>
-                                <th>Silenciado?</th>
-                                <th>Processo de fundo?</th>
-                                <th>Tratado?</th>
-                                <th>Tempo de funcionamento</th>
-                                <th>Stack-trace</th>
-                            </tr>
-                        </thead>
-                        <tbody></tbody>
-                        <tfoot>
-                            <tr>
-                                <th>ID usuário</th>
-                                <th>Data</th>
-                                <th>CPU</th>
-                                <th>Ram atual</th>
-                                <th>Ram total</th>
-                                <th>Capacidade atual</th>
-                                <th>Capacidade total</th>
-                                <th>Bateria atual</th>
-                                <th>Orientação da tela</th>
-                                <th>Silenciado?</th>
-                                <th>Processo de fundo?</th>
-                                <th>Tratado?</th>
-                                <th>Tempo de funcionamento</th>
-                                <th>Stack-trace</th>
-                            </tr>
-                        </tfoot>
-                    </table>
+                <table id="crashes" class="table table-striped responsive table-bordered" width="100%" data-hint="Cada linha da tabela é um erro que ocorreu com um usuário, especificado pelo ID usuário. Além das informações do dispositivo no momento atual do erro, existe uma coluna Stack-trace, onde é detalhado o erro que ocorreu e em qual parte do código do app.">
+                    <thead>
+                        <tr>
+                            <th>ID usuário</th>
+                            <th>Data</th>
+                            <th>CPU</th>
+                            <th>Ram atual</th>
+                            <th>Ram total</th>
+                            <th>Capacidade atual</th>
+                            <th>Capacidade total</th>
+                            <th>Bateria atual</th>
+                            <th>Orientação da tela</th>
+                            <th>Silenciado?</th>
+                            <th>Processo de fundo?</th>
+                            <th>Tratado?</th>
+                            <th>Tempo de funcionamento</th>
+                            <th>Stack-trace</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                    <tfoot>
+                        <tr>
+                            <th>ID usuário</th>
+                            <th>Data</th>
+                            <th>CPU</th>
+                            <th>Ram atual</th>
+                            <th>Ram total</th>
+                            <th>Capacidade atual</th>
+                            <th>Capacidade total</th>
+                            <th>Bateria atual</th>
+                            <th>Orientação da tela</th>
+                            <th>Silenciado?</th>
+                            <th>Processo de fundo?</th>
+                            <th>Tratado?</th>
+                            <th>Tempo de funcionamento</th>
+                            <th>Stack-trace</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
 
-                    <br>
-
-                    <div id="chartCrashes" style="width:100%; height:400px;"></div>
-                </div>
+        <div class="row justify-content-around" data-intro="Aqui temos os gráficos para melhor visualizar as informações obtidas. No canto superior direito existe um menu com opções para imprimir ou baixar em uma variedade de formatos o gráfico. No canto superior esquerdo existe um botão com dicas e explicações para cada gráfico" data-scrollTo="tooltip">
+            <div class="col-md-11 shadow bg-white border rounded stats-box">
+                <div id="chartCrashes" style="width:100%; height:400px;" data-hint="Gráfico de barras que mostram a quantidade de erros, divididos em duas categorias, por mês. Erros tratados são os erros que seu app foi implementado para executar alguma ação para tentar remediar o ocorrido."></div>
             </div>
         </div>
 
@@ -67,6 +67,27 @@
     </main>
 
     <script>
+        let intro = introJs().setOptions({
+            'skipLabel': 'Pular tour',
+            'doneLabel': 'Concluir',
+            'nextLabel': 'Próximo >',
+            'prevLabel': '< Anterior',
+            'exitOnOverlayClick': false,
+            'showStepNumbers': false,
+            'scrollTo': 'element',
+            'overlayOpacity': 0.9
+        });
+
+        {{#if (is_equal usuarioLogado.nivel 'Iniciante') }}
+            {{#if usuarioNovo }}
+                intro.start();
+            {{/if}}
+        {{/if}}
+
+        document.getElementById('ver-tour').addEventListener('click', () => {
+            intro.start();
+        });
+
         $(document).ready(function() {
             $('#crashes').DataTable( {
                 "language": {
@@ -140,7 +161,15 @@
                         "render": (data) => { return data + "s"; }
                     },
                     { "data" : "stack_trace" }
-                ]
+                ],
+                "initComplete": function(settings, json) {
+                    {{#if (is_equal usuarioLogado.nivel 'Iniciante') }}
+                        introJs().setOptions({
+                            'hintButtonLabel': '',
+                            'hintPosition': 'top-left'
+                        }).addHints();
+                    {{/if}}
+                }
             });
         });
     </script>
