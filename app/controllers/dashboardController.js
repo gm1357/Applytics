@@ -107,16 +107,22 @@ exports.index = (req, res) => {
             { $project: { _id: 0, sum: 1} } 
         ]).toArray();
 
-        // Média de quanto foi gasto
-        dados.stats.media_gasto_total = dados.stats.total_gasto[0].sum / dados.stats.num_usuarios_totais.length;
+        if (dados.stats.total_gasto[0].sum > 0) {
+            // Média de quanto foi gasto
+            dados.stats.media_gasto_total = dados.stats.total_gasto[0].sum / dados.stats.num_usuarios_totais.length;
 
-        // Variância de quanto foi gasto
-        dados.stats.variancia_gasto_total = (dados.stats.num_usuarios_totais.map((num) => {
-            return Math.pow(num.total_gasto - dados.stats.media_gasto_total, 2);
-        }).reduce((a,b) => a + b, 0)) / dados.stats.num_usuarios_totais.length;
+            // Variância de quanto foi gasto
+            dados.stats.variancia_gasto_total = (dados.stats.num_usuarios_totais.map((num) => {
+                return Math.pow(num.total_gasto - dados.stats.media_gasto_total, 2);
+            }).reduce((a,b) => a + b, 0)) / dados.stats.num_usuarios_totais.length;
 
-        // Desvio padrão de quanto foi gasto
-        dados.stats.desvio_gasto_total = Math.sqrt(dados.stats.variancia_gasto_total);
+            // Desvio padrão de quanto foi gasto
+            dados.stats.desvio_gasto_total = Math.sqrt(dados.stats.variancia_gasto_total);
+        } else {
+            dados.stats.media_gasto_total = 0;
+            dados.stats.variancia_gasto_total = 0;
+            dados.stats.desvio_gasto_total = 0;
+        }
         
         // Soma de quantidade de novos usuários por mês
         dados.graphs.usuarios_mes = {};
