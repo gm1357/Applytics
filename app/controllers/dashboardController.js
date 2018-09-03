@@ -66,7 +66,10 @@ exports.index = (req, res) => {
 
         // Usuários homens
         dados.stats.num_usuarios_masculinos = await collection.find({
-            "sexo": "Male"
+            $or: [
+                {"sexo": "Male"},
+                {"sexo": "Masculino"}
+            ]
         }).count();
 
         // Soma total da duração das sessões de todos usuários em segundos (Tempo total do app rodando)
