@@ -5,7 +5,7 @@
     "telefone":"{{chance.phone()}}",
     "sexo":"Masculino",
     "ano_nascimento":"{{Number(chance.year({min: 1965, max: 1995}))}}",
-    "pais":"util.sample(['br', 'us', 'mx], 'jp')}}",
+    "pais":"{{util.sample(['br', 'us', 'mx', 'jp'])}}",
     "cidade":"{{chance.city()}}",
     "dispositivo":"{{util.sample(['Tablet', 'Mobile'])}}",
     "operadora":"{{util.sample(['Tim', 'Oi'])}}",

@@ -4,7 +4,7 @@
     "email":"{{chance.email()}}",
     "telefone":"{{chance.phone()}}",
     "sexo":"Feminino",
-    "ano_nascimento":"{{Number(chance.year({min: 1985, max: 2000}))}}",
+    "ano_nascimento":"{{Number(chance.year({min: 1955, max: 2000}))}}",
     "pais":"{{util.sample(['mx', 'us', 'jp', 'al', 'mn'])}}",
     "cidade":"{{chance.city()}}",
     "dispositivo":"Mobile",
