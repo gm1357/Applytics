@@ -83,34 +83,6 @@
         }
     });
 
-    Highcharts.chart('barTempoSessao', {
-        chart: {
-            type: 'column'
-        },
-        title: {
-            text: 'Tempo médio de sessão dos usuários'
-        },
-        yAxis: {
-            title: {
-                text: 'Tempo em segundos'
-            }
-        },
-        xAxis: {
-            text: 'Usuários'
-        },
-        legend: {
-            align: 'center',
-            verticalAlign: 'top'
-        },
-        series: [{
-            name: 'Usuários',
-            data: {{{json dados.graphs.sessao_media_usuario }}}
-        }],
-        credits: {
-            enabled: false
-        }
-    });
-
     Highcharts.chart('colIdades', {
         chart: {
             type: 'column'
@@ -214,15 +186,15 @@
                 text: 'Histograma do tempo médio de sessão dos usuários'
             },
             yAxis: [{
-                title: { text: 'Tempo em segundos' }
+                title: { text: 'Número de usuários' }
             }, {
-                title: { text: 'Número de usuários'},
+                title: { text: ''},
                 opposite: true
             }],
             xAxis: [{
-                title: { text: 'Número de usuários individuais' }
+                title: { text: 'Tempo em segundos do histograma' }
             }, {
-                title: { text: 'Tempo em segundos do histograma'},
+                title: { text: ''},
                 opposite: true
             }],
             legend: {
@@ -232,13 +204,16 @@
             series: [{
                 name: 'Histograma',
                 type: 'histogram',
-                xAxis: 1,
-                yAxis: 1,
+                xAxis: 0,
+                yAxis: 0,
                 baseSeries: 's1',
                 zIndex: -1
             }, {
                 name: 'Usuários individuais',
                 type: 'scatter',
+                visible: false,
+                xAxis: 1,
+                yAxis: 1,
                 data: {{{json dados.graphs.sessao_media_usuario }}},
                 id: 's1',
                 marker: {
