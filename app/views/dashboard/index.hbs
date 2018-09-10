@@ -1,25 +1,23 @@
 {{> _header}}
 
-    <main role="main" class="container">
+    <main role="main" class="container-fluid">
 
         {{> _mensagens}}
-
-        <h1 class="text-center" data-intro="Bem vindo! A seguir será apresentado as funções da dashboard">Dados gerais</h1>
 
         {{#unless dados.stats.num_usuarios_totais }}
             <p>A chave SDK para realizar a integração com o app é: <strong>{{ appID }}</strong>.</p>
             <p>Integre o SDK no seu app e atualize essa página quando tiver usado pelo menos uma vez seu app para ver os dados.</p>
         {{else}}
             <nav class="nav nav-pills nav-fill justify-content-around mt-5">
-                <a class="nav-link active" href="/dashboard">Dados gerais</a>
+                <a class="nav-link active" href="/dashboard" data-intro="Bem vindo! A seguir será apresentado as funções da dashboard">Dados gerais</a>
                 <a class="nav-link" href="/dashboard/crashes">Crashes</a>
                 <a class="nav-link" href="/dashboard/usuarios">Usuarios</a>
             </nav>
 
             <hr>
 
-            <div class="row justify-content-around" data-intro="Aqui é mostrado um slide com os dados rápidos e importantes para seu app">
-                <div class="col-md-11">
+            <div class="row justify-content-between" data-intro="Aqui é mostrado um slide com os dados rápidos e importantes para seu app">
+                <div class="col-md-12">
                     <ul class="stats-slider">
                         <li>
                             <div class="shadow bg-white border rounded stats-box text-center">
@@ -56,7 +54,7 @@
             </div>
             
             <div class="row justify-content-around">
-                <div class="shadow bg-white border rounded col-md-5 stats-box" data-intro="Aqui são mostrado dados sobre os usuários que utilizam o app">
+                <div class="shadow bg-white border rounded col-md-3 stats-box" data-intro="Aqui são mostrado dados sobre os usuários que utilizam o app">
                     <p>Usuários ativos nas ultimas 24h <strong>{{ dados.stats.num_usuarios_dia }}</strong></p>
                     <div class="progress">
                         <div class="progress-bar" style="width: {{ dados.porcentagens.num_usuarios_dia }}%" role="progressbar" aria-valuenow="{{ dados.stats.num_usuarios_dia }}" aria-valuemin="0" aria-valuemax="{{ dados.stats.num_usuarios_totais }}"></div>
@@ -83,30 +81,53 @@
                     </div>
                 </div>
 
-                <div class="shadow bg-white border rounded col-md-5 stats-box" data-intro="Aqui são mostrado mais alguns dados, incluindo dados monetários (se tiver)">
+                <div class="col-md-4 shadow bg-white border rounded stats-box">
+                    <div id="pieResolucoes" style="width:100%; height:300px;" data-hint="Gráfico de pizza que mostra a quantidade de usuários por resolução da tela do dispositivo que utiliza o app"></div>
+                </div>
+
+                <div class="col-md-4 shadow bg-white border rounded stats-box">
+                    <div id="pieViewsAcessos" style="width:100%; height:300px;" data-hint="Gráfico de pizza que mostrada a quantidade de acessos em cada tela do seu app (são considerados múltiplos acessos por usuário)"></div>
+                </div>
+
+                <div class="shadow bg-white border rounded col-md-3 stats-box" data-intro="Aqui são mostrado mais alguns dados, incluindo dados monetários (se tiver)">
                     <p>Tempo total de uso do app em segundos <strong>{{ dados.stats.tempo_total_sessoes }}s</strong></p>
                     <p>Tempo médio de uso do app por usuário <strong>{{ dados.stats.media_tempo_total }}s</strong></p>
                     <p>Desvio padrão do tempo total de uso do app <strong>{{ dados.stats.desvio_tempo_total }}s</strong></p>
                     <p>Média de gastos por usuários <strong>R$ {{ dados.stats.media_gasto_total }}</strong></p>
                     <p>Desvio padrão de gastos por usuários <strong>R$ {{ dados.stats.desvio_gasto_total }}</strong></p>
                 </div>
-            </div>
 
-            <div class="row justify-content-around" data-intro="Aqui temos os gráficos para melhor visualizar as informações obtidas. No canto superior direito existe um menu com opções para imprimir ou baixar em uma variedade de formatos o gráfico. No canto superior esquerdo existe um botão com dicas e explicações para cada gráfico" data-scrollTo="tooltip">
-                <div class="col-md-11 shadow bg-white border rounded stats-box">
-                    <div id="chartUsuarios" style="width:100%; height:400px;" data-hint="Gráfico de linhas que mostra a quantidade de usuários que foram visto pela primeira vez e pela última vez nos meses"></div>
-                    <div id="pieResolucoes" style="width:100%; height:400px;" data-hint="Gráfico de pizza que mostra a quantidade de usuários por resolução da tela do dispositivo que utiliza o app"></div>
-                    {{#if (is_equal usuarioLogado.nivel 'Avançado') }}
-                        <div id="histTempoSessao" style="width:100%; height:400px;" data-hint="Histograma que mostra por meio de grupos de usuários o tempo médio de sessão. Os pontos são usuários individuais, x é o seu número e y o tempo médio de sessão. As barras são os grupos, x é o tempo médio e y é a quantidade de usuários"></div>
-                    {{/if}}
+                <div class="col-md-7 shadow bg-white border rounded stats-box">
                     <div id="colIdades" style="width:100%; height:400px;" data-hint="Gráfico de barras que mostra a quantidade de usuários por idade"></div>
-                    <div id="mapaDist" style="width:100%; height:400px;" data-hint="Mapa que mostra a quantidade de usuários em cada país"></div>
-                    <div id="pieViewsAcessos" style="width:100%; height:400px;" data-hint="Gráfico de pizza que mostrada a quantidade de acessos em cada tela do seu app (são considerados múltiplos acessos por usuário)"></div>
-                    {{#if (is_equal usuarioLogado.nivel 'Avançado') }}
-                        <div id="heatMapAcessos" style="width:100%; height:600px;" data-hint="Mapa de calor que mostra sessões iniciadas a cada hora dos dias da semana. Quanto mais escuro, mais acessos)."></div>
-                        <div id="boxPlotDuracao" style="width:100%; height:600px;" data-hint="Box plot dos dados de tempo de sessão total dos usuários no app."></div>
-                    {{/if}}
                 </div>
+
+                <div class="col-md-{{#if (is_equal usuarioLogado.nivel 'Avançado') }}6{{else}}11{{/if}} shadow bg-white border rounded stats-box">
+                    <div id="chartUsuarios" style="width:100%; height:400px;" data-hint="Gráfico de linhas que mostra a quantidade de usuários que foram visto pela primeira vez e pela última vez nos meses"></div>
+                    
+                </div>
+
+                {{#if (is_equal usuarioLogado.nivel 'Avançado') }}
+                    <div class="col-md-4 shadow bg-white border rounded stats-box">
+                        <div id="histTempoSessao" style="width:100%; height:400px;" data-hint="Histograma que mostra por meio de grupos de usuários o tempo médio de sessão. Os pontos são usuários individuais, x é o seu número e y o tempo médio de sessão. As barras são os grupos, x é o tempo médio e y é a quantidade de usuários"></div>
+                    </div>
+                {{/if}}
+
+                <div class="col-md-11 shadow bg-white border rounded stats-box">
+                    <div id="mapaDist" style="width:100%; height:600px;" data-hint="Mapa que mostra a quantidade de usuários em cada país"></div>
+                </div>
+
+                {{#if (is_equal usuarioLogado.nivel 'Avançado') }}
+                    <div class="col-md-5 shadow bg-white border rounded stats-box">
+                        <div id="heatMapAcessos" style="width:100%; height:600px;" data-hint="Mapa de calor que mostra sessões iniciadas a cada hora dos dias da semana. Quanto mais escuro, mais acessos)."></div>
+                    </div>
+                {{/if}}
+
+                {{#if (is_equal usuarioLogado.nivel 'Avançado') }}
+                    <div class="col-md-5 shadow bg-white border rounded stats-box">
+                        <div id="boxPlotDuracao" style="width:100%; height:600px;" data-hint="Box plot dos dados de tempo de sessão total dos usuários no app."></div>
+                    </div>
+                {{/if}}
+                
             </div>
 
             {{> _graficosIndex}}
