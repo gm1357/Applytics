@@ -59,6 +59,9 @@
         title: {
             text: 'Distribuição de usuários por resolução de tela'
         },
+        tooltip: {
+            pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/><b>{point.percentage:.1f}%</b><br/>'
+        },
         plotOptions: {
             pie: {
                 allowPointSelect: true,
@@ -123,7 +126,8 @@
             enabled: true,
             buttonOptions: {
                 verticalAlign: 'bottom'
-            }
+            },
+            enableMouseWheelZoom: false
         },
         colorAxis: {
             tickPixelInterval: 100
@@ -154,6 +158,9 @@
         },
         title: {
             text: 'Distribuição de acessos de telas'
+        },
+        tooltip: {
+            pointFormat: '<span style="color:{point.color}">\u25CF</span> {series.name}: <b>{point.y}</b><br/><b>{point.percentage:.1f}%</b><br/>'
         },
         plotOptions: {
             pie: {
