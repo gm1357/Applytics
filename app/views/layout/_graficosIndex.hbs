@@ -186,6 +186,62 @@
         }
     });
 
+    Highcharts.chart('chartTransacoes', {
+        chart: {
+            type: 'line'
+        },
+        title: {
+            text: 'Fluxo transações feitas por mês'
+        },
+        yAxis: {
+            title: {
+                text: 'Número de transações'
+            }
+        },
+        xAxis: {
+            categories: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+        },
+        legend: {
+            align: 'center',
+            verticalAlign: 'top'
+        },
+        series: [{
+            name: 'Transações',
+            data: {{{json dados.graphs.transacoes_mes }}}
+        }],
+        credits: {
+            enabled: false
+        }
+    });
+
+    Highcharts.chart('colTransacoesValores', {
+        chart: {
+            type: 'column'
+        },
+        title: {
+            text: 'Valor total de transações por mês'
+        },
+        yAxis: {
+            title: {
+                text: 'Total monetário'
+            }
+        },
+        xAxis: {
+            categories: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro']
+        },
+        legend: {
+            align: 'center',
+            verticalAlign: 'top'
+        },
+        series: [{
+            name: 'Valor total',
+            data: {{{json dados.graphs.transacoes_valor_mes }}}
+        }],
+        credits: {
+            enabled: false
+        }
+    });
+
     {{#if (is_equal usuarioLogado.nivel 'Avançado') }}
 
         Highcharts.chart('histTempoSessao', {

@@ -334,6 +334,38 @@ exports.index = (req, res) => {
 
             dados.graphs.sessoes_por_hora_dia.push([dia_hora._id.dia_semana - 1, dia_hora._id.hora, dia_hora.sum]);
         }
+
+        const collectionTransactions = db.collection('app_transactions'+req.user.app);
+
+        // Soma de transações feitas por mês
+        dados.graphs.transacoes_mes = {};
+        let dados_transacoes_por_mes = await collectionTransactions.aggregate([
+            { $group: { 
+                _id:  { $month: '$data'}, 
+                count: { $sum: 1} }
+            }, 
+            { $sort: {_id: 1}}, 
+            { $project: { _id: 0, count: 1}}
+        ]);
+        dados.graphs.transacoes_mes = [];
+        await dados_transacoes_por_mes.forEach(row => {
+            dados.graphs.transacoes_mes.push(row.count);
+        });
+
+        // Valor total das transacoes por mês
+        dados.graphs.transacoes_valor_mes = {};
+        let dados_transacoes_valor_por_mes = await collectionTransactions.aggregate([
+            { $group: { 
+                _id:  { $month: '$data'}, 
+                count: { $sum: '$valor'} }
+            }, 
+            { $sort: {_id: 1}}, 
+            { $project: { _id: 0, count: 1}}
+        ]);
+        dados.graphs.transacoes_valor_mes = [];
+        await dados_transacoes_valor_por_mes.forEach(row => {
+            dados.graphs.transacoes_valor_mes.push(row.count);
+        });
         
         // Porcentagens com relação ao total de usuários
         dados.porcentagens = {};
