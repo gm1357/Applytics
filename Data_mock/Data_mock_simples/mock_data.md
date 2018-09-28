@@ -43,3 +43,13 @@
 
 <!-- Insere sessoes -->
 # mongoimport --jsonArray --db applytics --collection app_sessoes5b69f648537da10190857934 --file .\dataset_app_sessoes.json
+
+<!-- Adiciona ids gerados para o schema de geração do app_transactions -->
+
+<!-- Gera 5000 entradas -->
+# mongodb-dataset-generator .\app_transactions_schema.json -n 5000 -o dataset_app_transactions.json
+
+<!-- Trocar $date por ISODate para gerar datas de forma correta -->
+
+<!-- Insere transações -->
+# mongoimport --jsonArray --db applytics --collection app_transactions5b69f648537da10190857934 --file .\dataset_app_transactions.json
