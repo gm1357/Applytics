@@ -16,6 +16,7 @@ exports.index = (req, res) => {
         return res.redirect('/dashboard/novo');
     }
 
+    let anoFiltro = parseInt(req.query.ano);
     let message = req.flash('message');
     let dados = {};
     dados.stats = {};
@@ -26,6 +27,14 @@ exports.index = (req, res) => {
 
         const db = client.db(process.env.MONGODB_URI.split('/')[3]);
         const collection = db.collection('app_users'+req.user.app);
+        console.log(anoFiltro)
+        let dataInicio = new Date("1990-01-01T00:00:00.0Z");
+        let dataFim = new Date("2200-01-01T00:00:00.0Z");
+
+        if (!isNaN(anoFiltro)) {
+            dataInicio = new Date(anoFiltro+"-01-01T00:00:00.0Z");
+            dataFim = new Date((anoFiltro+1)+"-01-01T00:00:00.0Z");
+        }
 
         // Todos usuários
         dados.stats.num_usuarios_totais = await collection.find().toArray();
@@ -126,10 +135,18 @@ exports.index = (req, res) => {
             dados.stats.variancia_gasto_total = 0;
             dados.stats.desvio_gasto_total = 0;
         }
-        
+
+        //--------------------------------------------------------------------------------------------
+
         // Soma de quantidade de novos usuários por mês
         dados.graphs.usuarios_mes = {};
         let dados_novos_por_mes = await collection.aggregate([
+            { $match: { 
+                visto_primeiro: { 
+                    $gte: new Date(dataInicio), 
+                    $lt: new Date(dataFim)
+                } 
+            }},
             { $group: { 
                 _id:  { $month: '$visto_primeiro'}, 
                 count: { $sum: 1} }
@@ -144,6 +161,12 @@ exports.index = (req, res) => {
 
         // Soma de quantidade de usuários que não usaram mais o app por mês
         let dados_desistentes_por_mes = await collection.aggregate([
+            { $match: { 
+                visto_ultimo: { 
+                    $gte: new Date(dataInicio), 
+                    $lt: new Date(dataFim)
+                } 
+            }},
             { $group: { 
                 _id:  { $month: '$visto_ultimo'}, 
                 count: { $sum: 1} }
@@ -396,7 +419,7 @@ exports.index = (req, res) => {
         dados.stats.num_crashes = dados.stats.num_crashes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         dados.stats.num_total_sessoes = dados.stats.num_total_sessoes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         
-        await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message, usuarioNovo: req.user.novoD});
+        await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message, usuarioNovo: req.user.novoD, anoFiltro: anoFiltro});
     });
     
 };

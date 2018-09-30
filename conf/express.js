@@ -36,6 +36,13 @@ module.exports = () => {
             return false;
     });
 
+    hbs.registerHelper('for', function(from, to, incr, block) {
+        var accum = '';
+        for(var i = from; i < to; i += incr)
+            accum += block.fn(i);
+        return accum;
+    });
+
     // app.set('view engine', 'ejs');
     app.set('view engine', 'hbs');
     hbs.registerPartials('./app/views/layout');

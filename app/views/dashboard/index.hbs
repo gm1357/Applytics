@@ -16,6 +16,29 @@
 
             <hr>
 
+            <div class="row justify-content-end">
+                <div class="col-lg-3 col-md-4 col-sm-5 shadow bg-white border rounded stats-box">
+                    <form action="" method="get">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label for="anof">Filtrar por ano</label>
+                            </div>
+                            <div class="col-md-4">
+                                <select name="ano" id="anof" class="form-control">
+                                    <option value="" {{#unless anoFiltro}}selected{{/unless}}>Geral</option>
+                                    {{#for 2015 2019 1}}
+                                        <option value="{{this}}" {{#if (is_equal anoFiltro ../this)}}selected{{/if}}>{{this}}</option>
+                                    {{/for}}
+                                </select>
+                            </div>
+                            <div class="col-md-2 mx-auto">
+                                <input type="submit" value="Filtrar" class="btn btn-info">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
             <div class="row justify-content-between" data-intro="Aqui é mostrado um slide com os dados rápidos e importantes para seu app">
                 <div class="col-md-12">
                     <ul class="stats-slider">
