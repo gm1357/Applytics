@@ -10,11 +10,11 @@ var Helper = require('../helpers/dashboardHelper');
 
 exports.index = (req, res) => {
     if (!req.isAuthenticated()) {
-        return res.redirect('/usuarios/login');
+        return res.redirect('/');
     }
-    if (req.user.app == null) {
-        return res.redirect('/dashboard/novo');
-    }
+    // if (req.user.app == null) {
+    //     return res.redirect('/dashboard/novo');
+    // }
 
     let message = req.flash('message');
     let dados = {};
@@ -403,7 +403,7 @@ exports.index = (req, res) => {
 
 exports.monta_form = (req, res) => {
     if (!req.isAuthenticated()) {
-        return res.redirect('/usuarios/login');
+        return res.redirect('/');
     }
 
     request({
@@ -507,11 +507,11 @@ exports.atualizar_app = (req, res) => {
 
 exports.lista_crashes = (req, res) => {
     if (!req.isAuthenticated()) {
-        return res.redirect('/usuarios/login');
+        return res.redirect('/');
     }
-    if (req.user.app == null) {
-        return res.redirect('/dashboard/novo');
-    }
+    // if (req.user.app == null) {
+    //     return res.redirect('/dashboard/novo');
+    // }
 
     // Para identificar se é o primeiro acesso de um usuário à pagina de crashes
     req.user.novoC = Helper.verificaNovoUsuario(req, 'novoC');
@@ -554,11 +554,11 @@ exports.lista_crashes = (req, res) => {
 
 exports.lista_usuarios = (req, res) => {
     if (!req.isAuthenticated()) {
-        return res.redirect('/usuarios/login');
+        return res.redirect('/');
     }
-    if (req.user.app == null) {
-        return res.redirect('/dashboard/novo');
-    }
+    // if (req.user.app == null) {
+    //     return res.redirect('/dashboard/novo');
+    // }
 
     // Para identificar se é o primeiro acesso de um usuário à pagina de usuários
     req.user.novoU = Helper.verificaNovoUsuario(req, 'novoU');
