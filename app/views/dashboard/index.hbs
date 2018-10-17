@@ -151,11 +151,11 @@
                     'overlayOpacity': 0.9
                 });
 
-                {{#if (is_equal usuarioLogado.nivel 'Iniciante') }}
+                {{!-- {{#if (is_equal usuarioLogado.nivel 'Iniciante') }} --}}
                     {{#if usuarioNovo }}
                         intro.start();
                     {{/if}}
-                {{/if}}
+                {{!-- {{/if}} --}}
 
                 document.getElementById('ver-tour').addEventListener('click', () => {
                     intro.start();
@@ -177,12 +177,13 @@
                         adaptiveHeight:true,
                     });
 
-                    {{#if (is_equal usuarioLogado.nivel 'Iniciante') }}
+                    {{!-- {{#if (is_equal usuarioLogado.nivel 'Iniciante') }} --}}
                         introJs().setOptions({
                             'hintButtonLabel': '',
-                            'hintPosition': 'top-left'
+                            'hintPosition': 'top-left',
+                            'overlayOpacity': 1
                         }).addHints();
-                    {{/if}}
+                    {{!-- {{/if}} --}}
                 });
             </script>
         {{/unless}}

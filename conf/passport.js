@@ -69,7 +69,14 @@ module.exports = passport => {
             if (!user.validPassword(password))
                 return done(null, false, req.flash('loginMessage', 'Senha incorreta.'));
 
-            return done(null, user);
+            user.novoD = 2;
+            user.novoC = 2;
+            user.novoU = 2;
+
+            user.save(err => {
+                return done(null, user);
+            });
+
         });
 
     }));

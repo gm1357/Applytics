@@ -38,3 +38,7 @@ header {
 .tags-input {
     width:100% !important;
 }
+
+.introjs-tooltip {
+    background-color: rgba(000, 0, 0, 0.8) !important;
+}
