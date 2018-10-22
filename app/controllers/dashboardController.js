@@ -530,7 +530,7 @@ exports.lista_crashes = (req, res) => {
             { $sort: { _id: 1}} 
         ]).toArray();
         let crashes_por_mes_nao_tratadas = await collection.aggregate([
-            { $match: { nonfatal: 1}},
+            { $match: { nonfatal: 0}},
             { $group: { _id: { $month: '$crashed_at'}, count: { $sum: 1}}}, 
             { $sort: { _id: 1}} 
         ]).toArray();
