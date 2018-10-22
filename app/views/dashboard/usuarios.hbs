@@ -1,7 +1,7 @@
 {{> _header}}
 
     <main role="main" class="container">
-        <h1 class="text-center" data-intro="Essa página fornece informações mais aprofundadas dos usuários do seu app. Informações que possam ser úteis para traçar o perfil dos seus usuários.">Usuários</h1>
+        <h1 class="text-center" data-intro="Essa página fornece informações mais aprofundadas dos usuários do seu app. Essas informações podem servir para auxiliar na análise dos travamentos servindo como complemento ou apenas dar uma ideia de quem são seus usuários.">Usuários</h1>
 
         <nav class="nav nav-pills nav-fill justify-content-around mt-5">
             <a class="nav-link" href="/dashboard">Dados gerais</a>
@@ -15,7 +15,8 @@
             <div class="col-md-11 shadow bg-white border rounded stats-box">
                 <h2 class="text-center">Tabela de usuários do app</h2>
 
-                <table id="usuarios" class="table table-striped responsive table-bordered" width="100%" data-hint="Cada linha é um usuário, O ID é o identificador usado pela nossa ferramenta para referenciar a esse usuário. Um relatório de todas as informações está disponível se clicar no botão + ao lado do ID.">
+                <center><div class="lds-dual-ring" id="ring-loading1"></div></center>
+                <table id="usuarios" style="display: none;" class="table table-striped responsive table-bordered" width="100%" data-hint="Cada linha é um usuário, O ID é o identificador usado pela nossa ferramenta para referenciar a esse usuário. Um relatório de todas as informações está disponível se clicar no botão + ao lado do ID.">
                     <thead>
                         <tr>
                             <th>ID</th>
@@ -73,7 +74,8 @@
 
                 <h2 class="text-center">Tabela de acesso de views por usuários</h2>
 
-                <table id="views" class="table table-striped responsive table-bordered" width="100%" data-hint="Nessa tabela existe duas colunas para cada tela cadastrada do seu app, a primeira coluna mostra o número de vezes que ela foi acessada pelo usuário e a segunda a data do último acesso.">
+                <center><div class="lds-dual-ring" id="ring-loading2"></div></center>
+                <table id="views" style="display: none;" class="table table-striped responsive table-bordered" width="100%" data-hint="Nessa tabela existe duas colunas para cada tela cadastrada do seu app, a primeira coluna mostra o número de vezes que ela foi acessada pelo usuário e a segunda a data do último acesso.">
                     <thead>
                         <tr>
                             <th>ID do Usuário</th>
@@ -112,7 +114,7 @@
 
         {{!-- {{#if (is_equal usuarioLogado.nivel 'Iniciante') }} --}}
             {{#if usuarioNovo }}
-                intro.start();
+                {{!-- intro.start(); --}}
             {{/if}}
         {{!-- {{/if}} --}}
 
@@ -121,9 +123,18 @@
         });
 
         $(document).ready(function() {
+            {{#if usuarioNovo }}
+                intro.start();
+            {{/if}}
+
+            setTimeout(function() {
             $('#usuarios').DataTable( {
                 "language": {
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
+                },
+                "drawCallback": function( settings ) {
+                    $('#ring-loading1').hide();
+                    $('#usuarios').show();
                 },
                 "data": {{{json users}}},
                 responsive: {
@@ -202,6 +213,10 @@
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
                 },
                 "data": {{{json views}}},
+                "drawCallback": function( settings ) {
+                    $('#ring-loading2').hide();
+                    $('#views').show();
+                },
                 responsive: {
                     details: {
                         display: $.fn.dataTable.Responsive.display.modal( {
@@ -238,6 +253,7 @@
                     {{!-- {{/if}} --}}
                 }
             });
+            }, 50);
         });
     </script>
 
