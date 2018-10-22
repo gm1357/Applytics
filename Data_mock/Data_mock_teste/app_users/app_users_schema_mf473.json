@@ -1,0 +1,28 @@
+{
+    "sexo":"{{util.sample(['Masculino', 'Feminino'])}}",
+    "ano_nascimento":"{{Number(chance.year({min: 1995, max: 2000}))}}",
+    "pais":"{{util.sample(['br'])}}",
+    "visto_primeiro":"{{Date(chance.date({year: 2018, month: 10}))}}",
+    "visto_ultimo":"{{Date(chance.date({year: 2018}))}}",
+    "numero_sessoes":"{{Number(chance.integer({ min: 5, max: 150 }))}}",
+    "duracao_sessao":"{{Number(chance.integer({ min: 100, max: 12000 }))}}",
+    "total_duracao_sessao":"{{Number(chance.integer({ min: 3500, max: 55000 }))}}",
+
+    "versao_os":"{{Number(chance.floating({ min: 1, max: 8, fixed: 1 }))}}",
+    "versao_app":"{{Number(chance.floating({ min: 1, max: 2, fixed: 1 }))}}",
+    "ultima_view":"{{util.sample(['Inicio', 'Perfil', 'Detalhes_produto', 'Listagem_produtos', 'Carrinho', 'Confirmacao_compra', 'Sobre'])}}",
+    "ultima_compra":"{{Date(chance.date({year: 2018}))}}",
+    "total_ultima_compra":"{{Number(chance.floating({ min: 5, max: 1000, fixed: 2 }))}}",
+    "total_gasto":"{{Number(chance.floating({ min: 500, max: 10000, fixed: 2 }))}}",
+    "uid":"{{counter()}}",
+    "nome":"{{chance.name()}}",
+    "email":"{{chance.email()}}",
+    "cidade":"{{chance.city()}}",
+    "telefone":"{{chance.phone()}}",
+    "dispositivo":"Mobile",
+    "operadora":"{{util.sample(['Tim', 'Oi', 'Vivo'])}}",
+    "os":"Android",
+    "s_id":"{{chance.hash()}}",
+    "resolucao_tela":"{{util.sample(['720x1280', '800x600', '240x320', '360x640', '768x1024', '320x568'])}}",
+    "densidade_tela":"{{Number(util.sample([120, 180, 320, 240]))}}"
+}
