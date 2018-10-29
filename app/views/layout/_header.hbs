@@ -31,21 +31,31 @@
                                         <a href="#" class="nav-link dropdown-toggle" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-step="1000" data-intro='Caso queira ver esse guia novamente é só clicar em "ver guia".'>Bem-vindo {{usuarioLogado.local.nome}}</a>
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                                             <a class="dropdown-item" href="/dashboard">Dashboard</a>
-                                            {{!-- <a class="dropdown-item" href="/usuarios/{{ usuarioLogado._id }}">Alterar perfil</a>
-                                            <a class="dropdown-item" href="/dashboard/novo">Cadastrar novo app</a>
-                                            <a class="dropdown-item" href="/dashboard/editar">Editar app selecionado</a> --}}
+                                            {{#unless teste}}
+                                                <a class="dropdown-item" href="/usuarios/{{ usuarioLogado._id }}">Alterar perfil</a>
+                                                <a class="dropdown-item" href="/dashboard/novo">Cadastrar novo app</a>
+                                                <a class="dropdown-item" href="/dashboard/editar">Editar app selecionado</a>
+                                            {{/unless}}
                                             <a class="dropdown-item" id="ver-tour" href="#">Ver guia</a>
-                                            {{!-- <a class="dropdown-item" href="/usuarios/logout">Log-out</a> --}}
+                                            <a class="dropdown-item" href="/usuarios/logout">Log-out</a>
                                         </div>
                                     </div>
                                 </li>
                             {{else}}
-                                {{!-- <li class="nav-item">
+                                <li class="nav-item">
+                                    <form action="/usuarios/login" method="post">
+                                        <input type="hidden" name="email" value="teste@hotmail.com">
+                                        <input type="hidden" name="senha" value="qweqwe">
+
+                                        <input type="submit" value="Faça um teste!" class="btn btn-primary">
+                                    </form>
+                                </li>
+                                <li class="nav-item">
                                     <a class="nav-link" href="/usuarios/cadastro">Sign-up</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" href="/usuarios/login">Log-in</a>
-                                </li> --}}
+                                </li>
                             {{/if}}
                         </ul>
                     </div>

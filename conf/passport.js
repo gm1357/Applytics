@@ -39,6 +39,7 @@ module.exports = passport => {
                     newUser.novoD = 2;
                     newUser.novoC = 2;
                     newUser.novoU = 2;
+                    newUser.teste = 0;
                     newUser.local.senha = newUser.generateHash(password);
 
                     newUser.save(err => {
@@ -69,13 +70,17 @@ module.exports = passport => {
             if (!user.validPassword(password))
                 return done(null, false, req.flash('loginMessage', 'Senha incorreta.'));
 
-            user.novoD = 2;
-            user.novoC = 2;
-            user.novoU = 2;
+            if (user.teste) {
+                user.novoD = 2;
+                user.novoC = 2;
+                user.novoU = 2;
 
-            user.save(err => {
+                user.save(err => {
+                    return done(null, user);
+                });
+            } else {
                 return done(null, user);
-            });
+            }
 
         });
 

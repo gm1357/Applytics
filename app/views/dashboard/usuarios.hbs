@@ -112,12 +112,6 @@
             'overlayOpacity': 0.9
         });
 
-        {{!-- {{#if (is_equal usuarioLogado.nivel 'Iniciante') }} --}}
-            {{#if usuarioNovo }}
-                {{!-- intro.start(); --}}
-            {{/if}}
-        {{!-- {{/if}} --}}
-
         document.getElementById('ver-tour').addEventListener('click', () => {
             intro.start();
         });
@@ -245,12 +239,10 @@
                     {{/each}}
                 ],
                 "initComplete": function(settings, json) {
-                    {{!-- {{#if (is_equal usuarioLogado.nivel 'Iniciante') }} --}}
-                        introJs().setOptions({
-                            'hintButtonLabel': '',
-                            'hintPosition': 'top-left'
-                        }).addHints();
-                    {{!-- {{/if}} --}}
+                    introJs().setOptions({
+                        'hintButtonLabel': '',
+                        'hintPosition': 'top-left'
+                    }).addHints();
                 }
             });
             }, 50);

@@ -3,6 +3,10 @@ var Aplicativo = require('../models/Aplicativo');
 const { validationResult } = require('express-validator/check');
 
 exports.cadastro = (req, res) => {
+    if (req.isAuthenticated()) {
+        return res.redirect('/dashboard');
+    }
+
     let erroMsg = '';
     const flashMsg = req.flash('signupMessage');
     
@@ -14,6 +18,10 @@ exports.cadastro = (req, res) => {
 };
 
 exports.login = (req, res) => {
+    if (req.isAuthenticated()) {
+        return res.redirect('/dashboard');
+    }
+    
     let erroMsg = '';
     const flashMsg = req.flash('loginMessage');
     
@@ -33,6 +41,9 @@ exports.detalhes = (req, res) => {
     if (!req.isAuthenticated() || req.user._id != req.params.id) {
         res.redirect('/usuarios/login');
         return;
+    }
+    if (req.user.teste) {
+        return res.redirect('/dashboard');
     }
 
     let validationErrors = req.flash('validationErrors');

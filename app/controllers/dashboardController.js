@@ -12,9 +12,9 @@ exports.index = (req, res) => {
     if (!req.isAuthenticated()) {
         return res.redirect('/');
     }
-    // if (req.user.app == null) {
-    //     return res.redirect('/dashboard/novo');
-    // }
+    if (req.user.app == null) {
+        return res.redirect('/dashboard/novo');
+    }
 
     let message = req.flash('message');
     let dados = {};
@@ -396,7 +396,7 @@ exports.index = (req, res) => {
         dados.stats.num_crashes = dados.stats.num_crashes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         dados.stats.num_total_sessoes = dados.stats.num_total_sessoes.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         
-        await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message, usuarioNovo: req.user.novoD});
+        await res.render('dashboard/index', {appID: req.user.app, dados: dados, message: message, usuarioNovo: req.user.novoD, teste: req.user.teste});
     });
     
 };
@@ -404,6 +404,9 @@ exports.index = (req, res) => {
 exports.monta_form = (req, res) => {
     if (!req.isAuthenticated()) {
         return res.redirect('/');
+    }
+    if (req.user.teste) {
+        return res.redirect('/dashboard');
     }
 
     request({
@@ -509,9 +512,9 @@ exports.lista_crashes = (req, res) => {
     if (!req.isAuthenticated()) {
         return res.redirect('/');
     }
-    // if (req.user.app == null) {
-    //     return res.redirect('/dashboard/novo');
-    // }
+    if (req.user.app == null) {
+        return res.redirect('/dashboard/novo');
+    }
 
     // Para identificar se é o primeiro acesso de um usuário à pagina de crashes
     req.user.novoC = Helper.verificaNovoUsuario(req, 'novoC');
@@ -547,7 +550,7 @@ exports.lista_crashes = (req, res) => {
         collection.find().toArray((err, crashes) => {
             if(err) { return console.dir(err); }
             
-            res.render('dashboard/crashes', {crashes: crashes, dados: dados, usuarioNovo: req.user.novoC});
+            res.render('dashboard/crashes', {crashes: crashes, dados: dados, usuarioNovo: req.user.novoC, teste: req.user.teste});
         });
     });
 };
@@ -556,9 +559,9 @@ exports.lista_usuarios = (req, res) => {
     if (!req.isAuthenticated()) {
         return res.redirect('/');
     }
-    // if (req.user.app == null) {
-    //     return res.redirect('/dashboard/novo');
-    // }
+    if (req.user.app == null) {
+        return res.redirect('/dashboard/novo');
+    }
 
     // Para identificar se é o primeiro acesso de um usuário à pagina de usuários
     req.user.novoU = Helper.verificaNovoUsuario(req, 'novoU');
@@ -580,7 +583,7 @@ exports.lista_usuarios = (req, res) => {
                 collectionViews.find().toArray((err, views) => {
                     if(err) { return console.dir(err); }
 
-                    res.render('dashboard/usuarios', {users: users, aplicativo: app, views: views, usuarioNovo: req.user.novoU});
+                    res.render('dashboard/usuarios', {users: users, aplicativo: app, views: views, usuarioNovo: req.user.novoU, teste: req.user.teste});
                 });
             });
         });
