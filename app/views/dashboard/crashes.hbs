@@ -1,21 +1,22 @@
 {{> _header}}
 
     <main role="main" class="container">
-        <h1 class="text-center" data-intro="Essa página é dedicada para mostrar informações sobre os travamentos que ocorrem com os usuários, informações importantes para poder melhorar seu app!">Crashes</h1>
+        <h1 class="text-center" data-intro="Essa página é dedicada para mostrar informações sobre os travamentos que ocorrem com os usuários, útil para poder verificar e corrigir os erros existentes o mais rápido possível.">Travamentos</h1>
 
         <nav class="nav nav-pills nav-fill justify-content-around mt-5">
             <a class="nav-link" href="/dashboard">Dados gerais</a>
-            <a class="nav-link active" href="/dashboard/crashes">Crashes</a>
+            <a class="nav-link active" href="/dashboard/crashes">Travamentos</a>
             <a class="nav-link" href="/dashboard/usuarios">Usuarios</a>
         </nav>
 
         <hr>
 
-        <div class="row justify-content-around" data-intro="Aqui é mostrado uma tabela com todos os erros e informações gravadas no seu app." data-scrollTo="tooltip">
+        <div class="row justify-content-around" data-intro="Aqui é mostrado uma tabela com todos os erros e informações gravadas quando o erro ocorreu no seu app. No canto superior esquerdo está o botão com dicas e mais informações sobre essa tabela." data-scrollTo="tooltip">
             <div class="col-md-11 shadow bg-white border rounded stats-box">
-                <h2 class="text-center">Tabela de travamento do app</h2>
+                <h2 class="text-center">Tabela de travamentos do app</h2>
 
-                <table id="crashes" class="table table-striped responsive table-bordered" width="100%" data-hint="Cada linha da tabela é um erro que ocorreu com um usuário, especificado pelo ID usuário. Além das informações do dispositivo no momento atual do erro, existe uma coluna Stack-trace, onde é detalhado o erro que ocorreu e em qual parte do código do app.">
+                <center><div class="lds-dual-ring" id="ring-loading1"></div></center>
+                <table id="crashes" style="display: none;" class="table table-striped responsive table-bordered" width="100%" data-hint="Cada linha da tabela é um erro que ocorreu com um usuário, especificado pelo ID usuário. Além das informações do dispositivo no momento atual do erro, existe uma coluna Stack-trace, onde é detalhado o erro que ocorreu e em qual parte do código do app.">
                     <thead>
                         <tr>
                             <th>ID usuário</th>
@@ -57,7 +58,7 @@
             </div>
         </div>
 
-        <div class="row justify-content-around" data-intro="Aqui temos os gráficos para melhor visualizar as informações obtidas. No canto superior direito existe um menu com opções para imprimir ou baixar em uma variedade de formatos o gráfico. No canto superior esquerdo existe um botão com dicas e explicações para cada gráfico" data-scrollTo="tooltip">
+        <div class="row justify-content-around" data-intro="Aqui é mostrado um gráfico para melhor visualizar as informações de travamentos obtidas." data-scrollTo="tooltip">
             <div class="col-md-11 shadow bg-white border rounded stats-box">
                 <div id="chartCrashes" style="width:100%; height:400px;" data-hint="Gráfico de barras que mostram a quantidade de erros, divididos em duas categorias, por mês. Erros tratados são os erros que seu app foi implementado para executar alguma ação para tentar remediar o ocorrido."></div>
             </div>
@@ -78,11 +79,11 @@
             'overlayOpacity': 0.9
         });
 
-        {{#if (is_equal usuarioLogado.nivel 'Iniciante') }}
+        {{!-- {{#if (is_equal usuarioLogado.nivel 'Iniciante') }} --}}
             {{#if usuarioNovo }}
                 intro.start();
             {{/if}}
-        {{/if}}
+        {{!-- {{/if}} --}}
 
         document.getElementById('ver-tour').addEventListener('click', () => {
             intro.start();
@@ -94,6 +95,10 @@
                     "url": "//cdn.datatables.net/plug-ins/1.10.19/i18n/Portuguese-Brasil.json"
                 },
                 "data": {{{json crashes}}},
+                "drawCallback": function( settings ) {
+                    $('#ring-loading1').hide();
+                    $('#crashes').show();
+                },
                 responsive: {
                     details: {
                         display: $.fn.dataTable.Responsive.display.modal( {
@@ -163,12 +168,12 @@
                     { "data" : "stack_trace" }
                 ],
                 "initComplete": function(settings, json) {
-                    {{#if (is_equal usuarioLogado.nivel 'Iniciante') }}
+                    {{!-- {{#if (is_equal usuarioLogado.nivel 'Iniciante') }} --}}
                         introJs().setOptions({
                             'hintButtonLabel': '',
                             'hintPosition': 'top-left'
                         }).addHints();
-                    {{/if}}
+                    {{!-- {{/if}} --}}
                 }
             });
         });

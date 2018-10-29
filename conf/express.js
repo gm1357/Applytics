@@ -72,7 +72,7 @@ module.exports = () => {
     .into(app);
 
     app.use((req, res, next) => {
-        res.status(404).render('erros/404');
+        res.status(404).redirect('/dashboard/');
     });
 
     app.use((error, req, res, next) => {
