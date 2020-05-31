@@ -1,6 +1,10 @@
 # Applytics
 Ferramenta analytics para apps desenvolvida para conclusão de curso de bcc.
 
+![Dashboard screenshot](https://github.com/gm1357/Applytics/tree/master/images/applytics1.png)
+![Dashboard screenshot](https://github.com/gm1357/Applytics/tree/master/images/applytics2.png)
+![Dashboard screenshot](https://github.com/gm1357/Applytics/tree/master/images/applytics3.png)
+
 ## Construido com:
 - Node.js
 - Express
