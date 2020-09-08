@@ -41,7 +41,7 @@
     "express-load": "^1.1.16",
     "express-session": "^1.15.6",
     "express-validator": "^5.2.0",
-    "handlebars": "^4.0.11",
+    "handlebars": "^4.5.3",
     "hbs": "^4.0.1",
     "highcharts": "^6.1.1",
     "intro.js": "^2.9.3",
